@@ -1,4 +1,4 @@
-/**
- * Created by Nikcher on 19.12.2016.
- */
-alert('test');
+var angular = require('angular');
+var SM = angular.module('SM',[]);
+
+require('./controllers')(SM);
