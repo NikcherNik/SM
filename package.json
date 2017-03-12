@@ -30,6 +30,8 @@
     "webpack-dev-server": "^1.16.2"
   },
   "dependencies": {
-    "angular": "^1.6.0"
+    "angular": "^1.6.0",
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2"
   }
 }
