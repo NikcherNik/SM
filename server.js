@@ -9,6 +9,7 @@ var router = express.Router();
 var app = express();
 var http = require('http').Server(app);
 
+app.use(express.static('app'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
