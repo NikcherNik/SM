@@ -2,3 +2,28 @@
 .main-page{
   background-image: url('../img/body_background.png');
 }
+.c-modal {
+  text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+  .c-modal:before {
+    display: inline-block;
+    vertical-align: middle;
+    content: " ";
+    height: 100%;
+  }
+}
+.c-modal.in .c-modal-dialog{
+  opacity: 1;
+  -webkit-transition: opacity 0.7s ease-out 0.1s;
+  -moz-transition: opacity 0.7s ease-out 0.1s;
+  -o-transition: opacity 0.7s ease-out 0.1s;
+  transition: opacity 0.7s ease-out 0.1s;
+}
+.c-modal-dialog {
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+  opacity: 0;
+}

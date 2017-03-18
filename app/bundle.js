@@ -34947,7 +34947,7 @@ exports = module.exports = __webpack_require__(8)(undefined);
 
 
 // module
-exports.push([module.i, ".main-page {\n  background-image: url(" + __webpack_require__(13) + ");\n}\n", ""]);
+exports.push([module.i, ".main-page {\n  background-image: url(" + __webpack_require__(13) + ");\n}\n.c-modal {\n  text-align: center;\n}\n@media screen and (min-width: 768px) {\n  .c-modal:before {\n    display: inline-block;\n    vertical-align: middle;\n    content: \" \";\n    height: 100%;\n  }\n}\n.c-modal.in .c-modal-dialog {\n  opacity: 1;\n  -webkit-transition: opacity 0.7s ease-out 0.1s;\n  -moz-transition: opacity 0.7s ease-out 0.1s;\n  -o-transition: opacity 0.7s ease-out 0.1s;\n  transition: opacity 0.7s ease-out 0.1s;\n}\n.c-modal-dialog {\n  display: inline-block;\n  text-align: left;\n  vertical-align: middle;\n  opacity: 0;\n}\n", ""]);
 
 // exports
 
