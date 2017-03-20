@@ -61,7 +61,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 16);
+/******/ 	return __webpack_require__(__webpack_require__.s = 15);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -79,9 +79,9 @@
 
 'use strict'
 
-var base64 = __webpack_require__(6)
-var ieee754 = __webpack_require__(9)
-var isArray = __webpack_require__(10)
+var base64 = __webpack_require__(5)
+var ieee754 = __webpack_require__(8)
+var isArray = __webpack_require__(9)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -1859,29 +1859,29 @@ function isnan (val) {
   return val !== val // eslint-disable-line no-self-compare
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0).Buffer, __webpack_require__(15)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0).Buffer, __webpack_require__(14)))
 
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports = function (ngModule) {
+    __webpack_require__(3)(ngModule);
     __webpack_require__(4)(ngModule);
-    __webpack_require__(5)(ngModule);
+    __webpack_require__(16)(ngModule);
 };
 
 /***/ },
-/* 2 */,
-/* 3 */
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(7);
+var content = __webpack_require__(6);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(11)(content, {});
+var update = __webpack_require__(10)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -1898,7 +1898,7 @@ if(false) {
 }
 
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports) {
 
 module.exports = function (ngModule) {
@@ -1906,7 +1906,7 @@ module.exports = function (ngModule) {
 };
 
 /***/ },
-/* 5 */
+/* 4 */
 /***/ function(module, exports) {
 
 /**
@@ -1935,11 +1935,31 @@ module.exports = function (ngModule) {
                 $(this).closest(".bs-float-label").find('.input-group-addon').removeClass("select-label");
             }).trigger("bs-check-value");
         }
+
+        $(function () {
+            $('#loginBtn').click(function () {
+                var formValid = true;
+                $('input').each(function () {
+                    var formGroup = $(this).parents('.form-group');
+                    var glyphicon = formGroup.find('.form-control-feedback');
+                    if (this.checkValidity()) {
+                        formGroup.addClass('has-success').removeClass('has-error');
+                        glyphicon.addClass('glyphicon-ok').removeClass('glyphicon-remove');
+                    } else {
+                        formGroup.addClass('has-error').removeClass('has-success');
+                        glyphicon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
+
+                        formValid = false;
+                    }
+                });
+                if (formValid) {}
+            });
+        });
     });
 };
 
 /***/ },
-/* 6 */
+/* 5 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -2060,21 +2080,21 @@ function fromByteArray (uint8) {
 
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(8)(undefined);
+exports = module.exports = __webpack_require__(7)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, ".main-page {\n  background-image: url(" + __webpack_require__(13) + ");\n}\n.c-modal {\n  text-align: center;\n}\n@media screen and (min-width: 768px) {\n  .c-modal:before {\n    display: inline-block;\n    vertical-align: middle;\n    content: \" \";\n    height: 100%;\n  }\n}\n.c-modal.in .c-modal-dialog {\n  opacity: 1;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.c-modal-dialog {\n  display: inline-block;\n  text-align: left;\n  vertical-align: middle;\n  opacity: 0;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.login-form {\n  top: 130px;\n}\n.login-form .title {\n  color: #FFFFFF;\n  font-size: 27px;\n  text-align: center;\n}\n.login-button {\n  width: 100%;\n  margin-top: 5px;\n}\n.login-form-element {\n  left: 15px;\n}\n.login-form-element.login-field {\n  margin-top: 25px;\n}\n.login-form-element.password-field {\n  margin-top: 10px;\n}\n.background-login-form {\n  width: 100%;\n  height: 100%;\n  border-radius: 3px;\n  background-color: #FFFFFF;\n  position: absolute;\n  opacity: 0.3;\n}\n.float-label {\n  position: absolute;\n  top: 0px;\n  left: 2px;\n  -webkit-transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  opacity: 0;\n  color: #FFFFFF;\n}\n.float-label.show {\n  top: -20px;\n  left: 2px;\n  opacity: 1;\n}\n.main-img {\n  background-image: url(" + __webpack_require__(14) + ");\n  background-size: 100% auto;\n  background-repeat: no-repeat;\n  position: absolute;\n  width: 100%;\n  height: 450px;\n}\n.select-label {\n  color: #61C3FF;\n}\n@media screen and (max-width: 650px) {\n  .login-form {\n    top: 55px;\n  }\n}\n", ""]);
+exports.push([module.i, ".main-page {\n  background-image: url(" + __webpack_require__(12) + ");\n}\n.c-modal {\n  text-align: center;\n}\n@media screen and (min-width: 768px) {\n  .c-modal:before {\n    display: inline-block;\n    vertical-align: middle;\n    content: \" \";\n    height: 100%;\n  }\n}\n.c-modal.in .c-modal-dialog {\n  opacity: 1;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.c-modal-dialog {\n  display: inline-block;\n  text-align: left;\n  vertical-align: middle;\n  opacity: 0;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.login-form {\n  top: 130px;\n}\n.login-form .title {\n  color: #FFFFFF;\n  font-size: 27px;\n  text-align: center;\n  margin-top: 10px;\n}\n.login-button {\n  width: 100%;\n  margin-top: 20px;\n}\n.login-form-element {\n  left: 15px;\n}\n.login-form-element.login-field {\n  margin-top: 25px;\n}\n.login-form-element.password-field {\n  margin-top: 10px;\n}\n.background-login-form {\n  width: 100%;\n  height: 100%;\n  border-radius: 3px;\n  background-color: #FFFFFF;\n  position: absolute;\n  opacity: 0.3;\n}\n.float-label {\n  position: absolute;\n  top: 0px;\n  left: 17px;\n  -webkit-transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  opacity: 0;\n  color: #FFFFFF;\n}\n.float-label.show {\n  top: -20px;\n  left: 17px;\n  opacity: 1;\n}\n.main-img {\n  background-image: url(" + __webpack_require__(13) + ");\n  background-size: 100% auto;\n  background-repeat: no-repeat;\n  position: absolute;\n  width: 100%;\n  height: 550px;\n  min-height: 350px;\n}\n.select-label {\n  color: #61C3FF;\n}\n@media screen and (max-width: 650px) {\n  .login-form {\n    top: 55px;\n  }\n}\n@media screen and (max-width: 750px) {\n  .main-img {\n    background-image: none;\n  }\n  .background-login-form {\n    background-color: #000000;\n  }\n}\n", ""]);
 
 // exports
 
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -2156,7 +2176,7 @@ function toComment(sourceMap) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0).Buffer))
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2246,7 +2266,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 
 /***/ },
-/* 10 */
+/* 9 */
 /***/ function(module, exports) {
 
 var toString = {}.toString;
@@ -2257,7 +2277,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ },
-/* 11 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 /*
@@ -2281,7 +2301,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(12);
+	fixUrls = __webpack_require__(11);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -2534,7 +2554,7 @@ function updateLink(linkElement, options, obj) {
 
 
 /***/ },
-/* 12 */
+/* 11 */
 /***/ function(module, exports) {
 
 
@@ -2603,19 +2623,19 @@ module.exports = function (css) {
 
 
 /***/ },
-/* 13 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "./img/31285c5ad879cfc119ef5dbd3892bc93.png";
 
 /***/ },
-/* 14 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "./img/41d61da7a43b26fabd5542cb40ba37b6.jpg";
 
 /***/ },
-/* 15 */
+/* 14 */
 /***/ function(module, exports) {
 
 var g;
@@ -2640,11 +2660,11 @@ module.exports = g;
 
 
 /***/ },
-/* 16 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__css_common_less__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__css_common_less__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__css_common_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__css_common_less__);
 
 
@@ -2660,6 +2680,59 @@ var SM = angular.module('SM', ["ngRoute"]).config(function ($routeProvider) {
 });
 
 __webpack_require__(1)(SM);
+
+/***/ },
+/* 16 */
+/***/ function(module, exports) {
+
+/**
+ * Created by Nikcher on 20.03.2017.
+ */
+module.exports = function (ngModule) {
+    ngModule.controller('registrationCtrl', function ($rootScope, $scope) {
+        if ($('.bs-float-label input').length) {
+            var bs_float_on_class = "on";
+            var bs_float_show_class = "show";
+
+            $('.float-input').on('bs-check-value', function () {
+                var _bs_label = $(this).closest('.bs-float-label').find('.float-label');
+                if (this.value !== '') {
+                    _bs_label.addClass(bs_float_show_class);
+                } else {
+                    _bs_label.removeClass(bs_float_show_class);
+                }
+            }).on("keyup", function () {
+                $(this).trigger("bs-check-value");
+            }).on("focus", function () {
+                $(this).closest(".bs-float-label").find('.float-label').addClass(bs_float_on_class);
+                $(this).closest(".bs-float-label").find('.input-group-addon').addClass("select-label");
+            }).on("blur", function () {
+                $(this).closest(".bs-float-label").find('.float-label').removeClass(bs_float_on_class);
+                $(this).closest(".bs-float-label").find('.input-group-addon').removeClass("select-label");
+            }).trigger("bs-check-value");
+        };
+
+        $(function () {
+            $('#loginBtn').click(function () {
+                var formValid = true;
+                $('input').each(function () {
+                    var formGroup = $(this).parents('.form-group');
+                    var glyphicon = formGroup.find('.form-control-feedback');
+                    if (this.checkValidity()) {
+                        formGroup.addClass('has-success').removeClass('has-error');
+                        glyphicon.addClass('glyphicon-ok').removeClass('glyphicon-remove');
+                    } else {
+                        formGroup.addClass('has-error').removeClass('has-success');
+                        glyphicon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
+
+                        formValid = false;
+                    }
+                });
+                if (formValid) {}
+            });
+        });
+    });
+};
 
 /***/ }
 /******/ ]);

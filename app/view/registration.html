@@ -1,0 +1,77 @@
+<form class="form-horizontal    col-lg-4 col-lg-offset-4
+                                col-md-6 col-md-offset-3
+                                col-sm-8 col-sm-offset-2
+                                col-xs-8 col-xs-offset-2
+                                content-area sample-show-hide login-form"
+      name ="registrationForm" ng-submit=toRegister(user) role="form">
+
+    <div class="background-login-form"></div>
+
+    <div class="form-group has-feedback login-form-element">
+        <div class="title">Регистрация</div>
+    </div>
+
+    <div class="form-group has-feedback">
+        <div class="col-lg-12 login-form-element login-field">
+            <div class="input bs-float-label">
+                <input type="text" class="form-control float-input" id="login" placeholder="Логин" required="required" name="login"
+                       pattern="[A-Za-zА-Яа-я]{3,}"
+                       ng-model = "user.login">
+                <label for="login" class="float-label">Логин</label>
+            </div>
+            <span class="glyphicon form-control-feedback"></span>
+        </div>
+    </div>
+
+    <div class="form-group has-feedback">
+        <div class="col-lg-12 login-form-element password-field">
+            <div class="input bs-float-label">
+                <input type="password"
+                       class="form-control float-input"
+                       id="password"
+                       placeholder="Пароль"
+                       ng-model = "user.password"
+                       required="required"
+                       data-validation="notempty;minlength:6">
+                <label for="password" class="float-label">Пароль</label>
+            </div>
+            <span class="glyphicon form-control-feedback"></span>
+
+        </div>
+    </div>
+
+    <div class="form-group has-feedback">
+        <div class="col-lg-12 login-form-element password-field">
+            <div class="input bs-float-label">
+                <input type="password"
+                       class="form-control float-input"
+                       id="passwordRepeat"
+                       placeholder="Повторите пароль"
+                       ng-model = "user.passwordRepeat"
+                       required="required"
+                       data-validation="notempty;passretry">
+                <label for="passwordRepeat" class="float-label">Повторите пароль</label>
+            </div>
+            <span class="glyphicon form-control-feedback"></span>
+
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-12 login-form-element ">
+            <button type="submit" class="btn btn-primary login-button" id="loginBtn">
+                <span class="glyphicon" aria-hidden="true"></span> Регистрация
+            </button>
+        </div>
+    </div>
+
+    <div class="form-group" ng-if = "registrationErr">
+        <div class="alert alert-danger">
+            <a href="" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Ошибка!</strong> {{errMessage}}
+        </div>
+    </div>
+
+</form>
+
+<script src="../js/validation.js"></script>

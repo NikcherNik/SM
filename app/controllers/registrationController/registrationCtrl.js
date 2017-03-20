@@ -1,8 +1,8 @@
 /**
- * Created by Nikcher on 19.03.2017.
+ * Created by Nikcher on 20.03.2017.
  */
 module.exports = function (ngModule) {
-    ngModule.controller('singUpCtrl',function ($rootScope,$scope) {
+    ngModule.controller('registrationCtrl',function ($rootScope,$scope) {
         if($('.bs-float-label input').length){
             var bs_float_on_class = "on";
             var bs_float_show_class = "show";
@@ -26,7 +26,7 @@ module.exports = function (ngModule) {
                     $(this).closest(".bs-float-label").find('.float-label').removeClass(bs_float_on_class);
                     $(this).closest(".bs-float-label").find('.input-group-addon').removeClass("select-label");
                 }).trigger("bs-check-value");
-        }
+        };
 
 
         $(function() {
@@ -41,7 +41,7 @@ module.exports = function (ngModule) {
                     } else {
                         formGroup.addClass('has-error').removeClass('has-success');
                         glyphicon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
-                        
+
                         formValid = false;
                     }
                 });
