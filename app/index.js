@@ -15,3 +15,5 @@ var SM = angular.module('SM',["ngRoute"])
     })
 
 require('./controllers')(SM);
+require('./services')(SM);
+

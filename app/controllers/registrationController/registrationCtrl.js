@@ -2,7 +2,7 @@
  * Created by Nikcher on 20.03.2017.
  */
 module.exports = function (ngModule) {
-    ngModule.controller('registrationCtrl',function ($rootScope,$scope) {
+    ngModule.controller('registrationCtrl',function ($rootScope,$window,$scope,validationService) {
         if($('.bs-float-label input').length){
             var bs_float_on_class = "on";
             var bs_float_show_class = "show";
@@ -17,6 +17,13 @@ module.exports = function (ngModule) {
             })
                 .on("keyup",function(){
                     $(this).trigger("bs-check-value");
+                    var formGroup = $(this).parents('.form-group');
+                    var glyphicon = formGroup.find('.form-control-feedback');
+                    if(!!this.value){
+                        validationService.resetValidationError(formGroup,glyphicon);
+                    }else{
+                        validationService.showValidationError(formGroup,glyphicon);
+                    }
                 })
                 .on("focus",function(){
                     $(this).closest(".bs-float-label").find('.float-label').addClass(bs_float_on_class);
@@ -28,26 +35,84 @@ module.exports = function (ngModule) {
                 }).trigger("bs-check-value");
         };
 
+        /*
+         * ===============РЕГИСТРАЦИЯ==============*/
 
-        $(function() {
-            $('#loginBtn').click(function() {
-                var formValid = true;
-                $('input').each(function() {
+        $scope.toRegister = function (user) {
+            formValid = true;
+            if(typeof (user) === 'undefined' || !user){
+                $('input').each(function () {
                     var formGroup = $(this).parents('.form-group');
                     var glyphicon = formGroup.find('.form-control-feedback');
-                    if (this.checkValidity()) {
-                        formGroup.addClass('has-success').removeClass('has-error');
-                        glyphicon.addClass('glyphicon-ok').removeClass('glyphicon-remove');
-                    } else {
-                        formGroup.addClass('has-error').removeClass('has-success');
-                        glyphicon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
+                    validationService.showValidationError(formGroup,glyphicon);
 
-                        formValid = false;
-                    }
                 });
-                if (formValid) {
-                }
-            });
-        });
+                return;
+            }
+
+            if(typeof (user.login) === 'undefined' || !user.login){
+                formValid = false;
+                var formGroup = $('.form-group.login-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                validationService.showValidationError(formGroup,glyphicon);
+                formGroup = glyphicon = null;
+            }else {
+                var formGroup = $('.form-group.login-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                validationService.resetValidationError(formGroup,glyphicon);
+                formGroup = glyphicon = null;
+            }
+             if(typeof (user.password) === 'undefined' || !user.password){
+                formValid = false;
+                var formGroup = $('.form-group.password-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                validationService.showValidationError(formGroup,glyphicon);
+
+                formGroup = glyphicon = null;
+            }else {
+                var formGroup = $('.form-group.password-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                validationService.resetValidationError(formGroup,glyphicon);
+                formGroup = glyphicon = null;
+            }
+            if(typeof (user.passwordRepeat) === 'undefined' || !user.passwordRepeat){
+                formValid = false;
+                var formGroup = $('.form-group.passwordRepeat-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                validationService.showValidationError(formGroup,glyphicon);
+
+                formGroup = glyphicon = null;
+            }else {
+                var formGroup = $('.form-group.passwordRepeat-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                validationService.resetValidationError(formGroup,glyphicon);
+                formGroup = glyphicon = null;
+            }
+
+            if(user.passwordRepeat != user.password){
+                formValid = false;
+                var formGroup = $('.form-group.password-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+                validationService.showValidationError(formGroup,glyphicon);
+
+                formGroup = $('.form-group.passwordRepeat-field-form');
+                glyphicon = formGroup.find('.form-control-feedback');
+                validationService.showValidationError(formGroup,glyphicon);
+
+                formGroup = glyphicon = null;
+            }
+            if(formValid){
+                //TODO sent to ser
+            }
+        };
+
+        //===============================================
+
     })
 };
