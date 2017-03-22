@@ -5,7 +5,7 @@ module.exports = function (ngModule) {
     ngModule.controller('singUpCtrl',function ($rootScope,$scope, validationService) {
         var formValid;
 
-        /*==========Набор текста в импуты===========*/
+        /*==========INPUTS===========*/
         if($('.bs-float-label input').length){
             var bs_float_on_class = "on";
             var bs_float_show_class = "show";
@@ -40,16 +40,21 @@ module.exports = function (ngModule) {
         /*========================================*/
 
         /*
-        * ===============ВОЙТИ==============*/
+        * ===============LOGIN==============*/
         $scope.singUp = function (login,password) {
+
             formValid = true;
+            $('.error-validation').each(function () {
+                this.remove();
+            });
+
             if(typeof (login) === 'undefined' || !login){
                 formValid = false;
                 var formGroup = $('.form-group.login-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
-
-                validationService.showValidationError(formGroup,glyphicon);
-                formGroup = glyphicon = null;
+                var errorMessage = "Введите логин";
+                validationService.showValidationError(formGroup,glyphicon,errorMessage);
+                formGroup = glyphicon = errorMessage = null;
             }else {
                 var formGroup = $('.form-group.login-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
@@ -62,9 +67,9 @@ module.exports = function (ngModule) {
                 var formGroup = $('.form-group.password-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
 
-                validationService.showValidationError(formGroup,glyphicon);
-
-                formGroup = glyphicon = null;
+                var errorMessage = "Введите пароль";
+                validationService.showValidationError(formGroup,glyphicon,errorMessage);
+                formGroup = glyphicon = errorMessage = null;
             }else {
                 var formGroup = $('.form-group.password-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');

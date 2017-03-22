@@ -61,7 +61,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 17);
+/******/ 	return __webpack_require__(__webpack_require__.s = 18);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -79,9 +79,9 @@
 
 'use strict'
 
-var base64 = __webpack_require__(7)
-var ieee754 = __webpack_require__(10)
-var isArray = __webpack_require__(11)
+var base64 = __webpack_require__(8)
+var ieee754 = __webpack_require__(11)
+var isArray = __webpack_require__(12)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -1859,7 +1859,7 @@ function isnan (val) {
   return val !== val // eslint-disable-line no-self-compare
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0).Buffer, __webpack_require__(16)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0).Buffer, __webpack_require__(17)))
 
 /***/ },
 /* 1 */
@@ -1879,7 +1879,7 @@ module.exports = function (ngModule) {
  * Created by Nikcher on 21.03.2017.
  */
 module.exports = function (ngModule) {
-  __webpack_require__(18)(ngModule);
+  __webpack_require__(7)(ngModule);
 };
 
 /***/ },
@@ -1889,10 +1889,10 @@ module.exports = function (ngModule) {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(8);
+var content = __webpack_require__(9);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(12)(content, {});
+var update = __webpack_require__(13)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -1927,7 +1927,7 @@ module.exports = function (ngModule) {
     ngModule.controller('singUpCtrl', function ($rootScope, $scope, validationService) {
         var formValid;
 
-        /*==========Набор текста в импуты===========*/
+        /*==========INPUTS===========*/
         if ($('.bs-float-label input').length) {
             var bs_float_on_class = "on";
             var bs_float_show_class = "show";
@@ -1959,16 +1959,21 @@ module.exports = function (ngModule) {
         /*========================================*/
 
         /*
-        * ===============ВОЙТИ==============*/
+        * ===============LOGIN==============*/
         $scope.singUp = function (login, password) {
+
             formValid = true;
+            $('.error-validation').each(function () {
+                this.remove();
+            });
+
             if (typeof login === 'undefined' || !login) {
                 formValid = false;
                 var formGroup = $('.form-group.login-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
-
-                validationService.showValidationError(formGroup, glyphicon);
-                formGroup = glyphicon = null;
+                var errorMessage = "Введите логин";
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
             } else {
                 var formGroup = $('.form-group.login-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
@@ -1981,9 +1986,9 @@ module.exports = function (ngModule) {
                 var formGroup = $('.form-group.password-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
 
-                validationService.showValidationError(formGroup, glyphicon);
-
-                formGroup = glyphicon = null;
+                var errorMessage = "Введите пароль";
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
             } else {
                 var formGroup = $('.form-group.password-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
@@ -2009,6 +2014,8 @@ module.exports = function (ngModule) {
  */
 module.exports = function (ngModule) {
     ngModule.controller('registrationCtrl', function ($rootScope, $window, $scope, validationService) {
+
+        var messagesError = ['Введите логин', 'Введите пароль', 'Повторите пароль'];
         if ($('.bs-float-label input').length) {
             var bs_float_on_class = "on";
             var bs_float_show_class = "show";
@@ -2039,16 +2046,19 @@ module.exports = function (ngModule) {
         };
 
         /*
-         * ===============РЕГИСТРАЦИЯ==============*/
+         * ===============REGISTRATION==============*/
 
         $scope.toRegister = function (user) {
             formValid = true;
             if (typeof user === 'undefined' || !user) {
+                var i = 0;
                 $('input').each(function () {
                     var formGroup = $(this).parents('.form-group');
                     var glyphicon = formGroup.find('.form-control-feedback');
-                    validationService.showValidationError(formGroup, glyphicon);
+                    validationService.showValidationError(formGroup, glyphicon, messagesError[i]);
+                    i++;
                 });
+                i = null;
                 return;
             }
 
@@ -2057,8 +2067,9 @@ module.exports = function (ngModule) {
                 var formGroup = $('.form-group.login-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
 
-                validationService.showValidationError(formGroup, glyphicon);
-                formGroup = glyphicon = null;
+                var errorMessage = "Введите логин";
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
             } else {
                 var formGroup = $('.form-group.login-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
@@ -2066,14 +2077,15 @@ module.exports = function (ngModule) {
                 validationService.resetValidationError(formGroup, glyphicon);
                 formGroup = glyphicon = null;
             }
+
             if (typeof user.password === 'undefined' || !user.password) {
                 formValid = false;
                 var formGroup = $('.form-group.password-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
 
-                validationService.showValidationError(formGroup, glyphicon);
-
-                formGroup = glyphicon = null;
+                var errorMessage = "Введите пароль";
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
             } else {
                 var formGroup = $('.form-group.password-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
@@ -2081,14 +2093,15 @@ module.exports = function (ngModule) {
                 validationService.resetValidationError(formGroup, glyphicon);
                 formGroup = glyphicon = null;
             }
+
             if (typeof user.passwordRepeat === 'undefined' || !user.passwordRepeat) {
                 formValid = false;
                 var formGroup = $('.form-group.passwordRepeat-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
 
-                validationService.showValidationError(formGroup, glyphicon);
-
-                formGroup = glyphicon = null;
+                var errorMessage = "Повторите пароль";
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
             } else {
                 var formGroup = $('.form-group.passwordRepeat-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
@@ -2099,15 +2112,16 @@ module.exports = function (ngModule) {
 
             if (user.passwordRepeat != user.password) {
                 formValid = false;
-                var formGroup = $('.form-group.password-field-form');
+                var formGroup = $('.form-group.passwordRepeat-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
                 validationService.showValidationError(formGroup, glyphicon);
 
                 formGroup = $('.form-group.passwordRepeat-field-form');
                 glyphicon = formGroup.find('.form-control-feedback');
-                validationService.showValidationError(formGroup, glyphicon);
 
-                formGroup = glyphicon = null;
+                var errorMessage = "Пароли не совпадают";
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
             }
             if (formValid) {
                 //TODO sent to ser
@@ -2120,6 +2134,39 @@ module.exports = function (ngModule) {
 
 /***/ },
 /* 7 */
+/***/ function(module, exports) {
+
+/**
+ * Created by Nikcher on 21.03.2017.
+ */
+module.exports = function (ngModule) {
+    ngModule.factory('validationService', function ($http, $rootScope, $location) {
+
+        return {
+            showValidationError: function (formGroup, glyphicon, messageError) {
+                formGroup.addClass('has-error').removeClass('has-success');
+                glyphicon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
+                formGroup.find('.error-validation').remove();
+
+                if (messageError) {
+                    var msgElem = document.createElement('div');
+                    msgElem.innerHTML = messageError;
+                    $(msgElem).addClass('error-validation');
+                    formGroup.append(msgElem);
+                }
+            },
+            resetValidationError: function (formGroup, glyphicon, messageError) {
+                formGroup.addClass('has-success').removeClass('has-error');
+                glyphicon.addClass('glyphicon-ok').removeClass('glyphicon-remove');
+
+                formGroup.find('.error-validation').remove();
+            }
+        };
+    });
+};
+
+/***/ },
+/* 8 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -2240,21 +2287,21 @@ function fromByteArray (uint8) {
 
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(9)(undefined);
+exports = module.exports = __webpack_require__(10)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, ".main-page {\n  background-image: url(" + __webpack_require__(14) + ");\n}\n.c-modal {\n  text-align: center;\n}\n@media screen and (min-width: 768px) {\n  .c-modal:before {\n    display: inline-block;\n    vertical-align: middle;\n    content: \" \";\n    height: 100%;\n  }\n}\n.c-modal.in .c-modal-dialog {\n  opacity: 1;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.c-modal-dialog {\n  display: inline-block;\n  text-align: left;\n  vertical-align: middle;\n  opacity: 0;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.login-form {\n  top: 130px;\n}\n.login-form .title {\n  color: #FFFFFF;\n  font-size: 27px;\n  text-align: center;\n  margin-top: 10px;\n}\n.login-button {\n  width: 100%;\n  margin-top: 20px;\n}\n.login-form-element {\n  left: 15px;\n}\n.login-form-element.login-field {\n  margin-top: 25px;\n}\n.login-form-element.password-field {\n  margin-top: 10px;\n}\n.background-login-form {\n  width: 100%;\n  height: 100%;\n  border-radius: 3px;\n  background-color: #FFFFFF;\n  position: absolute;\n  opacity: 0.3;\n}\n.float-label {\n  position: absolute;\n  top: 0px;\n  left: 17px;\n  -webkit-transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  opacity: 0;\n  color: #FFFFFF;\n}\n.float-label.show {\n  top: -20px;\n  left: 17px;\n  opacity: 1;\n}\n.main-img {\n  background-image: url(" + __webpack_require__(15) + ");\n  background-size: 100% auto;\n  background-repeat: no-repeat;\n  position: absolute;\n  width: 100%;\n  height: 550px;\n  min-height: 350px;\n}\n.select-label {\n  color: #61C3FF;\n}\n@media screen and (max-width: 650px) {\n  .login-form {\n    top: 55px;\n  }\n}\n@media screen and (max-width: 750px) {\n  .main-img {\n    background-image: none;\n  }\n  .background-login-form {\n    background-color: #000000;\n  }\n}\n", ""]);
+exports.push([module.i, ".main-page {\n  background-image: url(" + __webpack_require__(15) + ");\n}\n.c-modal {\n  text-align: center;\n}\n@media screen and (min-width: 768px) {\n  .c-modal:before {\n    display: inline-block;\n    vertical-align: middle;\n    content: \" \";\n    height: 100%;\n  }\n}\n.c-modal.in .c-modal-dialog {\n  opacity: 1;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.c-modal-dialog {\n  display: inline-block;\n  text-align: left;\n  vertical-align: middle;\n  opacity: 0;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.login-form {\n  top: 130px;\n}\n.login-form .title {\n  color: #FFFFFF;\n  font-size: 27px;\n  text-align: center;\n  margin-top: 10px;\n}\n.login-button {\n  width: 100%;\n  margin-top: 20px;\n}\n.login-form-element {\n  left: 15px;\n}\n.login-form-element.login-field {\n  margin-top: 25px;\n}\n.login-form-element.password-field {\n  margin-top: 10px;\n}\n.background-login-form {\n  width: 100%;\n  height: 100%;\n  border-radius: 3px;\n  background-color: #FFFFFF;\n  position: absolute;\n  opacity: 0.3;\n}\n.float-label {\n  position: absolute;\n  top: 0px;\n  left: 17px;\n  -webkit-transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  opacity: 0;\n  color: #FFFFFF;\n}\n.float-label.show {\n  top: -20px;\n  left: 17px;\n  opacity: 1;\n}\n.main-img {\n  background-image: url(" + __webpack_require__(16) + ");\n  background-size: 100% auto;\n  background-repeat: no-repeat;\n  position: absolute;\n  width: 100%;\n  height: 550px;\n  min-height: 350px;\n}\n.select-label {\n  color: #61C3FF;\n}\n@media screen and (max-width: 650px) {\n  .login-form {\n    top: 55px;\n  }\n}\n@media screen and (max-width: 750px) {\n  .main-img {\n    background-image: none;\n  }\n  .background-login-form {\n    background-color: #000000;\n  }\n}\n.error-validation {\n  margin-left: 31px;\n  margin-bottom: -5px;\n  color: red;\n  font-size: medium;\n}\n", ""]);
 
 // exports
 
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -2336,7 +2383,7 @@ function toComment(sourceMap) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0).Buffer))
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -2426,7 +2473,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports) {
 
 var toString = {}.toString;
@@ -2437,7 +2484,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 /*
@@ -2461,7 +2508,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(13);
+	fixUrls = __webpack_require__(14);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -2714,7 +2761,7 @@ function updateLink(linkElement, options, obj) {
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 
@@ -2783,19 +2830,19 @@ module.exports = function (css) {
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "./img/31285c5ad879cfc119ef5dbd3892bc93.png";
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "./img/41d61da7a43b26fabd5542cb40ba37b6.jpg";
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 var g;
@@ -2820,7 +2867,7 @@ module.exports = g;
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2841,29 +2888,6 @@ var SM = angular.module('SM', ["ngRoute"]).config(function ($routeProvider) {
 
 __webpack_require__(1)(SM);
 __webpack_require__(2)(SM);
-
-/***/ },
-/* 18 */
-/***/ function(module, exports) {
-
-/**
- * Created by Nikcher on 21.03.2017.
- */
-module.exports = function (ngModule) {
-    ngModule.factory('validationService', function ($http, $rootScope, $location) {
-
-        return {
-            showValidationError: function (formGroup, glyphicon, messageError) {
-                formGroup.addClass('has-error').removeClass('has-success');
-                glyphicon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
-            },
-            resetValidationError: function (formGroup, glyphicon, messageError) {
-                formGroup.addClass('has-success').removeClass('has-error');
-                glyphicon.addClass('glyphicon-ok').removeClass('glyphicon-remove');
-            }
-        };
-    });
-};
 
 /***/ }
 /******/ ]);

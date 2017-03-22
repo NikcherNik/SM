@@ -3,6 +3,8 @@
  */
 module.exports = function (ngModule) {
     ngModule.controller('registrationCtrl',function ($rootScope,$window,$scope,validationService) {
+
+        var messagesError = ['Введите логин', 'Введите пароль','Повторите пароль']
         if($('.bs-float-label input').length){
             var bs_float_on_class = "on";
             var bs_float_show_class = "show";
@@ -36,17 +38,19 @@ module.exports = function (ngModule) {
         };
 
         /*
-         * ===============РЕГИСТРАЦИЯ==============*/
+         * ===============REGISTRATION==============*/
 
         $scope.toRegister = function (user) {
             formValid = true;
             if(typeof (user) === 'undefined' || !user){
+                var i = 0;
                 $('input').each(function () {
                     var formGroup = $(this).parents('.form-group');
                     var glyphicon = formGroup.find('.form-control-feedback');
-                    validationService.showValidationError(formGroup,glyphicon);
-
+                    validationService.showValidationError(formGroup,glyphicon,messagesError[i]);
+                    i++;
                 });
+                i = null;
                 return;
             }
 
@@ -55,8 +59,10 @@ module.exports = function (ngModule) {
                 var formGroup = $('.form-group.login-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
 
-                validationService.showValidationError(formGroup,glyphicon);
-                formGroup = glyphicon = null;
+                var errorMessage = "Введите логин";
+                validationService.showValidationError(formGroup,glyphicon,errorMessage);
+                formGroup = glyphicon = errorMessage = null;
+
             }else {
                 var formGroup = $('.form-group.login-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
@@ -64,14 +70,15 @@ module.exports = function (ngModule) {
                 validationService.resetValidationError(formGroup,glyphicon);
                 formGroup = glyphicon = null;
             }
+
              if(typeof (user.password) === 'undefined' || !user.password){
                 formValid = false;
                 var formGroup = $('.form-group.password-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
 
-                validationService.showValidationError(formGroup,glyphicon);
-
-                formGroup = glyphicon = null;
+                 var errorMessage = "Введите пароль";
+                 validationService.showValidationError(formGroup,glyphicon,errorMessage);
+                 formGroup = glyphicon = errorMessage = null;
             }else {
                 var formGroup = $('.form-group.password-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
@@ -79,14 +86,15 @@ module.exports = function (ngModule) {
                 validationService.resetValidationError(formGroup,glyphicon);
                 formGroup = glyphicon = null;
             }
+
             if(typeof (user.passwordRepeat) === 'undefined' || !user.passwordRepeat){
                 formValid = false;
                 var formGroup = $('.form-group.passwordRepeat-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
 
-                validationService.showValidationError(formGroup,glyphicon);
-
-                formGroup = glyphicon = null;
+                var errorMessage = "Повторите пароль";
+                validationService.showValidationError(formGroup,glyphicon,errorMessage);
+                formGroup = glyphicon = errorMessage = null;
             }else {
                 var formGroup = $('.form-group.passwordRepeat-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
@@ -97,15 +105,16 @@ module.exports = function (ngModule) {
 
             if(user.passwordRepeat != user.password){
                 formValid = false;
-                var formGroup = $('.form-group.password-field-form');
+                var formGroup = $('.form-group.passwordRepeat-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
                 validationService.showValidationError(formGroup,glyphicon);
 
                 formGroup = $('.form-group.passwordRepeat-field-form');
                 glyphicon = formGroup.find('.form-control-feedback');
-                validationService.showValidationError(formGroup,glyphicon);
 
-                formGroup = glyphicon = null;
+                var errorMessage = "Пароли не совпадают";
+                validationService.showValidationError(formGroup,glyphicon,errorMessage);
+                formGroup = glyphicon = errorMessage = null;
             }
             if(formValid){
                 //TODO sent to ser
