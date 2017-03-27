@@ -3,10 +3,15 @@
  */
 
 var express = require('express');
+var DataBase = require('./server/database.js');
 var bodyParser = require('body-parser');
-var router = express.Router();
+
+var database = new DataBase();
 
 var app = express();
+var router = express.Router();
+
+
 var http = require('http').Server(app);
 
 app.use(express.static('app'));
@@ -25,4 +30,25 @@ app.get('/app/bundle.js',function (req,res) {
 });
 
 http.listen(8080,function () {
-})
+});
+
+try {
+    database.connect();
+}catch (exp){
+    console.error(exp);
+}
+
+database.save_money.query('select * from users',function (error, result) {
+    if(error){
+        console.error(error);
+        return;
+    }
+    console.log(result);
+});
+
+
+
+
+
+
+
