@@ -2,8 +2,9 @@
  * Created by Nikcher on 20.03.2017.
  */
 module.exports = function (ngModule) {
-    ngModule.controller('registrationCtrl',function ($rootScope,$window,$scope,validationService) {
-
+    ngModule.controller('registrationCtrl',function ($rootScope,$window,$scope,validationService,
+                                                     registrationService) {
+        $scope.registrationService = registrationService;
         var messagesError = ['Введите логин', 'Введите пароль','Повторите пароль']
         if($('.bs-float-label input').length){
             var bs_float_on_class = "on";
@@ -118,6 +119,7 @@ module.exports = function (ngModule) {
             }
             if(formValid){
                 //TODO sent to ser
+                registrationService.toRegister(user);
             }
         };
 

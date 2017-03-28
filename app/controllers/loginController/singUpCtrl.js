@@ -2,7 +2,7 @@
  * Created by Nikcher on 19.03.2017.
  */
 module.exports = function (ngModule) {
-    ngModule.controller('singUpCtrl',function ($rootScope,$scope, validationService) {
+    ngModule.controller('singUpCtrl',function ($rootScope,$scope, validationService,saltService) {
         var formValid;
 
         /*==========INPUTS===========*/
@@ -79,6 +79,7 @@ module.exports = function (ngModule) {
             }
 
             if(formValid){
+                saltService.toSalt(login,password);
                 //TODO sent to service
             }
         }
