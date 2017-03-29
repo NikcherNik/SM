@@ -3439,6 +3439,7 @@ module.exports = Binary;
 
 module.exports = function (ngModule) {
     var Binary = __webpack_require__(20);
+    var binary = new Binary();
     var md5 = __webpack_require__(25);
     ngModule.factory('registrationService', function ($http, $rootScope, $location, $route) {
 
@@ -3452,18 +3453,41 @@ module.exports = function (ngModule) {
                         password: cipherPassword
                     }
 
-                }).success(function (pswdServer) {});
+                }).success(function (pswdServer) {
+                    if (pswdServer) {
+                        var cipherPasswordServer = decryptString(pswdServer);
+                        $http({
+                            method: "post",
+                            url: "/registration",
+                            data: {
+                                login: user.login,
+                                password: cipherPasswordServer
+                            }
+
+                        }).success(function (data) {}).error(function (data, status, headers, configs) {
+                            console.error(status);
+                        });
+                    }
+                }).error(function (error, status) {
+                    console.error(error);
+                });
             }
         };
         function encryptString(str) {
-
-            var binary = new Binary();
             var hashCodeArr = binary.str2char(md5(str));
             var charArr_new = hashCodeArr.map(function (code) {
                 return code ^ 123;
             });
             return binary.char2str(charArr_new);
         };
+        function decryptString(str) {
+
+            var hashCodeArrServer = binary.str2char(str);
+            var charArr_newServer = hashCodeArrServer.map(function (code) {
+                return code ^ 123;
+            });
+            return binary.char2str(charArr_newServer);
+        }
     });
 };
 
