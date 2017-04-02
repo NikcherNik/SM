@@ -61,7 +61,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 19);
+/******/ 	return __webpack_require__(__webpack_require__.s = 25);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -79,9 +79,9 @@
 
 'use strict'
 
-var base64 = __webpack_require__(9)
-var ieee754 = __webpack_require__(12)
-var isArray = __webpack_require__(13)
+var base64 = __webpack_require__(12)
+var ieee754 = __webpack_require__(16)
+var isArray = __webpack_require__(18)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -1859,42 +1859,81 @@ function isnan (val) {
   return val !== val // eslint-disable-line no-self-compare
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0).Buffer, __webpack_require__(18)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0).Buffer, __webpack_require__(24)))
 
 /***/ },
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-module.exports = function (ngModule) {
-    __webpack_require__(4)(ngModule);
-    __webpack_require__(5)(ngModule);
-    __webpack_require__(6)(ngModule);
+var charenc = {
+  // UTF-8 encoding
+  utf8: {
+    // Convert a string to a byte array
+    stringToBytes: function(str) {
+      return charenc.bin.stringToBytes(unescape(encodeURIComponent(str)));
+    },
+
+    // Convert a byte array to a string
+    bytesToString: function(bytes) {
+      return decodeURIComponent(escape(charenc.bin.bytesToString(bytes)));
+    }
+  },
+
+  // Binary encoding
+  bin: {
+    // Convert a string to a byte array
+    stringToBytes: function(str) {
+      for (var bytes = [], i = 0; i < str.length; i++)
+        bytes.push(str.charCodeAt(i) & 0xFF);
+      return bytes;
+    },
+
+    // Convert a byte array to a string
+    bytesToString: function(bytes) {
+      for (var str = [], i = 0; i < bytes.length; i++)
+        str.push(String.fromCharCode(bytes[i]));
+      return str.join('');
+    }
+  }
 };
+
+module.exports = charenc;
+
 
 /***/ },
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-/**
- * Created by Nikcher on 21.03.2017.
- */
 module.exports = function (ngModule) {
-    __webpack_require__(8)(ngModule);
-    __webpack_require__(21)(ngModule);
+    __webpack_require__(6)(ngModule);
     __webpack_require__(7)(ngModule);
+    __webpack_require__(8)(ngModule);
 };
 
 /***/ },
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
+/**
+ * Created by Nikcher on 21.03.2017.
+ */
+module.exports = function (ngModule) {
+    __webpack_require__(11)(ngModule);
+    __webpack_require__(9)(ngModule);
+    __webpack_require__(10)(ngModule);
+};
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(10);
+var content = __webpack_require__(14);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(14)(content, {});
+var update = __webpack_require__(20)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -1911,1018 +1950,7 @@ if(false) {
 }
 
 /***/ },
-/* 4 */
-/***/ function(module, exports) {
-
-module.exports = function (ngModule) {
-   ngModule.controller('firstCtrl', function ($rootScope, $scope) {});
-};
-
-/***/ },
 /* 5 */
-/***/ function(module, exports) {
-
-/**
- * Created by Nikcher on 19.03.2017.
- */
-module.exports = function (ngModule) {
-    ngModule.controller('singUpCtrl', function ($rootScope, $scope, validationService, saltService) {
-        var formValid;
-
-        /*==========INPUTS===========*/
-        if ($('.bs-float-label input').length) {
-            var bs_float_on_class = "on";
-            var bs_float_show_class = "show";
-
-            $('.float-input').on('bs-check-value', function () {
-                var _bs_label = $(this).closest('.bs-float-label').find('.float-label');
-                if (this.value !== '') {
-                    _bs_label.addClass(bs_float_show_class);
-                } else {
-                    _bs_label.removeClass(bs_float_show_class);
-                }
-            }).on("keyup", function () {
-                $(this).trigger("bs-check-value");
-                var formGroup = $(this).parents('.form-group');
-                var glyphicon = formGroup.find('.form-control-feedback');
-                if (!!this.value) {
-                    validationService.resetValidationError(formGroup, glyphicon);
-                } else {
-                    validationService.showValidationError(formGroup, glyphicon);
-                }
-            }).on("focus", function () {
-                $(this).closest(".bs-float-label").find('.float-label').addClass(bs_float_on_class);
-                $(this).closest(".bs-float-label").find('.input-group-addon').addClass("select-label");
-            }).on("blur", function () {
-                $(this).closest(".bs-float-label").find('.float-label').removeClass(bs_float_on_class);
-                $(this).closest(".bs-float-label").find('.input-group-addon').removeClass("select-label");
-            }).trigger("bs-check-value");
-        }
-        /*========================================*/
-
-        /*
-        * ===============LOGIN==============*/
-        $scope.singUp = function (login, password) {
-
-            formValid = true;
-            $('.error-validation').each(function () {
-                this.remove();
-            });
-
-            if (typeof login === 'undefined' || !login) {
-                formValid = false;
-                var formGroup = $('.form-group.login-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-                var errorMessage = "Введите логин";
-                validationService.showValidationError(formGroup, glyphicon, errorMessage);
-                formGroup = glyphicon = errorMessage = null;
-            } else {
-                var formGroup = $('.form-group.login-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                validationService.resetValidationError(formGroup, glyphicon);
-                formGroup = glyphicon = null;
-            }
-            if (typeof password === 'undefined' || !password) {
-                formValid = false;
-                var formGroup = $('.form-group.password-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                var errorMessage = "Введите пароль";
-                validationService.showValidationError(formGroup, glyphicon, errorMessage);
-                formGroup = glyphicon = errorMessage = null;
-            } else {
-                var formGroup = $('.form-group.password-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                validationService.resetValidationError(formGroup, glyphicon);
-                formGroup = glyphicon = null;
-            }
-
-            if (formValid) {
-                saltService.toSalt(login, password);
-                //TODO sent to service
-            }
-        };
-        //===============================================
-    });
-};
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-/**
- * Created by Nikcher on 20.03.2017.
- */
-module.exports = function (ngModule) {
-    ngModule.controller('registrationCtrl', function ($rootScope, $window, $scope, validationService, registrationService) {
-        $scope.registrationService = registrationService;
-        var messagesError = ['Введите логин', 'Введите пароль', 'Повторите пароль'];
-        if ($('.bs-float-label input').length) {
-            var bs_float_on_class = "on";
-            var bs_float_show_class = "show";
-
-            $('.float-input').on('bs-check-value', function () {
-                var _bs_label = $(this).closest('.bs-float-label').find('.float-label');
-                if (this.value !== '') {
-                    _bs_label.addClass(bs_float_show_class);
-                } else {
-                    _bs_label.removeClass(bs_float_show_class);
-                }
-            }).on("keyup", function () {
-                $(this).trigger("bs-check-value");
-                var formGroup = $(this).parents('.form-group');
-                var glyphicon = formGroup.find('.form-control-feedback');
-                if (!!this.value) {
-                    validationService.resetValidationError(formGroup, glyphicon);
-                } else {
-                    validationService.showValidationError(formGroup, glyphicon);
-                }
-            }).on("focus", function () {
-                $(this).closest(".bs-float-label").find('.float-label').addClass(bs_float_on_class);
-                $(this).closest(".bs-float-label").find('.input-group-addon').addClass("select-label");
-            }).on("blur", function () {
-                $(this).closest(".bs-float-label").find('.float-label').removeClass(bs_float_on_class);
-                $(this).closest(".bs-float-label").find('.input-group-addon').removeClass("select-label");
-            }).trigger("bs-check-value");
-        };
-
-        /*
-         * ===============REGISTRATION==============*/
-
-        $scope.toRegister = function (user) {
-            formValid = true;
-            if (typeof user === 'undefined' || !user) {
-                var i = 0;
-                $('input').each(function () {
-                    var formGroup = $(this).parents('.form-group');
-                    var glyphicon = formGroup.find('.form-control-feedback');
-                    validationService.showValidationError(formGroup, glyphicon, messagesError[i]);
-                    i++;
-                });
-                i = null;
-                return;
-            }
-
-            if (typeof user.login === 'undefined' || !user.login) {
-                formValid = false;
-                var formGroup = $('.form-group.login-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                var errorMessage = "Введите логин";
-                validationService.showValidationError(formGroup, glyphicon, errorMessage);
-                formGroup = glyphicon = errorMessage = null;
-            } else {
-                var formGroup = $('.form-group.login-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                validationService.resetValidationError(formGroup, glyphicon);
-                formGroup = glyphicon = null;
-            }
-
-            if (typeof user.password === 'undefined' || !user.password) {
-                formValid = false;
-                var formGroup = $('.form-group.password-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                var errorMessage = "Введите пароль";
-                validationService.showValidationError(formGroup, glyphicon, errorMessage);
-                formGroup = glyphicon = errorMessage = null;
-            } else {
-                var formGroup = $('.form-group.password-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                validationService.resetValidationError(formGroup, glyphicon);
-                formGroup = glyphicon = null;
-            }
-
-            if (typeof user.passwordRepeat === 'undefined' || !user.passwordRepeat) {
-                formValid = false;
-                var formGroup = $('.form-group.passwordRepeat-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                var errorMessage = "Повторите пароль";
-                validationService.showValidationError(formGroup, glyphicon, errorMessage);
-                formGroup = glyphicon = errorMessage = null;
-            } else {
-                var formGroup = $('.form-group.passwordRepeat-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                validationService.resetValidationError(formGroup, glyphicon);
-                formGroup = glyphicon = null;
-            }
-
-            if (user.passwordRepeat != user.password) {
-                formValid = false;
-                var formGroup = $('.form-group.passwordRepeat-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-                validationService.showValidationError(formGroup, glyphicon);
-
-                formGroup = $('.form-group.passwordRepeat-field-form');
-                glyphicon = formGroup.find('.form-control-feedback');
-
-                var errorMessage = "Пароли не совпадают";
-                validationService.showValidationError(formGroup, glyphicon, errorMessage);
-                formGroup = glyphicon = errorMessage = null;
-            }
-            if (formValid) {
-                //TODO sent to ser
-                registrationService.toRegister(user);
-            }
-        };
-
-        //===============================================
-    });
-};
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-/**
- * Created by Nikcher on 28.03.2017.
- */
-module.exports = function (ngModule) {
-    ngModule.factory('saltService', function ($http, $rootScope) {
-
-        return {
-            toSalt: function (login, password) {
-
-                $http({
-                    method: "post",
-                    url: "/login",
-                    data: {
-                        login: login
-                    }
-
-                }).success(function (answer) {
-                    console.log(answer);
-                });
-            }
-        };
-    });
-};
-
-/***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-/**
- * Created by Nikcher on 21.03.2017.
- */
-module.exports = function (ngModule) {
-    ngModule.factory('validationService', function ($http, $rootScope, $location) {
-
-        return {
-            showValidationError: function (formGroup, glyphicon, messageError) {
-                formGroup.addClass('has-error').removeClass('has-success');
-                glyphicon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
-                formGroup.find('.error-validation').remove();
-
-                if (messageError) {
-                    var msgElem = document.createElement('div');
-                    msgElem.innerHTML = messageError;
-                    $(msgElem).addClass('error-validation');
-                    formGroup.append(msgElem);
-                }
-            },
-            resetValidationError: function (formGroup, glyphicon, messageError) {
-                formGroup.addClass('has-success').removeClass('has-error');
-                glyphicon.addClass('glyphicon-ok').removeClass('glyphicon-remove');
-
-                formGroup.find('.error-validation').remove();
-            }
-        };
-    });
-};
-
-/***/ },
-/* 9 */
-/***/ function(module, exports) {
-
-"use strict";
-'use strict'
-
-exports.byteLength = byteLength
-exports.toByteArray = toByteArray
-exports.fromByteArray = fromByteArray
-
-var lookup = []
-var revLookup = []
-var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
-
-var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-for (var i = 0, len = code.length; i < len; ++i) {
-  lookup[i] = code[i]
-  revLookup[code.charCodeAt(i)] = i
-}
-
-revLookup['-'.charCodeAt(0)] = 62
-revLookup['_'.charCodeAt(0)] = 63
-
-function placeHoldersCount (b64) {
-  var len = b64.length
-  if (len % 4 > 0) {
-    throw new Error('Invalid string. Length must be a multiple of 4')
-  }
-
-  // the number of equal signs (place holders)
-  // if there are two placeholders, than the two characters before it
-  // represent one byte
-  // if there is only one, then the three characters before it represent 2 bytes
-  // this is just a cheap hack to not do indexOf twice
-  return b64[len - 2] === '=' ? 2 : b64[len - 1] === '=' ? 1 : 0
-}
-
-function byteLength (b64) {
-  // base64 is 4/3 + up to two characters of the original data
-  return b64.length * 3 / 4 - placeHoldersCount(b64)
-}
-
-function toByteArray (b64) {
-  var i, j, l, tmp, placeHolders, arr
-  var len = b64.length
-  placeHolders = placeHoldersCount(b64)
-
-  arr = new Arr(len * 3 / 4 - placeHolders)
-
-  // if there are placeholders, only get up to the last complete 4 chars
-  l = placeHolders > 0 ? len - 4 : len
-
-  var L = 0
-
-  for (i = 0, j = 0; i < l; i += 4, j += 3) {
-    tmp = (revLookup[b64.charCodeAt(i)] << 18) | (revLookup[b64.charCodeAt(i + 1)] << 12) | (revLookup[b64.charCodeAt(i + 2)] << 6) | revLookup[b64.charCodeAt(i + 3)]
-    arr[L++] = (tmp >> 16) & 0xFF
-    arr[L++] = (tmp >> 8) & 0xFF
-    arr[L++] = tmp & 0xFF
-  }
-
-  if (placeHolders === 2) {
-    tmp = (revLookup[b64.charCodeAt(i)] << 2) | (revLookup[b64.charCodeAt(i + 1)] >> 4)
-    arr[L++] = tmp & 0xFF
-  } else if (placeHolders === 1) {
-    tmp = (revLookup[b64.charCodeAt(i)] << 10) | (revLookup[b64.charCodeAt(i + 1)] << 4) | (revLookup[b64.charCodeAt(i + 2)] >> 2)
-    arr[L++] = (tmp >> 8) & 0xFF
-    arr[L++] = tmp & 0xFF
-  }
-
-  return arr
-}
-
-function tripletToBase64 (num) {
-  return lookup[num >> 18 & 0x3F] + lookup[num >> 12 & 0x3F] + lookup[num >> 6 & 0x3F] + lookup[num & 0x3F]
-}
-
-function encodeChunk (uint8, start, end) {
-  var tmp
-  var output = []
-  for (var i = start; i < end; i += 3) {
-    tmp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
-    output.push(tripletToBase64(tmp))
-  }
-  return output.join('')
-}
-
-function fromByteArray (uint8) {
-  var tmp
-  var len = uint8.length
-  var extraBytes = len % 3 // if we have 1 byte left, pad 2 bytes
-  var output = ''
-  var parts = []
-  var maxChunkLength = 16383 // must be multiple of 3
-
-  // go through the array every three bytes, we'll deal with trailing stuff later
-  for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
-    parts.push(encodeChunk(uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)))
-  }
-
-  // pad the end with zeros, but make sure to not forget the extra bytes
-  if (extraBytes === 1) {
-    tmp = uint8[len - 1]
-    output += lookup[tmp >> 2]
-    output += lookup[(tmp << 4) & 0x3F]
-    output += '=='
-  } else if (extraBytes === 2) {
-    tmp = (uint8[len - 2] << 8) + (uint8[len - 1])
-    output += lookup[tmp >> 10]
-    output += lookup[(tmp >> 4) & 0x3F]
-    output += lookup[(tmp << 2) & 0x3F]
-    output += '='
-  }
-
-  parts.push(output)
-
-  return parts.join('')
-}
-
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(11)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, ".main-page {\n  background-image: url(" + __webpack_require__(16) + ");\n}\n.c-modal {\n  text-align: center;\n}\n.navbar-nav a {\n  color: #FFFFFF;\n}\n.navbar-form .btn,\n.login-form-element .btn {\n  color: #FFFFFF;\n  font-weight: bold;\n  font-size: small;\n}\n.navbar-form .btn.button-background:active,\n.login-form-element .btn.button-background:active {\n  background-color: #0087ff;\n}\n.navbar-form .btn.singup:hover,\n.login-form-element .btn.singup:hover {\n  text-decoration: underline;\n}\n.button-background {\n  background-color: #0096ff;\n  color: #FFFFFF;\n}\n.button-background:hover {\n  background-color: #00a5ff;\n  color: #FFFFFF;\n}\n@media screen and (min-width: 768px) {\n  .c-modal:before {\n    display: inline-block;\n    vertical-align: middle;\n    content: \" \";\n    height: 100%;\n  }\n}\n.c-modal.in .c-modal-dialog {\n  opacity: 1;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.c-modal-dialog {\n  display: inline-block;\n  text-align: left;\n  vertical-align: middle;\n  opacity: 0;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.login-form {\n  top: 130px;\n}\n.login-form .title {\n  color: #FFFFFF;\n  font-size: 27px;\n  text-align: center;\n  margin-top: 10px;\n}\n.login-button {\n  width: 100%;\n  margin-top: 20px;\n}\n.login-form-element {\n  left: 15px;\n}\n.login-form-element.login-field {\n  margin-top: 25px;\n}\n.login-form-element.password-field {\n  margin-top: 10px;\n}\n.background-login-form {\n  width: 100%;\n  height: 100%;\n  border-radius: 10px;\n  background-color: #FFFFFF;\n  position: absolute;\n  opacity: 0.3;\n}\n.float-label {\n  position: absolute;\n  top: 0px;\n  left: 17px;\n  -webkit-transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  opacity: 0;\n  color: #FFFFFF;\n}\n.float-label.show {\n  top: -20px;\n  left: 17px;\n  opacity: 1;\n}\n.main-img {\n  background-image: url(" + __webpack_require__(17) + ");\n  background-size: 100% auto;\n  background-repeat: no-repeat;\n  position: absolute;\n  width: 100%;\n  height: 550px;\n  min-height: 350px;\n}\n.select-label {\n  color: #61C3FF;\n}\n@media screen and (max-width: 650px) {\n  .login-form {\n    top: 55px;\n  }\n}\n@media screen and (max-width: 750px) {\n  .main-img {\n    background-image: none;\n  }\n  .background-login-form {\n    background-color: #000000;\n  }\n}\n.error-validation {\n  margin-left: 31px;\n  margin-bottom: -5px;\n  color: red;\n  font-size: medium;\n}\n", ""]);
-
-// exports
-
-
-/***/ },
-/* 11 */
-/***/ function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(Buffer) {/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function(useSourceMap) {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		return this.map(function (item) {
-			var content = cssWithMappingToString(item, useSourceMap);
-			if(item[2]) {
-				return "@media " + item[2] + "{" + content + "}";
-			} else {
-				return content;
-			}
-		}).join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-function cssWithMappingToString(item, useSourceMap) {
-	var content = item[1] || '';
-	var cssMapping = item[3];
-	if (!cssMapping) {
-		return content;
-	}
-
-	if (useSourceMap) {
-		var sourceMapping = toComment(cssMapping);
-		var sourceURLs = cssMapping.sources.map(function (source) {
-			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
-		});
-
-		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
-	}
-
-	return [content].join('\n');
-}
-
-// Adapted from convert-source-map (MIT)
-function toComment(sourceMap) {
-  var base64 = new Buffer(JSON.stringify(sourceMap)).toString('base64');
-  var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
-
-  return '/*# ' + data + ' */';
-}
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0).Buffer))
-
-/***/ },
-/* 12 */
-/***/ function(module, exports) {
-
-exports.read = function (buffer, offset, isLE, mLen, nBytes) {
-  var e, m
-  var eLen = nBytes * 8 - mLen - 1
-  var eMax = (1 << eLen) - 1
-  var eBias = eMax >> 1
-  var nBits = -7
-  var i = isLE ? (nBytes - 1) : 0
-  var d = isLE ? -1 : 1
-  var s = buffer[offset + i]
-
-  i += d
-
-  e = s & ((1 << (-nBits)) - 1)
-  s >>= (-nBits)
-  nBits += eLen
-  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {}
-
-  m = e & ((1 << (-nBits)) - 1)
-  e >>= (-nBits)
-  nBits += mLen
-  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {}
-
-  if (e === 0) {
-    e = 1 - eBias
-  } else if (e === eMax) {
-    return m ? NaN : ((s ? -1 : 1) * Infinity)
-  } else {
-    m = m + Math.pow(2, mLen)
-    e = e - eBias
-  }
-  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
-}
-
-exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
-  var e, m, c
-  var eLen = nBytes * 8 - mLen - 1
-  var eMax = (1 << eLen) - 1
-  var eBias = eMax >> 1
-  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
-  var i = isLE ? 0 : (nBytes - 1)
-  var d = isLE ? 1 : -1
-  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
-
-  value = Math.abs(value)
-
-  if (isNaN(value) || value === Infinity) {
-    m = isNaN(value) ? 1 : 0
-    e = eMax
-  } else {
-    e = Math.floor(Math.log(value) / Math.LN2)
-    if (value * (c = Math.pow(2, -e)) < 1) {
-      e--
-      c *= 2
-    }
-    if (e + eBias >= 1) {
-      value += rt / c
-    } else {
-      value += rt * Math.pow(2, 1 - eBias)
-    }
-    if (value * c >= 2) {
-      e++
-      c /= 2
-    }
-
-    if (e + eBias >= eMax) {
-      m = 0
-      e = eMax
-    } else if (e + eBias >= 1) {
-      m = (value * c - 1) * Math.pow(2, mLen)
-      e = e + eBias
-    } else {
-      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
-      e = 0
-    }
-  }
-
-  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
-
-  e = (e << mLen) | m
-  eLen += mLen
-  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
-
-  buffer[offset + i - d] |= s * 128
-}
-
-
-/***/ },
-/* 13 */
-/***/ function(module, exports) {
-
-var toString = {}.toString;
-
-module.exports = Array.isArray || function (arr) {
-  return toString.call(arr) == '[object Array]';
-};
-
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-var stylesInDom = {},
-	memoize = function(fn) {
-		var memo;
-		return function () {
-			if (typeof memo === "undefined") memo = fn.apply(this, arguments);
-			return memo;
-		};
-	},
-	isOldIE = memoize(function() {
-		return /msie [6-9]\b/.test(self.navigator.userAgent.toLowerCase());
-	}),
-	getHeadElement = memoize(function () {
-		return document.head || document.getElementsByTagName("head")[0];
-	}),
-	singletonElement = null,
-	singletonCounter = 0,
-	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(15);
-
-module.exports = function(list, options) {
-	if(typeof DEBUG !== "undefined" && DEBUG) {
-		if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
-	}
-
-	options = options || {};
-	options.attrs = typeof options.attrs === "object" ? options.attrs : {};
-
-	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-	// tags it will allow on a page
-	if (typeof options.singleton === "undefined") options.singleton = isOldIE();
-
-	// By default, add <style> tags to the bottom of <head>.
-	if (typeof options.insertAt === "undefined") options.insertAt = "bottom";
-
-	var styles = listToStyles(list);
-	addStylesToDom(styles, options);
-
-	return function update(newList) {
-		var mayRemove = [];
-		for(var i = 0; i < styles.length; i++) {
-			var item = styles[i];
-			var domStyle = stylesInDom[item.id];
-			domStyle.refs--;
-			mayRemove.push(domStyle);
-		}
-		if(newList) {
-			var newStyles = listToStyles(newList);
-			addStylesToDom(newStyles, options);
-		}
-		for(var i = 0; i < mayRemove.length; i++) {
-			var domStyle = mayRemove[i];
-			if(domStyle.refs === 0) {
-				for(var j = 0; j < domStyle.parts.length; j++)
-					domStyle.parts[j]();
-				delete stylesInDom[domStyle.id];
-			}
-		}
-	};
-};
-
-function addStylesToDom(styles, options) {
-	for(var i = 0; i < styles.length; i++) {
-		var item = styles[i];
-		var domStyle = stylesInDom[item.id];
-		if(domStyle) {
-			domStyle.refs++;
-			for(var j = 0; j < domStyle.parts.length; j++) {
-				domStyle.parts[j](item.parts[j]);
-			}
-			for(; j < item.parts.length; j++) {
-				domStyle.parts.push(addStyle(item.parts[j], options));
-			}
-		} else {
-			var parts = [];
-			for(var j = 0; j < item.parts.length; j++) {
-				parts.push(addStyle(item.parts[j], options));
-			}
-			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
-		}
-	}
-}
-
-function listToStyles(list) {
-	var styles = [];
-	var newStyles = {};
-	for(var i = 0; i < list.length; i++) {
-		var item = list[i];
-		var id = item[0];
-		var css = item[1];
-		var media = item[2];
-		var sourceMap = item[3];
-		var part = {css: css, media: media, sourceMap: sourceMap};
-		if(!newStyles[id])
-			styles.push(newStyles[id] = {id: id, parts: [part]});
-		else
-			newStyles[id].parts.push(part);
-	}
-	return styles;
-}
-
-function insertStyleElement(options, styleElement) {
-	var head = getHeadElement();
-	var lastStyleElementInsertedAtTop = styleElementsInsertedAtTop[styleElementsInsertedAtTop.length - 1];
-	if (options.insertAt === "top") {
-		if(!lastStyleElementInsertedAtTop) {
-			head.insertBefore(styleElement, head.firstChild);
-		} else if(lastStyleElementInsertedAtTop.nextSibling) {
-			head.insertBefore(styleElement, lastStyleElementInsertedAtTop.nextSibling);
-		} else {
-			head.appendChild(styleElement);
-		}
-		styleElementsInsertedAtTop.push(styleElement);
-	} else if (options.insertAt === "bottom") {
-		head.appendChild(styleElement);
-	} else {
-		throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
-	}
-}
-
-function removeStyleElement(styleElement) {
-	styleElement.parentNode.removeChild(styleElement);
-	var idx = styleElementsInsertedAtTop.indexOf(styleElement);
-	if(idx >= 0) {
-		styleElementsInsertedAtTop.splice(idx, 1);
-	}
-}
-
-function createStyleElement(options) {
-	var styleElement = document.createElement("style");
-	options.attrs.type = "text/css";
-
-	attachTagAttrs(styleElement, options.attrs);
-	insertStyleElement(options, styleElement);
-	return styleElement;
-}
-
-function createLinkElement(options) {
-	var linkElement = document.createElement("link");
-	options.attrs.type = "text/css";
-	options.attrs.rel = "stylesheet";
-
-	attachTagAttrs(linkElement, options.attrs);
-	insertStyleElement(options, linkElement);
-	return linkElement;
-}
-
-function attachTagAttrs(element, attrs) {
-	Object.keys(attrs).forEach(function (key) {
-		element.setAttribute(key, attrs[key]);
-	});
-}
-
-function addStyle(obj, options) {
-	var styleElement, update, remove;
-
-	if (options.singleton) {
-		var styleIndex = singletonCounter++;
-		styleElement = singletonElement || (singletonElement = createStyleElement(options));
-		update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
-		remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
-	} else if(obj.sourceMap &&
-		typeof URL === "function" &&
-		typeof URL.createObjectURL === "function" &&
-		typeof URL.revokeObjectURL === "function" &&
-		typeof Blob === "function" &&
-		typeof btoa === "function") {
-		styleElement = createLinkElement(options);
-		update = updateLink.bind(null, styleElement, options);
-		remove = function() {
-			removeStyleElement(styleElement);
-			if(styleElement.href)
-				URL.revokeObjectURL(styleElement.href);
-		};
-	} else {
-		styleElement = createStyleElement(options);
-		update = applyToTag.bind(null, styleElement);
-		remove = function() {
-			removeStyleElement(styleElement);
-		};
-	}
-
-	update(obj);
-
-	return function updateStyle(newObj) {
-		if(newObj) {
-			if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
-				return;
-			update(obj = newObj);
-		} else {
-			remove();
-		}
-	};
-}
-
-var replaceText = (function () {
-	var textStore = [];
-
-	return function (index, replacement) {
-		textStore[index] = replacement;
-		return textStore.filter(Boolean).join('\n');
-	};
-})();
-
-function applyToSingletonTag(styleElement, index, remove, obj) {
-	var css = remove ? "" : obj.css;
-
-	if (styleElement.styleSheet) {
-		styleElement.styleSheet.cssText = replaceText(index, css);
-	} else {
-		var cssNode = document.createTextNode(css);
-		var childNodes = styleElement.childNodes;
-		if (childNodes[index]) styleElement.removeChild(childNodes[index]);
-		if (childNodes.length) {
-			styleElement.insertBefore(cssNode, childNodes[index]);
-		} else {
-			styleElement.appendChild(cssNode);
-		}
-	}
-}
-
-function applyToTag(styleElement, obj) {
-	var css = obj.css;
-	var media = obj.media;
-
-	if(media) {
-		styleElement.setAttribute("media", media)
-	}
-
-	if(styleElement.styleSheet) {
-		styleElement.styleSheet.cssText = css;
-	} else {
-		while(styleElement.firstChild) {
-			styleElement.removeChild(styleElement.firstChild);
-		}
-		styleElement.appendChild(document.createTextNode(css));
-	}
-}
-
-function updateLink(linkElement, options, obj) {
-	var css = obj.css;
-	var sourceMap = obj.sourceMap;
-
-	/* If convertToAbsoluteUrls isn't defined, but sourcemaps are enabled
-	and there is no publicPath defined then lets turn convertToAbsoluteUrls
-	on by default.  Otherwise default to the convertToAbsoluteUrls option
-	directly
-	*/
-	const autoFixUrls = options.convertToAbsoluteUrls === undefined && sourceMap;
-
-	if (options.convertToAbsoluteUrls || autoFixUrls){
-		css = fixUrls(css);
-	}
-
-	if(sourceMap) {
-		// http://stackoverflow.com/a/26603875
-		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
-	}
-
-	var blob = new Blob([css], { type: "text/css" });
-
-	var oldSrc = linkElement.href;
-
-	linkElement.href = URL.createObjectURL(blob);
-
-	if(oldSrc)
-		URL.revokeObjectURL(oldSrc);
-}
-
-
-/***/ },
-/* 15 */
-/***/ function(module, exports) {
-
-
-/**
- * When source maps are enabled, `style-loader` uses a link element with a data-uri to
- * embed the css on the page. This breaks all relative urls because now they are relative to a
- * bundle instead of the current page.
- *
- * One solution is to only use full urls, but that may be impossible.
- *
- * Instead, this function "fixes" the relative urls to be absolute according to the current page location.
- *
- * A rudimentary test suite is located at `test/fixUrls.js` and can be run via the `npm test` command.
- *
- */
-
-module.exports = function (css) {
-  // get current location
-  var location = typeof window !== "undefined" && window.location;
-
-  if (!location) {
-    throw new Error("fixUrls requires window.location");
-  }
-
-	// blank or null?
-	if (!css || typeof css !== "string") {
-	  return css;
-  }
-
-  var baseUrl = location.protocol + "//" + location.host;
-  var currentDir = baseUrl + location.pathname.replace(/\/[^\/]*$/, "/");
-
-	// convert each url(...)
-	var fixedCss = css.replace(/url *\( *(.+?) *\)/g, function(fullMatch, origUrl) {
-		// strip quotes (if they exist)
-		var unquotedOrigUrl = origUrl
-			.replace(/^"(.*)"$/, function(o, $1){ return $1; })
-			.replace(/^'(.*)'$/, function(o, $1){ return $1; });
-
-		// already a full url? no change
-		if (/^(#|data:|http:\/\/|https:\/\/|file:\/\/\/)/i.test(unquotedOrigUrl)) {
-		  return fullMatch;
-		}
-
-		// convert the url to a full url
-		var newUrl;
-
-		if (unquotedOrigUrl.indexOf("//") === 0) {
-		  	//TODO: should we add protocol?
-			newUrl = unquotedOrigUrl;
-		} else if (unquotedOrigUrl.indexOf("/") === 0) {
-			// path should be relative to the base url
-			newUrl = baseUrl + unquotedOrigUrl; // already starts with '/'
-		} else {
-			// path should be relative to current directory
-			newUrl = currentDir + unquotedOrigUrl.replace(/^\.\//, ""); // Strip leading './'
-		}
-
-		// send back the fixed url(...)
-		return "url(" + JSON.stringify(newUrl) + ")";
-	});
-
-	// send back the fixed css
-	return fixedCss;
-};
-
-
-/***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "./img/31285c5ad879cfc119ef5dbd3892bc93.png";
-
-/***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "./img/41d61da7a43b26fabd5542cb40ba37b6.jpg";
-
-/***/ },
-/* 18 */
-/***/ function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() { return this; })();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ },
-/* 19 */
-/***/ function(module, exports, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__css_common_less__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__css_common_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__css_common_less__);
-
-
-
-var SM = angular.module('SM', ["ngRoute"]).config(function ($routeProvider) {
-    $routeProvider.when('/registration', {
-        templateUrl: 'view/registration.html',
-        controller: 'registrationCtrl'
-    }).when('/login', {
-        templateUrl: 'view/login.html',
-        controller: 'singUpCtrl'
-    });
-});
-
-__webpack_require__(1)(SM);
-__webpack_require__(2)(SM);
-
-/***/ },
-/* 20 */
 /***/ function(module, exports) {
 
 var Binary = function () {
@@ -3430,7 +2458,239 @@ var Binary = function () {
 module.exports = Binary;
 
 /***/ },
-/* 21 */
+/* 6 */
+/***/ function(module, exports) {
+
+module.exports = function (ngModule) {
+    ngModule.controller('appCtrl', function ($rootScope, $scope, $http) {
+        $http.get('/username').success(function (data) {
+            if (data.login) {
+                $rootScope.login = data.login;
+            }
+        });
+    });
+};
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+/**
+ * Created by Nikcher on 19.03.2017.
+ */
+module.exports = function (ngModule) {
+    ngModule.controller('singUpCtrl', function ($rootScope, $scope, validationService, saltService) {
+        var formValid;
+
+        /*==========INPUTS===========*/
+        if ($('.bs-float-label input').length) {
+            var bs_float_on_class = "on";
+            var bs_float_show_class = "show";
+
+            $('.float-input').on('bs-check-value', function () {
+                var _bs_label = $(this).closest('.bs-float-label').find('.float-label');
+                if (this.value !== '') {
+                    _bs_label.addClass(bs_float_show_class);
+                } else {
+                    _bs_label.removeClass(bs_float_show_class);
+                }
+            }).on("keyup", function () {
+                $(this).trigger("bs-check-value");
+                var formGroup = $(this).parents('.form-group');
+                var glyphicon = formGroup.find('.form-control-feedback');
+                if (!!this.value) {
+                    validationService.resetValidationError(formGroup, glyphicon);
+                } else {
+                    validationService.showValidationError(formGroup, glyphicon);
+                }
+            }).on("focus", function () {
+                $(this).closest(".bs-float-label").find('.float-label').addClass(bs_float_on_class);
+                $(this).closest(".bs-float-label").find('.input-group-addon').addClass("select-label");
+            }).on("blur", function () {
+                $(this).closest(".bs-float-label").find('.float-label').removeClass(bs_float_on_class);
+                $(this).closest(".bs-float-label").find('.input-group-addon').removeClass("select-label");
+            }).trigger("bs-check-value");
+        }
+        /*========================================*/
+
+        /*
+        * ===============LOGIN==============*/
+        $scope.singUp = function (login, password) {
+
+            formValid = true;
+            $('.error-validation').each(function () {
+                this.remove();
+            });
+
+            if (typeof login === 'undefined' || !login) {
+                formValid = false;
+                var formGroup = $('.form-group.login-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+                var errorMessage = "Введите логин";
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
+            } else {
+                var formGroup = $('.form-group.login-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                validationService.resetValidationError(formGroup, glyphicon);
+                formGroup = glyphicon = null;
+            }
+            if (typeof password === 'undefined' || !password) {
+                formValid = false;
+                var formGroup = $('.form-group.password-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                var errorMessage = "Введите пароль";
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
+            } else {
+                var formGroup = $('.form-group.password-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                validationService.resetValidationError(formGroup, glyphicon);
+                formGroup = glyphicon = null;
+            }
+
+            if (formValid) {
+                saltService.toSalt(login, password);
+                //TODO sent to service
+            }
+        };
+        //===============================================
+    });
+};
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+/**
+ * Created by Nikcher on 20.03.2017.
+ */
+module.exports = function (ngModule) {
+    ngModule.controller('registrationCtrl', function ($rootScope, $window, $scope, validationService, registrationService) {
+        $scope.registrationService = registrationService;
+        var messagesError = ['Введите логин', 'Введите пароль', 'Повторите пароль'];
+        if ($('.bs-float-label input').length) {
+            var bs_float_on_class = "on";
+            var bs_float_show_class = "show";
+
+            $('.float-input').on('bs-check-value', function () {
+                var _bs_label = $(this).closest('.bs-float-label').find('.float-label');
+                if (this.value !== '') {
+                    _bs_label.addClass(bs_float_show_class);
+                } else {
+                    _bs_label.removeClass(bs_float_show_class);
+                }
+            }).on("keyup", function () {
+                $(this).trigger("bs-check-value");
+                var formGroup = $(this).parents('.form-group');
+                var glyphicon = formGroup.find('.form-control-feedback');
+                if (!!this.value) {
+                    validationService.resetValidationError(formGroup, glyphicon);
+                } else {
+                    validationService.showValidationError(formGroup, glyphicon);
+                }
+            }).on("focus", function () {
+                $(this).closest(".bs-float-label").find('.float-label').addClass(bs_float_on_class);
+                $(this).closest(".bs-float-label").find('.input-group-addon').addClass("select-label");
+            }).on("blur", function () {
+                $(this).closest(".bs-float-label").find('.float-label').removeClass(bs_float_on_class);
+                $(this).closest(".bs-float-label").find('.input-group-addon').removeClass("select-label");
+            }).trigger("bs-check-value");
+        };
+
+        /*
+         * ===============REGISTRATION==============*/
+
+        $scope.toRegister = function (user) {
+            formValid = true;
+            if (typeof user === 'undefined' || !user) {
+                var i = 0;
+                $('input').each(function () {
+                    var formGroup = $(this).parents('.form-group');
+                    var glyphicon = formGroup.find('.form-control-feedback');
+                    validationService.showValidationError(formGroup, glyphicon, messagesError[i]);
+                    i++;
+                });
+                i = null;
+                return;
+            }
+
+            if (typeof user.login === 'undefined' || !user.login) {
+                formValid = false;
+                var formGroup = $('.form-group.login-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                var errorMessage = "Введите логин";
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
+            } else {
+                var formGroup = $('.form-group.login-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                validationService.resetValidationError(formGroup, glyphicon);
+                formGroup = glyphicon = null;
+            }
+
+            if (typeof user.password === 'undefined' || !user.password) {
+                formValid = false;
+                var formGroup = $('.form-group.password-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                var errorMessage = "Введите пароль";
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
+            } else {
+                var formGroup = $('.form-group.password-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                validationService.resetValidationError(formGroup, glyphicon);
+                formGroup = glyphicon = null;
+            }
+
+            if (typeof user.passwordRepeat === 'undefined' || !user.passwordRepeat) {
+                formValid = false;
+                var formGroup = $('.form-group.passwordRepeat-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                var errorMessage = "Повторите пароль";
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
+            } else {
+                var formGroup = $('.form-group.passwordRepeat-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                validationService.resetValidationError(formGroup, glyphicon);
+                formGroup = glyphicon = null;
+            }
+
+            if (user.passwordRepeat != user.password) {
+                formValid = false;
+                var formGroup = $('.form-group.passwordRepeat-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+                validationService.showValidationError(formGroup, glyphicon);
+
+                formGroup = $('.form-group.passwordRepeat-field-form');
+                glyphicon = formGroup.find('.form-control-feedback');
+
+                var errorMessage = "Пароли не совпадают";
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
+            }
+            if (formValid) {
+                //TODO sent to ser
+                registrationService.toRegister(user);
+            }
+        };
+
+        //===============================================
+    });
+};
+
+/***/ },
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 /**
@@ -3438,9 +2698,9 @@ module.exports = Binary;
  */
 
 module.exports = function (ngModule) {
-    var Binary = __webpack_require__(20);
+    var Binary = __webpack_require__(5);
     var binary = new Binary();
-    var md5 = __webpack_require__(25);
+    var md5 = __webpack_require__(19);
     ngModule.factory('registrationService', function ($http, $rootScope, $location, $route) {
 
         return {
@@ -3464,7 +2724,22 @@ module.exports = function (ngModule) {
                                 password: cipherPasswordServer
                             }
 
-                        }).success(function (data) {}).error(function (data, status, headers, configs) {
+                        }).success(function (data, status) {
+                            switch (status) {
+                                case 200:
+                                    if (data.login) {
+                                        $rootScope.login = data.login;
+                                        $location.path('/');
+                                    }
+                                    console.log($rootScope.login);
+                                    break;
+                                case 403:
+                                    //TODO user exists
+                                    break;
+                                default:
+
+                            }
+                        }).error(function (data, status, headers, configs) {
                             console.error(status);
                         });
                     }
@@ -3492,46 +2767,189 @@ module.exports = function (ngModule) {
 };
 
 /***/ },
-/* 22 */
+/* 10 */
 /***/ function(module, exports) {
 
-var charenc = {
-  // UTF-8 encoding
-  utf8: {
-    // Convert a string to a byte array
-    stringToBytes: function(str) {
-      return charenc.bin.stringToBytes(unescape(encodeURIComponent(str)));
-    },
+/**
+ * Created by Nikcher on 28.03.2017.
+ */
+module.exports = function (ngModule) {
+    ngModule.factory('saltService', function ($http, $rootScope) {
 
-    // Convert a byte array to a string
-    bytesToString: function(bytes) {
-      return decodeURIComponent(escape(charenc.bin.bytesToString(bytes)));
-    }
-  },
+        return {
+            toSalt: function (login, password) {
 
-  // Binary encoding
-  bin: {
-    // Convert a string to a byte array
-    stringToBytes: function(str) {
-      for (var bytes = [], i = 0; i < str.length; i++)
-        bytes.push(str.charCodeAt(i) & 0xFF);
-      return bytes;
-    },
+                $http({
+                    method: "post",
+                    url: "/login",
+                    data: {
+                        login: login
+                    }
 
-    // Convert a byte array to a string
-    bytesToString: function(bytes) {
-      for (var str = [], i = 0; i < bytes.length; i++)
-        str.push(String.fromCharCode(bytes[i]));
-      return str.join('');
-    }
-  }
+                }).success(function (answer) {
+                    console.log(answer);
+                });
+            }
+        };
+    });
 };
 
-module.exports = charenc;
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+/**
+ * Created by Nikcher on 21.03.2017.
+ */
+module.exports = function (ngModule) {
+    ngModule.factory('validationService', function ($http, $rootScope, $location) {
+
+        return {
+            showValidationError: function (formGroup, glyphicon, messageError) {
+                formGroup.addClass('has-error').removeClass('has-success');
+                glyphicon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
+                formGroup.find('.error-validation').remove();
+
+                if (messageError) {
+                    var msgElem = document.createElement('div');
+                    msgElem.innerHTML = messageError;
+                    $(msgElem).addClass('error-validation');
+                    formGroup.append(msgElem);
+                }
+            },
+            resetValidationError: function (formGroup, glyphicon, messageError) {
+                formGroup.addClass('has-success').removeClass('has-error');
+                glyphicon.addClass('glyphicon-ok').removeClass('glyphicon-remove');
+
+                formGroup.find('.error-validation').remove();
+            }
+        };
+    });
+};
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+"use strict";
+'use strict'
+
+exports.byteLength = byteLength
+exports.toByteArray = toByteArray
+exports.fromByteArray = fromByteArray
+
+var lookup = []
+var revLookup = []
+var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
+
+var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+for (var i = 0, len = code.length; i < len; ++i) {
+  lookup[i] = code[i]
+  revLookup[code.charCodeAt(i)] = i
+}
+
+revLookup['-'.charCodeAt(0)] = 62
+revLookup['_'.charCodeAt(0)] = 63
+
+function placeHoldersCount (b64) {
+  var len = b64.length
+  if (len % 4 > 0) {
+    throw new Error('Invalid string. Length must be a multiple of 4')
+  }
+
+  // the number of equal signs (place holders)
+  // if there are two placeholders, than the two characters before it
+  // represent one byte
+  // if there is only one, then the three characters before it represent 2 bytes
+  // this is just a cheap hack to not do indexOf twice
+  return b64[len - 2] === '=' ? 2 : b64[len - 1] === '=' ? 1 : 0
+}
+
+function byteLength (b64) {
+  // base64 is 4/3 + up to two characters of the original data
+  return b64.length * 3 / 4 - placeHoldersCount(b64)
+}
+
+function toByteArray (b64) {
+  var i, j, l, tmp, placeHolders, arr
+  var len = b64.length
+  placeHolders = placeHoldersCount(b64)
+
+  arr = new Arr(len * 3 / 4 - placeHolders)
+
+  // if there are placeholders, only get up to the last complete 4 chars
+  l = placeHolders > 0 ? len - 4 : len
+
+  var L = 0
+
+  for (i = 0, j = 0; i < l; i += 4, j += 3) {
+    tmp = (revLookup[b64.charCodeAt(i)] << 18) | (revLookup[b64.charCodeAt(i + 1)] << 12) | (revLookup[b64.charCodeAt(i + 2)] << 6) | revLookup[b64.charCodeAt(i + 3)]
+    arr[L++] = (tmp >> 16) & 0xFF
+    arr[L++] = (tmp >> 8) & 0xFF
+    arr[L++] = tmp & 0xFF
+  }
+
+  if (placeHolders === 2) {
+    tmp = (revLookup[b64.charCodeAt(i)] << 2) | (revLookup[b64.charCodeAt(i + 1)] >> 4)
+    arr[L++] = tmp & 0xFF
+  } else if (placeHolders === 1) {
+    tmp = (revLookup[b64.charCodeAt(i)] << 10) | (revLookup[b64.charCodeAt(i + 1)] << 4) | (revLookup[b64.charCodeAt(i + 2)] >> 2)
+    arr[L++] = (tmp >> 8) & 0xFF
+    arr[L++] = tmp & 0xFF
+  }
+
+  return arr
+}
+
+function tripletToBase64 (num) {
+  return lookup[num >> 18 & 0x3F] + lookup[num >> 12 & 0x3F] + lookup[num >> 6 & 0x3F] + lookup[num & 0x3F]
+}
+
+function encodeChunk (uint8, start, end) {
+  var tmp
+  var output = []
+  for (var i = start; i < end; i += 3) {
+    tmp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
+    output.push(tripletToBase64(tmp))
+  }
+  return output.join('')
+}
+
+function fromByteArray (uint8) {
+  var tmp
+  var len = uint8.length
+  var extraBytes = len % 3 // if we have 1 byte left, pad 2 bytes
+  var output = ''
+  var parts = []
+  var maxChunkLength = 16383 // must be multiple of 3
+
+  // go through the array every three bytes, we'll deal with trailing stuff later
+  for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
+    parts.push(encodeChunk(uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)))
+  }
+
+  // pad the end with zeros, but make sure to not forget the extra bytes
+  if (extraBytes === 1) {
+    tmp = uint8[len - 1]
+    output += lookup[tmp >> 2]
+    output += lookup[(tmp << 4) & 0x3F]
+    output += '=='
+  } else if (extraBytes === 2) {
+    tmp = (uint8[len - 2] << 8) + (uint8[len - 1])
+    output += lookup[tmp >> 10]
+    output += lookup[(tmp >> 4) & 0x3F]
+    output += lookup[(tmp << 2) & 0x3F]
+    output += '='
+  }
+
+  parts.push(output)
+
+  return parts.join('')
+}
 
 
 /***/ },
-/* 23 */
+/* 13 */
 /***/ function(module, exports) {
 
 (function() {
@@ -3633,7 +3051,193 @@ module.exports = charenc;
 
 
 /***/ },
-/* 24 */
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(15)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, ".main-page {\n  background-image: url(" + __webpack_require__(22) + ");\n}\n.c-modal {\n  text-align: center;\n}\n.navbar-nav a {\n  color: #FFFFFF;\n}\n.navbar-form .btn,\n.login-form-element .btn {\n  color: #FFFFFF;\n  font-weight: bold;\n  font-size: small;\n}\n.navbar-form .btn.button-background:active,\n.login-form-element .btn.button-background:active {\n  background-color: #0087ff;\n}\n.navbar-form .btn.singup:hover,\n.login-form-element .btn.singup:hover {\n  text-decoration: underline;\n}\n.button-background {\n  background-color: #0096ff;\n  color: #FFFFFF;\n}\n.button-background:hover {\n  background-color: #00a5ff;\n  color: #FFFFFF;\n}\n@media screen and (min-width: 768px) {\n  .c-modal:before {\n    display: inline-block;\n    vertical-align: middle;\n    content: \" \";\n    height: 100%;\n  }\n}\n.c-modal.in .c-modal-dialog {\n  opacity: 1;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.c-modal-dialog {\n  display: inline-block;\n  text-align: left;\n  vertical-align: middle;\n  opacity: 0;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.login-form {\n  top: 130px;\n}\n.login-form .title {\n  color: #FFFFFF;\n  font-size: 27px;\n  text-align: center;\n  margin-top: 10px;\n}\n.login-button {\n  width: 100%;\n  margin-top: 20px;\n}\n.login-form-element {\n  left: 15px;\n}\n.login-form-element.login-field {\n  margin-top: 25px;\n}\n.login-form-element.password-field {\n  margin-top: 10px;\n}\n.background-login-form {\n  width: 100%;\n  height: 100%;\n  border-radius: 10px;\n  background-color: #FFFFFF;\n  position: absolute;\n  opacity: 0.3;\n}\n.float-label {\n  position: absolute;\n  top: 0px;\n  left: 17px;\n  -webkit-transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  opacity: 0;\n  color: #FFFFFF;\n}\n.float-label.show {\n  top: -20px;\n  left: 17px;\n  opacity: 1;\n}\n.main-img {\n  background-image: url(" + __webpack_require__(23) + ");\n  background-size: 100% auto;\n  background-repeat: no-repeat;\n  position: absolute;\n  width: 100%;\n  height: 550px;\n  min-height: 350px;\n}\n.select-label {\n  color: #61C3FF;\n}\n@media screen and (max-width: 650px) {\n  .login-form {\n    top: 55px;\n  }\n}\n@media screen and (max-width: 750px) {\n  .main-img {\n    background-image: none;\n  }\n  .background-login-form {\n    background-color: #000000;\n  }\n}\n.error-validation {\n  margin-left: 31px;\n  margin-bottom: -5px;\n  color: red;\n  font-size: medium;\n}\n", ""]);
+
+// exports
+
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(Buffer) {/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap) {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+  var base64 = new Buffer(JSON.stringify(sourceMap)).toString('base64');
+  var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+  return '/*# ' + data + ' */';
+}
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0).Buffer))
+
+/***/ },
+/* 16 */
+/***/ function(module, exports) {
+
+exports.read = function (buffer, offset, isLE, mLen, nBytes) {
+  var e, m
+  var eLen = nBytes * 8 - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var nBits = -7
+  var i = isLE ? (nBytes - 1) : 0
+  var d = isLE ? -1 : 1
+  var s = buffer[offset + i]
+
+  i += d
+
+  e = s & ((1 << (-nBits)) - 1)
+  s >>= (-nBits)
+  nBits += eLen
+  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+
+  m = e & ((1 << (-nBits)) - 1)
+  e >>= (-nBits)
+  nBits += mLen
+  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+
+  if (e === 0) {
+    e = 1 - eBias
+  } else if (e === eMax) {
+    return m ? NaN : ((s ? -1 : 1) * Infinity)
+  } else {
+    m = m + Math.pow(2, mLen)
+    e = e - eBias
+  }
+  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
+}
+
+exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
+  var e, m, c
+  var eLen = nBytes * 8 - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
+  var i = isLE ? 0 : (nBytes - 1)
+  var d = isLE ? 1 : -1
+  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+
+  value = Math.abs(value)
+
+  if (isNaN(value) || value === Infinity) {
+    m = isNaN(value) ? 1 : 0
+    e = eMax
+  } else {
+    e = Math.floor(Math.log(value) / Math.LN2)
+    if (value * (c = Math.pow(2, -e)) < 1) {
+      e--
+      c *= 2
+    }
+    if (e + eBias >= 1) {
+      value += rt / c
+    } else {
+      value += rt * Math.pow(2, 1 - eBias)
+    }
+    if (value * c >= 2) {
+      e++
+      c /= 2
+    }
+
+    if (e + eBias >= eMax) {
+      m = 0
+      e = eMax
+    } else if (e + eBias >= 1) {
+      m = (value * c - 1) * Math.pow(2, mLen)
+      e = e + eBias
+    } else {
+      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
+      e = 0
+    }
+  }
+
+  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
+
+  e = (e << mLen) | m
+  eLen += mLen
+  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
+
+  buffer[offset + i - d] |= s * 128
+}
+
+
+/***/ },
+/* 17 */
 /***/ function(module, exports) {
 
 /*!
@@ -3660,14 +3264,25 @@ function isSlowBuffer (obj) {
 
 
 /***/ },
-/* 25 */
+/* 18 */
+/***/ function(module, exports) {
+
+var toString = {}.toString;
+
+module.exports = Array.isArray || function (arr) {
+  return toString.call(arr) == '[object Array]';
+};
+
+
+/***/ },
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 (function(){
-  var crypt = __webpack_require__(23),
-      utf8 = __webpack_require__(22).utf8,
-      isBuffer = __webpack_require__(24),
-      bin = __webpack_require__(22).bin,
+  var crypt = __webpack_require__(13),
+      utf8 = __webpack_require__(1).utf8,
+      isBuffer = __webpack_require__(17),
+      bin = __webpack_require__(1).bin,
 
   // The core
   md5 = function (message, options) {
@@ -3824,6 +3439,412 @@ function isSlowBuffer (obj) {
 
 })();
 
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+var stylesInDom = {},
+	memoize = function(fn) {
+		var memo;
+		return function () {
+			if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+			return memo;
+		};
+	},
+	isOldIE = memoize(function() {
+		return /msie [6-9]\b/.test(self.navigator.userAgent.toLowerCase());
+	}),
+	getHeadElement = memoize(function () {
+		return document.head || document.getElementsByTagName("head")[0];
+	}),
+	singletonElement = null,
+	singletonCounter = 0,
+	styleElementsInsertedAtTop = [],
+	fixUrls = __webpack_require__(21);
+
+module.exports = function(list, options) {
+	if(typeof DEBUG !== "undefined" && DEBUG) {
+		if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+	}
+
+	options = options || {};
+	options.attrs = typeof options.attrs === "object" ? options.attrs : {};
+
+	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+	// tags it will allow on a page
+	if (typeof options.singleton === "undefined") options.singleton = isOldIE();
+
+	// By default, add <style> tags to the bottom of <head>.
+	if (typeof options.insertAt === "undefined") options.insertAt = "bottom";
+
+	var styles = listToStyles(list);
+	addStylesToDom(styles, options);
+
+	return function update(newList) {
+		var mayRemove = [];
+		for(var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+			domStyle.refs--;
+			mayRemove.push(domStyle);
+		}
+		if(newList) {
+			var newStyles = listToStyles(newList);
+			addStylesToDom(newStyles, options);
+		}
+		for(var i = 0; i < mayRemove.length; i++) {
+			var domStyle = mayRemove[i];
+			if(domStyle.refs === 0) {
+				for(var j = 0; j < domStyle.parts.length; j++)
+					domStyle.parts[j]();
+				delete stylesInDom[domStyle.id];
+			}
+		}
+	};
+};
+
+function addStylesToDom(styles, options) {
+	for(var i = 0; i < styles.length; i++) {
+		var item = styles[i];
+		var domStyle = stylesInDom[item.id];
+		if(domStyle) {
+			domStyle.refs++;
+			for(var j = 0; j < domStyle.parts.length; j++) {
+				domStyle.parts[j](item.parts[j]);
+			}
+			for(; j < item.parts.length; j++) {
+				domStyle.parts.push(addStyle(item.parts[j], options));
+			}
+		} else {
+			var parts = [];
+			for(var j = 0; j < item.parts.length; j++) {
+				parts.push(addStyle(item.parts[j], options));
+			}
+			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+		}
+	}
+}
+
+function listToStyles(list) {
+	var styles = [];
+	var newStyles = {};
+	for(var i = 0; i < list.length; i++) {
+		var item = list[i];
+		var id = item[0];
+		var css = item[1];
+		var media = item[2];
+		var sourceMap = item[3];
+		var part = {css: css, media: media, sourceMap: sourceMap};
+		if(!newStyles[id])
+			styles.push(newStyles[id] = {id: id, parts: [part]});
+		else
+			newStyles[id].parts.push(part);
+	}
+	return styles;
+}
+
+function insertStyleElement(options, styleElement) {
+	var head = getHeadElement();
+	var lastStyleElementInsertedAtTop = styleElementsInsertedAtTop[styleElementsInsertedAtTop.length - 1];
+	if (options.insertAt === "top") {
+		if(!lastStyleElementInsertedAtTop) {
+			head.insertBefore(styleElement, head.firstChild);
+		} else if(lastStyleElementInsertedAtTop.nextSibling) {
+			head.insertBefore(styleElement, lastStyleElementInsertedAtTop.nextSibling);
+		} else {
+			head.appendChild(styleElement);
+		}
+		styleElementsInsertedAtTop.push(styleElement);
+	} else if (options.insertAt === "bottom") {
+		head.appendChild(styleElement);
+	} else {
+		throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
+	}
+}
+
+function removeStyleElement(styleElement) {
+	styleElement.parentNode.removeChild(styleElement);
+	var idx = styleElementsInsertedAtTop.indexOf(styleElement);
+	if(idx >= 0) {
+		styleElementsInsertedAtTop.splice(idx, 1);
+	}
+}
+
+function createStyleElement(options) {
+	var styleElement = document.createElement("style");
+	options.attrs.type = "text/css";
+
+	attachTagAttrs(styleElement, options.attrs);
+	insertStyleElement(options, styleElement);
+	return styleElement;
+}
+
+function createLinkElement(options) {
+	var linkElement = document.createElement("link");
+	options.attrs.type = "text/css";
+	options.attrs.rel = "stylesheet";
+
+	attachTagAttrs(linkElement, options.attrs);
+	insertStyleElement(options, linkElement);
+	return linkElement;
+}
+
+function attachTagAttrs(element, attrs) {
+	Object.keys(attrs).forEach(function (key) {
+		element.setAttribute(key, attrs[key]);
+	});
+}
+
+function addStyle(obj, options) {
+	var styleElement, update, remove;
+
+	if (options.singleton) {
+		var styleIndex = singletonCounter++;
+		styleElement = singletonElement || (singletonElement = createStyleElement(options));
+		update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
+		remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
+	} else if(obj.sourceMap &&
+		typeof URL === "function" &&
+		typeof URL.createObjectURL === "function" &&
+		typeof URL.revokeObjectURL === "function" &&
+		typeof Blob === "function" &&
+		typeof btoa === "function") {
+		styleElement = createLinkElement(options);
+		update = updateLink.bind(null, styleElement, options);
+		remove = function() {
+			removeStyleElement(styleElement);
+			if(styleElement.href)
+				URL.revokeObjectURL(styleElement.href);
+		};
+	} else {
+		styleElement = createStyleElement(options);
+		update = applyToTag.bind(null, styleElement);
+		remove = function() {
+			removeStyleElement(styleElement);
+		};
+	}
+
+	update(obj);
+
+	return function updateStyle(newObj) {
+		if(newObj) {
+			if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
+				return;
+			update(obj = newObj);
+		} else {
+			remove();
+		}
+	};
+}
+
+var replaceText = (function () {
+	var textStore = [];
+
+	return function (index, replacement) {
+		textStore[index] = replacement;
+		return textStore.filter(Boolean).join('\n');
+	};
+})();
+
+function applyToSingletonTag(styleElement, index, remove, obj) {
+	var css = remove ? "" : obj.css;
+
+	if (styleElement.styleSheet) {
+		styleElement.styleSheet.cssText = replaceText(index, css);
+	} else {
+		var cssNode = document.createTextNode(css);
+		var childNodes = styleElement.childNodes;
+		if (childNodes[index]) styleElement.removeChild(childNodes[index]);
+		if (childNodes.length) {
+			styleElement.insertBefore(cssNode, childNodes[index]);
+		} else {
+			styleElement.appendChild(cssNode);
+		}
+	}
+}
+
+function applyToTag(styleElement, obj) {
+	var css = obj.css;
+	var media = obj.media;
+
+	if(media) {
+		styleElement.setAttribute("media", media)
+	}
+
+	if(styleElement.styleSheet) {
+		styleElement.styleSheet.cssText = css;
+	} else {
+		while(styleElement.firstChild) {
+			styleElement.removeChild(styleElement.firstChild);
+		}
+		styleElement.appendChild(document.createTextNode(css));
+	}
+}
+
+function updateLink(linkElement, options, obj) {
+	var css = obj.css;
+	var sourceMap = obj.sourceMap;
+
+	/* If convertToAbsoluteUrls isn't defined, but sourcemaps are enabled
+	and there is no publicPath defined then lets turn convertToAbsoluteUrls
+	on by default.  Otherwise default to the convertToAbsoluteUrls option
+	directly
+	*/
+	const autoFixUrls = options.convertToAbsoluteUrls === undefined && sourceMap;
+
+	if (options.convertToAbsoluteUrls || autoFixUrls){
+		css = fixUrls(css);
+	}
+
+	if(sourceMap) {
+		// http://stackoverflow.com/a/26603875
+		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+	}
+
+	var blob = new Blob([css], { type: "text/css" });
+
+	var oldSrc = linkElement.href;
+
+	linkElement.href = URL.createObjectURL(blob);
+
+	if(oldSrc)
+		URL.revokeObjectURL(oldSrc);
+}
+
+
+/***/ },
+/* 21 */
+/***/ function(module, exports) {
+
+
+/**
+ * When source maps are enabled, `style-loader` uses a link element with a data-uri to
+ * embed the css on the page. This breaks all relative urls because now they are relative to a
+ * bundle instead of the current page.
+ *
+ * One solution is to only use full urls, but that may be impossible.
+ *
+ * Instead, this function "fixes" the relative urls to be absolute according to the current page location.
+ *
+ * A rudimentary test suite is located at `test/fixUrls.js` and can be run via the `npm test` command.
+ *
+ */
+
+module.exports = function (css) {
+  // get current location
+  var location = typeof window !== "undefined" && window.location;
+
+  if (!location) {
+    throw new Error("fixUrls requires window.location");
+  }
+
+	// blank or null?
+	if (!css || typeof css !== "string") {
+	  return css;
+  }
+
+  var baseUrl = location.protocol + "//" + location.host;
+  var currentDir = baseUrl + location.pathname.replace(/\/[^\/]*$/, "/");
+
+	// convert each url(...)
+	var fixedCss = css.replace(/url *\( *(.+?) *\)/g, function(fullMatch, origUrl) {
+		// strip quotes (if they exist)
+		var unquotedOrigUrl = origUrl
+			.replace(/^"(.*)"$/, function(o, $1){ return $1; })
+			.replace(/^'(.*)'$/, function(o, $1){ return $1; });
+
+		// already a full url? no change
+		if (/^(#|data:|http:\/\/|https:\/\/|file:\/\/\/)/i.test(unquotedOrigUrl)) {
+		  return fullMatch;
+		}
+
+		// convert the url to a full url
+		var newUrl;
+
+		if (unquotedOrigUrl.indexOf("//") === 0) {
+		  	//TODO: should we add protocol?
+			newUrl = unquotedOrigUrl;
+		} else if (unquotedOrigUrl.indexOf("/") === 0) {
+			// path should be relative to the base url
+			newUrl = baseUrl + unquotedOrigUrl; // already starts with '/'
+		} else {
+			// path should be relative to current directory
+			newUrl = currentDir + unquotedOrigUrl.replace(/^\.\//, ""); // Strip leading './'
+		}
+
+		// send back the fixed url(...)
+		return "url(" + JSON.stringify(newUrl) + ")";
+	});
+
+	// send back the fixed css
+	return fixedCss;
+};
+
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "./img/31285c5ad879cfc119ef5dbd3892bc93.png";
+
+/***/ },
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "./img/41d61da7a43b26fabd5542cb40ba37b6.jpg";
+
+/***/ },
+/* 24 */
+/***/ function(module, exports) {
+
+var g;
+
+// This works in non-strict mode
+g = (function() { return this; })();
+
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
+}
+
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
+
+module.exports = g;
+
+
+/***/ },
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__css_common_less__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__css_common_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__css_common_less__);
+
+
+
+var SM = angular.module('SM', ["ngRoute"]).config(function ($routeProvider) {
+    $routeProvider.when('/registration', {
+        templateUrl: 'view/registration.html',
+        controller: 'registrationCtrl'
+    }).when('/login', {
+        templateUrl: 'view/login.html',
+        controller: 'singUpCtrl'
+    });
+});
+
+__webpack_require__(2)(SM);
+__webpack_require__(3)(SM);
 
 /***/ }
 /******/ ]);

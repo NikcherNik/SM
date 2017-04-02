@@ -3,14 +3,29 @@
  */
 
 var express = require('express');
-var DataBase = require('./server/database.js');
+var session = require('express-session');
+var SessionStore = require('express-mysql-session');
+var DataBase = require('./server/db/database.js');
+//var connect = require('connect');
+var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser');
 var Binary = require('./app/binary.js');
+
+var async = require('async');
 
 var binary = new Binary();
 var database = new DataBase();
 
 var app = express();
+var options = {
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'save_money',
+    table: 'sessions'
+}
+
+
 var router = express.Router();
 
 
@@ -21,7 +36,12 @@ app.use(express.static('node_modules'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
-
+app.use(cookieParser());
+app.use(session({
+    key: 'save_money',
+    secret: 'SaveMoney20-06',
+    store: new SessionStore(options)
+}))
 //=======Start server=============
 http.listen(8080,function () {});
 //================================
@@ -38,11 +58,20 @@ try {
 
 //=============Send files===================
 app.get('/',function (req,res) {
-    res.sendfile(__dirname+'/index.html')
+    res.sendfile(__dirname+'/index.html');
 });
 
 app.get('/app/bundle.js',function (req,res) {
     res.sendfile(__dirname+'/app/bundle.js')
+});
+
+app.get('/username',function (req,res) {
+    console.log(req.session.login)
+    if(req.session.login){
+        res.send({
+            login : req.session.login
+        })
+    }else res.send('undefined')
 });
 
 //=========================================
@@ -51,7 +80,7 @@ app.get('/app/bundle.js',function (req,res) {
 //==========Handlers of requests===============
 
 app.post('/login',function (req,res) {
-  console.log(req);
+  console.log(req.session.login);
 });
 app.post('/cipher',function (req,res) {
 
@@ -65,30 +94,38 @@ app.post('/cipher',function (req,res) {
 });
 app.post('/registration',function (req,res) {
 
-    var hashCodeArr = binary.str2char(req.body.password);
+    var login = req.body.login;
+    var password = req.body.password;
+
+    var hashCodeArr = binary.str2char(password);
     var charArr_new = hashCodeArr.map(function(code) {
         return code ^ 123 ;
     });
     var newPassword = binary.char2str(charArr_new);
 
-    database.save_money.query({
-            sql: 'SELECT COUNT(*) AS count FROM `users` WHERE `login` = ?',
-            values: [req.body.login]
+    async.waterfall([
+        function (callback) {
+            database.save_money.query({
+                    sql: 'SELECT COUNT(*) AS count FROM `users` WHERE `login` = ?',
+                    values: [login]
+                },callback);
         },
-        function (error, results, fields) {
-            if(error){
-                console.error(error);
-                return;
-            }
+        function (results) {
             if(results[0].count == 0){
-                saveNewUser(req.body.login, newPassword);
+                saveNewUser(login, newPassword);
+                req.session.login = login;
+                res.status(200).send({
+                    login: login
+                });
+            }else {
+                res.status(403);
             }
         }
-    );
+    ],function (err) {
+        console.error(err)
+    });
 });
 //===============================
-
-
 
 function saveNewUser(login, password) {
     var user = {
@@ -98,7 +135,7 @@ function saveNewUser(login, password) {
     database.save_money.query('INSERT INTO users SET ?', user, function(err, result) {
         if(err){
             console.error(err);
-            return;
+            return next(err);
         }
         console.log('User successfully registered: '+login);
     });

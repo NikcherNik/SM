@@ -30,8 +30,21 @@ module.exports = function (ngModule) {
                             },
 
                         })
-                            .success(function (data) {
-
+                            .success(function (data, status) {
+                                switch (status){
+                                    case 200:
+                                        if(data.login){
+                                            $rootScope.login = data.login;
+                                            $location.path('/');
+                                        }
+                                        console.log($rootScope.login);
+                                        break;
+                                    case 403:
+                                        //TODO user exists
+                                        break;
+                                    default:
+                                        
+                                }
                             })
                             .error(function (data, status, headers, configs) {
                                 console.error(status)

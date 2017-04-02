@@ -18,7 +18,7 @@ module.exports = function (ngModule) {
                     _bs_label.removeClass(bs_float_show_class);
                 }
             })
-                .on("keyup",function(){
+                    .on("keyup",function(){
                     $(this).trigger("bs-check-value");
                     var formGroup = $(this).parents('.form-group');
                     var glyphicon = formGroup.find('.form-control-feedback');
