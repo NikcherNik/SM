@@ -2,11 +2,11 @@
  * Created by Nikcher on 03.04.2017.
  */
 
-var express = require('express');
-var session = require('express-session');
+var express  = require('express');
+var session  = require('express-session');
 var DataBase = require('../db/database.js');
-var Binary = require('../../app/binary.js');
-var async = require('async');
+var Binary   = require('../../app/binary.js');
+var async    = require('async');
 
 var binary = new Binary();
 var database = new DataBase();

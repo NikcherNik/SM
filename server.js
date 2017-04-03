@@ -6,7 +6,6 @@ var express = require('express');
 var session = require('express-session');
 var SessionStore = require('express-mysql-session');
 var DataBase = require('./server/db/database.js');
-//var connect = require('connect');
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser');
 var Binary = require('./app/binary.js');
@@ -72,7 +71,7 @@ app.get('/app/bundle.js',function (req,res) {
 });
 
 app.get('/username',function (req,res) {
-    console.log(req.session.login)
+    console.log(req.session.login);
     if(req.session.login){
         res.send({
             login : req.session.login
@@ -85,20 +84,14 @@ app.get('/username',function (req,res) {
 
 //==========Handlers of requests===============
 
-app.post('/login',function (req,res) {
-  console.log(req.session.login);
-});
-app.post('/cipher',function (req,res) {
 
-    var hashCodeArr = binary.str2char(req.body.password);
-    var charArr_new = hashCodeArr.map(function(code) {
-        return code ^ 123 ;
-    });
-    var newPassword = binary.char2str(charArr_new);
-    res.send(newPassword);
-
-});
+//registration
+app.post('/cipher',require('./server/routes/cipher').post);
 app.post('/registration',require('./server/routes/registration').post);
+
+//sing up
+app.post('/cipher',require('./server/routes/cipher').post);
+app.post('/login',require('./server/routes/login').post);
 
 //===============================
 
