@@ -37,10 +37,16 @@ app.use(express.static('node_modules'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(cookieParser());
+var expiryDate = new Date( Date.now() + 60 * 60 * 1000 ); // 1 hour
 app.use(session({
     key: 'save_money',
     secret: 'SaveMoney20-06',
-    store: new SessionStore(options)
+    store: new SessionStore(options),
+    cookie: { secure: true,
+        httpOnly: true,
+        domain: 'localhost',
+        expires: expiryDate
+    }
 }))
 //=======Start server=============
 http.listen(8080,function () {});
@@ -92,54 +98,10 @@ app.post('/cipher',function (req,res) {
     res.send(newPassword);
 
 });
-app.post('/registration',function (req,res) {
+app.post('/registration',require('./server/routes/registration').post);
 
-    var login = req.body.login;
-    var password = req.body.password;
-
-    var hashCodeArr = binary.str2char(password);
-    var charArr_new = hashCodeArr.map(function(code) {
-        return code ^ 123 ;
-    });
-    var newPassword = binary.char2str(charArr_new);
-
-    async.waterfall([
-        function (callback) {
-            database.save_money.query({
-                    sql: 'SELECT COUNT(*) AS count FROM `users` WHERE `login` = ?',
-                    values: [login]
-                },callback);
-        },
-        function (results) {
-            if(results[0].count == 0){
-                saveNewUser(login, newPassword);
-                req.session.login = login;
-                res.status(200).send({
-                    login: login
-                });
-            }else {
-                res.status(403);
-            }
-        }
-    ],function (err) {
-        console.error(err)
-    });
-});
 //===============================
 
-function saveNewUser(login, password) {
-    var user = {
-        login: login,
-        password: password
-    }
-    database.save_money.query('INSERT INTO users SET ?', user, function(err, result) {
-        if(err){
-            console.error(err);
-            return next(err);
-        }
-        console.log('User successfully registered: '+login);
-    });
-}
 
 
 

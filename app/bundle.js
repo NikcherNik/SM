@@ -2714,35 +2714,30 @@ module.exports = function (ngModule) {
                     }
 
                 }).success(function (pswdServer) {
-                    if (pswdServer) {
-                        var cipherPasswordServer = decryptString(pswdServer);
-                        $http({
-                            method: "post",
-                            url: "/registration",
-                            data: {
-                                login: user.login,
-                                password: cipherPasswordServer
-                            }
-
-                        }).success(function (data, status) {
-                            switch (status) {
-                                case 200:
-                                    if (data.login) {
-                                        $rootScope.login = data.login;
-                                        $location.path('/');
-                                    }
-                                    console.log($rootScope.login);
-                                    break;
-                                case 403:
-                                    //TODO user exists
-                                    break;
-                                default:
-
-                            }
-                        }).error(function (data, status, headers, configs) {
-                            console.error(status);
-                        });
-                    }
+                    var cipherPasswordServer = decryptString(pswdServer);
+                    $http({
+                        method: "post",
+                        url: "/registration",
+                        data: {
+                            login: user.login,
+                            password: cipherPasswordServer
+                        }
+                    }).success(function (data, status) {
+                        switch (status) {
+                            case 200:
+                                if (data.login) {
+                                    $rootScope.login = data.login;
+                                    $location.path('/');
+                                }
+                                break;
+                            case 403:
+                                //TODO user exists
+                                break;
+                            default:
+                        }
+                    }).error(function (data, status, headers, configs) {
+                        console.error(status);
+                    });
                 }).error(function (error, status) {
                     console.error(error);
                 });
