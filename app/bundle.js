@@ -1921,6 +1921,7 @@ module.exports = function (ngModule) {
     __webpack_require__(11)(ngModule);
     __webpack_require__(9)(ngModule);
     __webpack_require__(10)(ngModule);
+    __webpack_require__(26)(ngModule);
 };
 
 /***/ },
@@ -2769,20 +2770,24 @@ module.exports = function (ngModule) {
  * Created by Nikcher on 28.03.2017.
  */
 module.exports = function (ngModule) {
-    ngModule.factory('saltService', function ($http, $rootScope) {
+    ngModule.factory('saltService', function ($http, $rootScope, loginService) {
 
         return {
             toSalt: function (login, password) {
 
                 $http({
                     method: "post",
-                    url: "/login",
+                    url: "/salt",
                     data: {
                         login: login
                     }
 
-                }).success(function (answer) {
-                    console.log(answer);
+                }).success(function (answer, status) {
+                    if (status === 200) {
+                        loginService.toLogin(answer.answer, password);
+                    } else if (status === 403) {
+                        //TODO error login
+                    }
                 });
             }
         };
@@ -3840,6 +3845,51 @@ var SM = angular.module('SM', ["ngRoute"]).config(function ($routeProvider) {
 
 __webpack_require__(2)(SM);
 __webpack_require__(3)(SM);
+
+/***/ },
+/* 26 */
+/***/ function(module, exports, __webpack_require__) {
+
+/**
+ * Created by Nikcher on 04.04.2017.
+ */
+module.exports = function (ngModule) {
+    var Binary = __webpack_require__(5);
+    var binary = new Binary();
+    var md5 = __webpack_require__(19);
+    ngModule.factory('loginService', function ($http, $rootScope, $location) {
+
+        return {
+            toLogin: function (answer, password) {
+                console.log(answer.iter);
+                var saltPassword = md5(password);
+                console.log(saltPassword);
+                for (var i = 0; i < answer.iter; i++) {
+                    saltPassword = md5(answer.salt + saltPassword + answer.salt);
+                    console.log(saltPassword);
+                }
+
+                $http({
+                    method: "post",
+                    url: "/login",
+                    data: {
+                        saltPassword: saltPassword
+                    }
+
+                }).success(function (data, status) {
+                    if (status === 200) {
+                        if (data.login) {
+                            $rootScope.login = data.login;
+                            $location.path('/');
+                        }
+                    } else if (status === 403) {
+                        //TODO error login
+                    }
+                });
+            }
+        };
+    });
+};
 
 /***/ }
 /******/ ]);

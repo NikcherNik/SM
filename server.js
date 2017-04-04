@@ -1,6 +1,3 @@
-/**
- * Created by Nikcher on 12.03.2017.
- */
 
 var express = require('express');
 var session = require('express-session');
@@ -27,7 +24,6 @@ var options = {
 
 var router = express.Router();
 
-
 var http = require('http').Server(app);
 
 app.use(express.static('app'));
@@ -41,7 +37,7 @@ app.use(session({
     key: 'save_money',
     secret: 'SaveMoney20-06',
     store: new SessionStore(options),
-    cookie: { secure: true,
+    cookie: {
         httpOnly: true,
         domain: 'localhost',
         expires: expiryDate
@@ -90,7 +86,7 @@ app.post('/cipher',require('./server/routes/cipher').post);
 app.post('/registration',require('./server/routes/registration').post);
 
 //sing up
-app.post('/cipher',require('./server/routes/cipher').post);
+app.post('/salt',require('./server/routes/salt').post);
 app.post('/login',require('./server/routes/login').post);
 
 //===============================

@@ -7,6 +7,7 @@ var session  = require('express-session');
 var DataBase = require('../db/database.js');
 var Binary   = require('../../app/binary.js');
 var async    = require('async');
+var cookieParser = require('cookie-parser')
 
 var binary = new Binary();
 var database = new DataBase();
@@ -32,6 +33,7 @@ exports.post = function (req, res, next ) {
             if(results[0].count == 0){
                 saveNewUser(login, newPassword);
                 req.session.login = login;
+                console.log(req.session.login);
                 res.status(200).send({
                     login: login
                 });

@@ -5,4 +5,5 @@ module.exports = function (ngModule) {
     require('./validationServices/validationService.js')(ngModule);
     require('./registrationService/registrationService.js')(ngModule);
     require('./saltService/saltService.js')(ngModule);
+    require('./loginService/loginService.js')(ngModule);
 };
