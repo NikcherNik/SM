@@ -67,7 +67,6 @@ app.get('/app/bundle.js',function (req,res) {
 });
 
 app.get('/username',function (req,res) {
-    console.log(req.session.login);
     if(req.session.login){
         res.send({
             login : req.session.login
@@ -89,6 +88,8 @@ app.post('/registration',require('./server/routes/registration').post);
 app.post('/salt',require('./server/routes/salt').post);
 app.post('/login',require('./server/routes/login').post);
 
+//sing out
+app.post('/singout',require('./server/routes/singout').post);
 //===============================
 
 

@@ -61,11 +61,519 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 25);
+/******/ 	return __webpack_require__(__webpack_require__.s = 26);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ function(module, exports) {
+
+var Binary = function () {
+    function initBinary(packageRoot) {
+        if (packageRoot.__PACKAGE_ENABLED) {
+            __unit("binary.js");
+        }
+
+        var i2a = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'];
+
+        function base64_encode(s) {
+            var length = s.length;
+            var groupCount = Math.floor(length / 3);
+            var remaining = length - 3 * groupCount;
+            var result = "";
+
+            var idx = 0;
+            for (var i = 0; i < groupCount; i++) {
+                var b0 = s[idx++] & 0xff;
+                var b1 = s[idx++] & 0xff;
+                var b2 = s[idx++] & 0xff;
+                result += i2a[b0 >> 2];
+                result += i2a[b0 << 4 & 0x3f | b1 >> 4];
+                result += i2a[b1 << 2 & 0x3f | b2 >> 6];
+                result += i2a[b2 & 0x3f];
+            }
+
+            if (remaining == 0) {} else if (remaining == 1) {
+                var b0 = s[idx++] & 0xff;
+                result += i2a[b0 >> 2];
+                result += i2a[b0 << 4 & 0x3f];
+                result += "==";
+            } else if (remaining == 2) {
+                var b0 = s[idx++] & 0xff;
+                var b1 = s[idx++] & 0xff;
+                result += i2a[b0 >> 2];
+                result += i2a[b0 << 4 & 0x3f | b1 >> 4];
+                result += i2a[b1 << 2 & 0x3f];
+                result += '=';
+            } else {
+                throw "never happen";
+            }
+            return result;
+        }
+
+        var a2i = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1, -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51];
+
+        function get_a2i(c) {
+            var result = 0 <= c && c < a2i.length ? a2i[c] : -1;
+            if (result < 0) throw "Illegal character " + c;
+            return result;
+        }
+
+        function base64_decode(s) {
+            var length = s.length;
+            var groupCount = Math.floor(length / 4);
+            if (4 * groupCount != length) throw "String length must be a multiple of four.";
+
+            var missing = 0;
+            if (length != 0) {
+                if (s.charAt(length - 1) == '=') {
+                    missing++;
+                    groupCount--;
+                }
+                if (s.charAt(length - 2) == '=') missing++;
+            }
+
+            var len = 3 * groupCount - missing;
+            if (len < 0) {
+                len = 0;
+            }
+            var result = new Array(len);
+            // var result = new Array( 3 * groupCount - missing );
+            // var result = new Array( 3 * ( groupCount +1 ) - missing );
+            var idx_in = 0;
+            var idx_out = 0;
+            for (var i = 0; i < groupCount; i++) {
+                var c0 = get_a2i(s.charCodeAt(idx_in++));
+                var c1 = get_a2i(s.charCodeAt(idx_in++));
+                var c2 = get_a2i(s.charCodeAt(idx_in++));
+                var c3 = get_a2i(s.charCodeAt(idx_in++));
+                result[idx_out++] = 0xFF & (c0 << 2 | c1 >> 4);
+                result[idx_out++] = 0xFF & (c1 << 4 | c2 >> 2);
+                result[idx_out++] = 0xFF & (c2 << 6 | c3);
+            }
+
+            if (missing == 0) {} else if (missing == 1) {
+                var c0 = get_a2i(s.charCodeAt(idx_in++));
+                var c1 = get_a2i(s.charCodeAt(idx_in++));
+                var c2 = get_a2i(s.charCodeAt(idx_in++));
+                result[idx_out++] = 0xFF & (c0 << 2 | c1 >> 4);
+                result[idx_out++] = 0xFF & (c1 << 4 | c2 >> 2);
+            } else if (missing == 2) {
+                var c0 = get_a2i(s.charCodeAt(idx_in++));
+                var c1 = get_a2i(s.charCodeAt(idx_in++));
+                result[idx_out++] = 0xFF & (c0 << 2 | c1 >> 4);
+            } else {
+                throw "never happen";
+            }
+            return result;
+        }
+
+        function base64x_encode(s) {
+            return base64x_pre_encode(base64_encode(s));
+        }
+        function base64x_decode(s) {
+            return base64_decode(base64x_pre_decode(s));
+        }
+
+        var base64x_pre_encode_map = {};
+        base64x_pre_encode_map["x"] = "xx";
+        base64x_pre_encode_map["+"] = "xa";
+        base64x_pre_encode_map["/"] = "xb";
+        base64x_pre_encode_map["="] = "";
+
+        function base64x_pre_encode(s) {
+            var ss = "";
+            for (var i = 0; i < s.length; i++) {
+                var c = s.charAt(i);
+                var cc = base64x_pre_encode_map[c];
+                if (cc != null) {
+                    ss = ss + cc;
+                } else {
+                    ss = ss + c;
+                }
+            }
+            return ss;
+        }
+
+        var base64x_pre_decode_map = {};
+        base64x_pre_decode_map['x'] = 'x';
+        base64x_pre_decode_map['a'] = '+';
+        base64x_pre_decode_map['b'] = '/';
+
+        function base64x_pre_decode(s) {
+            var ss = "";
+            for (var i = 0; i < s.length; i++) {
+                var c = s.charAt(i);
+                if (c == 'x') {
+                    c = s.charAt(++i);
+                    var cc = base64x_pre_decode_map[c];
+                    if (cc != null) {
+                        ss = ss + cc;
+                        // ss = ss + '/';
+                    } else {
+                            // throw "invalid character was found. ("+cc+")"; // ignore.
+                        }
+                } else {
+                    ss = ss + c;
+                }
+            }
+            while (ss.length % 4 != 0) {
+                ss += "=";
+            }
+            return ss;
+        }
+
+        function equals(a, b) {
+            if (a.length != b.length) return false;
+            var size = a.length;
+            for (var i = 0; i < size; i++) {
+                // trace( a[i] + "/" + b[i] );
+                if (a[i] != b[i]) return false;
+            }
+            return true;
+        }
+
+        function hex(i) {
+            if (i == null) return "??";
+            //if ( i < 0 ) i+=256;
+            i &= 0xff;
+            var result = i.toString(16);
+            return result.length < 2 ? "0" + result : result;
+        }
+
+        function base16(data, columns, delim) {
+            return base16_encode(data, columns, delim);
+        }
+        function base16_encode(data, columns, delim) {
+            if (delim == null) {
+                delim = "";
+            }
+            if (columns == null) {
+                columns = 256;
+            }
+            var result = "";
+            for (var i = 0; i < data.length; i++) {
+                if (i % columns == 0 && 0 < i) result += "\n";
+                result += hex(data[i]) + delim;
+            }
+            return result.toUpperCase();
+        }
+
+        var amap = {};
+        amap['0'] = 0;amap['1'] = 1;amap['2'] = 2;amap['3'] = 3;
+        amap['4'] = 4;amap['5'] = 5;amap['6'] = 6;amap['7'] = 7;
+        amap['8'] = 8;amap['9'] = 9;amap['A'] = 10;amap['B'] = 11;
+        amap['C'] = 12;amap['D'] = 13;amap['E'] = 14;amap['F'] = 15;
+        amap['a'] = 10;amap['b'] = 11;
+        amap['c'] = 12;amap['d'] = 13;amap['e'] = 14;amap['f'] = 15;
+
+        function get_amap(c) {
+            var cc = amap[c];
+            //trace(c + "=>" + cc );
+            if (cc == null) throw "found an invalid character.";
+            return cc;
+        }
+
+        function base16_decode(data) {
+            var ca = [];
+            for (var i = 0, j = 0; i < data.length; i++) {
+                var c = data.charAt(i);
+                if (c == "\s") {
+                    continue;
+                } else {
+                    ca[j++] = c;
+                }
+            }
+            if (ca.length % 2 != 0) {
+                throw "data must be a multiple of two.";
+            }
+
+            var result = new Array(ca.length >> 1);
+            for (var i = 0; i < ca.length; i += 2) {
+                var v = 0xff & (get_amap(ca[i]) << 4 | get_amap(ca[i + 1]));
+                result[i >> 1] = v;
+                // trace(  get_amap( ca[i+1] ) )
+                // result[i>>1] =  get_amap( ca[i+1] );
+            }
+            return result;
+        }
+        // trace( base16_encode([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,128,255 ] ) );
+        // trace( base16_encode( base16_decode("000102030405060708090A0B0C0D0E0F1080FF") ) );
+        // trace( base16_encode( base16_decode( "000102030405060708090A0B0C0D0E0F102030405060708090A0B0C0D0E0F0FF" ) ) );
+        //                                       000102030405060708090A0B0C0D0E0F102030405060708090A0B0C0D0E0F0FF
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        var B10000000 = 0x80;
+        var B11000000 = 0xC0;
+        var B11100000 = 0xE0;
+        var B11110000 = 0xF0;
+        var B11111000 = 0xF8;
+        var B11111100 = 0xFC;
+        var B11111110 = 0xFE;
+        var B01111111 = 0x7F;
+        var B00111111 = 0x3F;
+        var B00011111 = 0x1F;
+        var B00001111 = 0x0F;
+        var B00000111 = 0x07;
+        var B00000011 = 0x03;
+        var B00000001 = 0x01;
+
+        function str2utf8(str) {
+            var result = [];
+            var length = str.length;
+            var idx = 0;
+            for (var i = 0; i < length; i++) {
+                var c = str.charCodeAt(i);
+                if (c <= 0x7f) {
+                    result[idx++] = c;
+                } else if (c <= 0x7ff) {
+                    result[idx++] = B11000000 | B00011111 & c >>> 6;
+                    result[idx++] = B10000000 | B00111111 & c >>> 0;
+                } else if (c <= 0xffff) {
+                    result[idx++] = B11100000 | B00001111 & c >>> 12;
+                    result[idx++] = B10000000 | B00111111 & c >>> 6;
+                    result[idx++] = B10000000 | B00111111 & c >>> 0;
+                } else if (c <= 0x10ffff) {
+                    result[idx++] = B11110000 | B00000111 & c >>> 18;
+                    result[idx++] = B10000000 | B00111111 & c >>> 12;
+                    result[idx++] = B10000000 | B00111111 & c >>> 6;
+                    result[idx++] = B10000000 | B00111111 & c >>> 0;
+                } else {
+                    throw "error";
+                }
+            }
+            return result;
+        }
+
+        function utf82str(data) {
+            var result = "";
+            var length = data.length;
+
+            for (var i = 0; i < length;) {
+                var c = data[i++];
+                if (c < 0x80) {
+                    result += String.fromCharCode(c);
+                } else if (c < B11100000) {
+                    result += String.fromCharCode((B00011111 & c) << 6 | (B00111111 & data[i++]) << 0);
+                } else if (c < B11110000) {
+                    result += String.fromCharCode((B00001111 & c) << 12 | (B00111111 & data[i++]) << 6 | (B00111111 & data[i++]) << 0);
+                } else if (c < B11111000) {
+                    result += String.fromCharCode((B00000111 & c) << 18 | (B00111111 & data[i++]) << 12 | (B00111111 & data[i++]) << 6 | (B00111111 & data[i++]) << 0);
+                } else if (c < B11111100) {
+                    result += String.fromCharCode((B00000011 & c) << 24 | (B00111111 & data[i++]) << 18 | (B00111111 & data[i++]) << 12 | (B00111111 & data[i++]) << 6 | (B00111111 & data[i++]) << 0);
+                } else if (c < B11111110) {
+                    result += String.fromCharCode((B00000001 & c) << 30 | (B00111111 & data[i++]) << 24 | (B00111111 & data[i++]) << 18 | (B00111111 & data[i++]) << 12 | (B00111111 & data[i++]) << 6 | (B00111111 & data[i++]) << 0);
+                }
+            }
+            return result;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        // convert unicode character array to string
+        function char2str(ca) {
+            var result = "";
+            for (var i = 0; i < ca.length; i++) {
+                result += String.fromCharCode(ca[i]);
+            }
+            return result;
+        }
+
+        // convert string to unicode character array
+        function str2char(str) {
+            var result = new Array(str.length);
+            for (var i = 0; i < str.length; i++) {
+                result[i] = str.charCodeAt(i);
+            }
+            return result;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        // byte expressions (big endian)
+        function i2ba_be(i) {
+            return [0xff & i >> 24, 0xff & i >> 16, 0xff & i >> 8, 0xff & i >> 0];
+        }
+        function ba2i_be(bs) {
+            return bs[0] << 24 | bs[1] << 16 | bs[2] << 8 | bs[3] << 0;
+        }
+        function s2ba_be(i) {
+            return [0xff & i >> 8, 0xff & i >> 0];
+        }
+        function ba2s_be(bs) {
+            return 0 | bs[0] << 8 | bs[1] << 0;
+        }
+
+        // byte expressions (little endian)
+        function i2ba_le(i) {
+            return [0xff & i >> 0, 0xff & i >> 8, 0xff & i >> 16, 0xff & i >> 24];
+        }
+        function ba2i_le(bs) {
+            return 0 | bs[3] << 0 | bs[2] << 8 | bs[1] << 16 | bs[0] << 24;
+        }
+        function s2ba_le(i) {
+            return [0xff & i >> 0, 0xff & i >> 8];
+        }
+        function ba2s_le(bs) {
+            return 0 | bs[1] << 0 | bs[0] << 8;
+        }
+
+        function ia2ba_be(ia) {
+            var length = ia.length << 2;
+            var ba = new Array(length);
+            for (var ii = 0, bi = 0; ii < ia.length && bi < ba.length;) {
+                ba[bi++] = 0xff & ia[ii] >> 24;
+                ba[bi++] = 0xff & ia[ii] >> 16;
+                ba[bi++] = 0xff & ia[ii] >> 8;
+                ba[bi++] = 0xff & ia[ii] >> 0;
+                ii++;
+            }
+            return ba;
+        }
+        function ba2ia_be(ba) {
+            var length = ba.length + 3 >> 2;
+            var ia = new Array(length);;
+            for (var ii = 0, bi = 0; ii < ia.length && bi < ba.length;) {
+                ia[ii++] = (bi < ba.length ? ba[bi++] << 24 : 0) | (bi < ba.length ? ba[bi++] << 16 : 0) | (bi < ba.length ? ba[bi++] << 8 : 0) | (bi < ba.length ? ba[bi++] /*<< 0*/ : 0);
+            }
+            return ia;
+        }
+
+        function ia2ba_le(ia) {
+            var length = ia.length << 2;
+            var ba = new Array(length);
+            for (var ii = 0, bi = 0; ii < ia.length && bi < ba.length;) {
+                ba[bi++] = 0xff & ia[ii] >> 0;
+                ba[bi++] = 0xff & ia[ii] >> 8;
+                ba[bi++] = 0xff & ia[ii] >> 16;
+                ba[bi++] = 0xff & ia[ii] >> 24;
+                ii++;
+            }
+            return ba;
+        }
+        function ba2ia_le(ba) {
+            var length = ba.length + 3 >> 2;
+            var ia = new Array(length);;
+            for (var ii = 0, bi = 0; ii < ia.length && bi < ba.length;) {
+                ia[ii++] = (bi < ba.length ? ba[bi++] /*<< 0*/ : 0) | (bi < ba.length ? ba[bi++] << 8 : 0) | (bi < ba.length ? ba[bi++] << 16 : 0) | (bi < ba.length ? ba[bi++] << 24 : 0);
+            }
+            return ia;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function trim(s) {
+            var result = "";
+            for (var idx = 0; idx < s.length; idx++) {
+                var c = s.charAt(idx);
+                if (c == "\s" || c == "\t" || c == "\r" || c == "\n") {} else {
+                    result += c;
+                }
+            }
+            return result;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+
+        function mktst(encode, decode) {
+            return function (trial, from, to) {
+                var flg = true;
+                for (var i = 0; i < trial; i++) {
+                    for (var j = from; j < to; j++) {
+                        var arr = new Array(j);
+                        for (var k = 0; k < j; k++) arr[k] = Math.floor(Math.random() * 256);
+
+                        var s = encode(arr);
+                        var b = decode(s);
+
+                        // trace( "in:"+arr.length);
+                        // trace( "base64:"+s.length);
+                        // trace( "out:"+b.length);
+                        // trace( "in:"+arr);
+                        // trace( "base64:"+s );
+                        // trace( "out:"+b );
+                        trace("in :" + arr.length + ":" + base16_encode(arr));
+                        trace("b64:" + s.length + ":" + s);
+                        trace("out:" + b.length + ":" + base16_encode(arr));
+                        if (equals(arr, b)) {
+                            trace("OK! ( " + i + "," + j + ")");
+                        } else {
+                            trace("ERR ( " + i + "," + j + ")");
+                            flg = false;
+                        }
+                        trace("-----------");
+                    }
+                }
+                if (flg) {
+                    trace("ALL OK! ");
+                } else {
+                    trace("FOUND ERROR!");
+                }
+            };
+        }
+
+        // export
+
+        // base64
+        packageRoot.base64_encode = base64_encode;
+        packageRoot.base64_decode = base64_decode;
+        packageRoot.base64_test = mktst(base64_encode, base64_decode);
+
+        // base64ex
+        packageRoot.base64x_encode = base64x_encode;
+        packageRoot.base64x_decode = base64x_decode;
+        packageRoot.base64x_test = mktst(base64x_encode, base64x_decode);
+
+        packageRoot.base64x_pre_encode = base64x_pre_encode;
+        packageRoot.base64x_pre_decode = base64x_pre_decode;
+
+        // base16
+        packageRoot.base16_encode = base16_encode;
+        packageRoot.base16_decode = base16_decode;
+        packageRoot.base16 = base16;
+        packageRoot.hex = base16;
+
+        // utf8
+        packageRoot.utf82str = utf82str;
+        packageRoot.str2utf8 = str2utf8;
+        packageRoot.str2char = str2char;
+        packageRoot.char2str = char2str;
+
+        // byte expressions
+        packageRoot.i2ba = i2ba_be;
+        packageRoot.ba2i = ba2i_be;
+        packageRoot.i2ba_be = i2ba_be;
+        packageRoot.ba2i_be = ba2i_be;
+        packageRoot.i2ba_le = i2ba_le;
+        packageRoot.ba2i_le = ba2i_le;
+
+        packageRoot.s2ba = s2ba_be;
+        packageRoot.ba2s = ba2s_be;
+        packageRoot.s2ba_be = s2ba_be;
+        packageRoot.ba2s_be = ba2s_be;
+        packageRoot.s2ba_le = s2ba_le;
+        packageRoot.ba2s_le = ba2s_le;
+
+        packageRoot.ba2ia = ba2ia_be;
+        packageRoot.ia2ba = ia2ba_be;
+        packageRoot.ia2ba_be = ia2ba_be;
+        packageRoot.ba2ia_be = ba2ia_be;
+        packageRoot.ia2ba_le = ia2ba_le;
+        packageRoot.ba2ia_le = ba2ia_le;
+
+        // arrays
+        packageRoot.cmparr = equals;
+    }
+
+    initBinary(this);
+};
+
+module.exports = Binary;
+
+/***/ },
+/* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -79,9 +587,9 @@
 
 'use strict'
 
-var base64 = __webpack_require__(12)
-var ieee754 = __webpack_require__(16)
-var isArray = __webpack_require__(18)
+var base64 = __webpack_require__(14)
+var ieee754 = __webpack_require__(18)
+var isArray = __webpack_require__(20)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -1859,10 +2367,10 @@ function isnan (val) {
   return val !== val // eslint-disable-line no-self-compare
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0).Buffer, __webpack_require__(24)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1).Buffer, __webpack_require__(25)))
 
 /***/ },
-/* 1 */
+/* 2 */
 /***/ function(module, exports) {
 
 var charenc = {
@@ -1901,1388 +2409,14 @@ module.exports = charenc;
 
 
 /***/ },
-/* 2 */
-/***/ function(module, exports, __webpack_require__) {
-
-module.exports = function (ngModule) {
-    __webpack_require__(6)(ngModule);
-    __webpack_require__(7)(ngModule);
-    __webpack_require__(8)(ngModule);
-};
-
-/***/ },
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-/**
- * Created by Nikcher on 21.03.2017.
- */
-module.exports = function (ngModule) {
-    __webpack_require__(11)(ngModule);
-    __webpack_require__(9)(ngModule);
-    __webpack_require__(10)(ngModule);
-    __webpack_require__(26)(ngModule);
-};
-
-/***/ },
-/* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(14);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(20)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/less-loader/lib/loader.js!./common.less", function() {
-			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/less-loader/lib/loader.js!./common.less");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-var Binary = function () {
-    function initBinary(packageRoot) {
-        if (packageRoot.__PACKAGE_ENABLED) {
-            __unit("binary.js");
-        }
-
-        var i2a = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'];
-
-        function base64_encode(s) {
-            var length = s.length;
-            var groupCount = Math.floor(length / 3);
-            var remaining = length - 3 * groupCount;
-            var result = "";
-
-            var idx = 0;
-            for (var i = 0; i < groupCount; i++) {
-                var b0 = s[idx++] & 0xff;
-                var b1 = s[idx++] & 0xff;
-                var b2 = s[idx++] & 0xff;
-                result += i2a[b0 >> 2];
-                result += i2a[b0 << 4 & 0x3f | b1 >> 4];
-                result += i2a[b1 << 2 & 0x3f | b2 >> 6];
-                result += i2a[b2 & 0x3f];
-            }
-
-            if (remaining == 0) {} else if (remaining == 1) {
-                var b0 = s[idx++] & 0xff;
-                result += i2a[b0 >> 2];
-                result += i2a[b0 << 4 & 0x3f];
-                result += "==";
-            } else if (remaining == 2) {
-                var b0 = s[idx++] & 0xff;
-                var b1 = s[idx++] & 0xff;
-                result += i2a[b0 >> 2];
-                result += i2a[b0 << 4 & 0x3f | b1 >> 4];
-                result += i2a[b1 << 2 & 0x3f];
-                result += '=';
-            } else {
-                throw "never happen";
-            }
-            return result;
-        }
-
-        var a2i = [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1, -1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51];
-
-        function get_a2i(c) {
-            var result = 0 <= c && c < a2i.length ? a2i[c] : -1;
-            if (result < 0) throw "Illegal character " + c;
-            return result;
-        }
-
-        function base64_decode(s) {
-            var length = s.length;
-            var groupCount = Math.floor(length / 4);
-            if (4 * groupCount != length) throw "String length must be a multiple of four.";
-
-            var missing = 0;
-            if (length != 0) {
-                if (s.charAt(length - 1) == '=') {
-                    missing++;
-                    groupCount--;
-                }
-                if (s.charAt(length - 2) == '=') missing++;
-            }
-
-            var len = 3 * groupCount - missing;
-            if (len < 0) {
-                len = 0;
-            }
-            var result = new Array(len);
-            // var result = new Array( 3 * groupCount - missing );
-            // var result = new Array( 3 * ( groupCount +1 ) - missing );
-            var idx_in = 0;
-            var idx_out = 0;
-            for (var i = 0; i < groupCount; i++) {
-                var c0 = get_a2i(s.charCodeAt(idx_in++));
-                var c1 = get_a2i(s.charCodeAt(idx_in++));
-                var c2 = get_a2i(s.charCodeAt(idx_in++));
-                var c3 = get_a2i(s.charCodeAt(idx_in++));
-                result[idx_out++] = 0xFF & (c0 << 2 | c1 >> 4);
-                result[idx_out++] = 0xFF & (c1 << 4 | c2 >> 2);
-                result[idx_out++] = 0xFF & (c2 << 6 | c3);
-            }
-
-            if (missing == 0) {} else if (missing == 1) {
-                var c0 = get_a2i(s.charCodeAt(idx_in++));
-                var c1 = get_a2i(s.charCodeAt(idx_in++));
-                var c2 = get_a2i(s.charCodeAt(idx_in++));
-                result[idx_out++] = 0xFF & (c0 << 2 | c1 >> 4);
-                result[idx_out++] = 0xFF & (c1 << 4 | c2 >> 2);
-            } else if (missing == 2) {
-                var c0 = get_a2i(s.charCodeAt(idx_in++));
-                var c1 = get_a2i(s.charCodeAt(idx_in++));
-                result[idx_out++] = 0xFF & (c0 << 2 | c1 >> 4);
-            } else {
-                throw "never happen";
-            }
-            return result;
-        }
-
-        function base64x_encode(s) {
-            return base64x_pre_encode(base64_encode(s));
-        }
-        function base64x_decode(s) {
-            return base64_decode(base64x_pre_decode(s));
-        }
-
-        var base64x_pre_encode_map = {};
-        base64x_pre_encode_map["x"] = "xx";
-        base64x_pre_encode_map["+"] = "xa";
-        base64x_pre_encode_map["/"] = "xb";
-        base64x_pre_encode_map["="] = "";
-
-        function base64x_pre_encode(s) {
-            var ss = "";
-            for (var i = 0; i < s.length; i++) {
-                var c = s.charAt(i);
-                var cc = base64x_pre_encode_map[c];
-                if (cc != null) {
-                    ss = ss + cc;
-                } else {
-                    ss = ss + c;
-                }
-            }
-            return ss;
-        }
-
-        var base64x_pre_decode_map = {};
-        base64x_pre_decode_map['x'] = 'x';
-        base64x_pre_decode_map['a'] = '+';
-        base64x_pre_decode_map['b'] = '/';
-
-        function base64x_pre_decode(s) {
-            var ss = "";
-            for (var i = 0; i < s.length; i++) {
-                var c = s.charAt(i);
-                if (c == 'x') {
-                    c = s.charAt(++i);
-                    var cc = base64x_pre_decode_map[c];
-                    if (cc != null) {
-                        ss = ss + cc;
-                        // ss = ss + '/';
-                    } else {
-                            // throw "invalid character was found. ("+cc+")"; // ignore.
-                        }
-                } else {
-                    ss = ss + c;
-                }
-            }
-            while (ss.length % 4 != 0) {
-                ss += "=";
-            }
-            return ss;
-        }
-
-        function equals(a, b) {
-            if (a.length != b.length) return false;
-            var size = a.length;
-            for (var i = 0; i < size; i++) {
-                // trace( a[i] + "/" + b[i] );
-                if (a[i] != b[i]) return false;
-            }
-            return true;
-        }
-
-        function hex(i) {
-            if (i == null) return "??";
-            //if ( i < 0 ) i+=256;
-            i &= 0xff;
-            var result = i.toString(16);
-            return result.length < 2 ? "0" + result : result;
-        }
-
-        function base16(data, columns, delim) {
-            return base16_encode(data, columns, delim);
-        }
-        function base16_encode(data, columns, delim) {
-            if (delim == null) {
-                delim = "";
-            }
-            if (columns == null) {
-                columns = 256;
-            }
-            var result = "";
-            for (var i = 0; i < data.length; i++) {
-                if (i % columns == 0 && 0 < i) result += "\n";
-                result += hex(data[i]) + delim;
-            }
-            return result.toUpperCase();
-        }
-
-        var amap = {};
-        amap['0'] = 0;amap['1'] = 1;amap['2'] = 2;amap['3'] = 3;
-        amap['4'] = 4;amap['5'] = 5;amap['6'] = 6;amap['7'] = 7;
-        amap['8'] = 8;amap['9'] = 9;amap['A'] = 10;amap['B'] = 11;
-        amap['C'] = 12;amap['D'] = 13;amap['E'] = 14;amap['F'] = 15;
-        amap['a'] = 10;amap['b'] = 11;
-        amap['c'] = 12;amap['d'] = 13;amap['e'] = 14;amap['f'] = 15;
-
-        function get_amap(c) {
-            var cc = amap[c];
-            //trace(c + "=>" + cc );
-            if (cc == null) throw "found an invalid character.";
-            return cc;
-        }
-
-        function base16_decode(data) {
-            var ca = [];
-            for (var i = 0, j = 0; i < data.length; i++) {
-                var c = data.charAt(i);
-                if (c == "\s") {
-                    continue;
-                } else {
-                    ca[j++] = c;
-                }
-            }
-            if (ca.length % 2 != 0) {
-                throw "data must be a multiple of two.";
-            }
-
-            var result = new Array(ca.length >> 1);
-            for (var i = 0; i < ca.length; i += 2) {
-                var v = 0xff & (get_amap(ca[i]) << 4 | get_amap(ca[i + 1]));
-                result[i >> 1] = v;
-                // trace(  get_amap( ca[i+1] ) )
-                // result[i>>1] =  get_amap( ca[i+1] );
-            }
-            return result;
-        }
-        // trace( base16_encode([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,128,255 ] ) );
-        // trace( base16_encode( base16_decode("000102030405060708090A0B0C0D0E0F1080FF") ) );
-        // trace( base16_encode( base16_decode( "000102030405060708090A0B0C0D0E0F102030405060708090A0B0C0D0E0F0FF" ) ) );
-        //                                       000102030405060708090A0B0C0D0E0F102030405060708090A0B0C0D0E0F0FF
-
-
-        /////////////////////////////////////////////////////////////////////////////////////////////
-
-        var B10000000 = 0x80;
-        var B11000000 = 0xC0;
-        var B11100000 = 0xE0;
-        var B11110000 = 0xF0;
-        var B11111000 = 0xF8;
-        var B11111100 = 0xFC;
-        var B11111110 = 0xFE;
-        var B01111111 = 0x7F;
-        var B00111111 = 0x3F;
-        var B00011111 = 0x1F;
-        var B00001111 = 0x0F;
-        var B00000111 = 0x07;
-        var B00000011 = 0x03;
-        var B00000001 = 0x01;
-
-        function str2utf8(str) {
-            var result = [];
-            var length = str.length;
-            var idx = 0;
-            for (var i = 0; i < length; i++) {
-                var c = str.charCodeAt(i);
-                if (c <= 0x7f) {
-                    result[idx++] = c;
-                } else if (c <= 0x7ff) {
-                    result[idx++] = B11000000 | B00011111 & c >>> 6;
-                    result[idx++] = B10000000 | B00111111 & c >>> 0;
-                } else if (c <= 0xffff) {
-                    result[idx++] = B11100000 | B00001111 & c >>> 12;
-                    result[idx++] = B10000000 | B00111111 & c >>> 6;
-                    result[idx++] = B10000000 | B00111111 & c >>> 0;
-                } else if (c <= 0x10ffff) {
-                    result[idx++] = B11110000 | B00000111 & c >>> 18;
-                    result[idx++] = B10000000 | B00111111 & c >>> 12;
-                    result[idx++] = B10000000 | B00111111 & c >>> 6;
-                    result[idx++] = B10000000 | B00111111 & c >>> 0;
-                } else {
-                    throw "error";
-                }
-            }
-            return result;
-        }
-
-        function utf82str(data) {
-            var result = "";
-            var length = data.length;
-
-            for (var i = 0; i < length;) {
-                var c = data[i++];
-                if (c < 0x80) {
-                    result += String.fromCharCode(c);
-                } else if (c < B11100000) {
-                    result += String.fromCharCode((B00011111 & c) << 6 | (B00111111 & data[i++]) << 0);
-                } else if (c < B11110000) {
-                    result += String.fromCharCode((B00001111 & c) << 12 | (B00111111 & data[i++]) << 6 | (B00111111 & data[i++]) << 0);
-                } else if (c < B11111000) {
-                    result += String.fromCharCode((B00000111 & c) << 18 | (B00111111 & data[i++]) << 12 | (B00111111 & data[i++]) << 6 | (B00111111 & data[i++]) << 0);
-                } else if (c < B11111100) {
-                    result += String.fromCharCode((B00000011 & c) << 24 | (B00111111 & data[i++]) << 18 | (B00111111 & data[i++]) << 12 | (B00111111 & data[i++]) << 6 | (B00111111 & data[i++]) << 0);
-                } else if (c < B11111110) {
-                    result += String.fromCharCode((B00000001 & c) << 30 | (B00111111 & data[i++]) << 24 | (B00111111 & data[i++]) << 18 | (B00111111 & data[i++]) << 12 | (B00111111 & data[i++]) << 6 | (B00111111 & data[i++]) << 0);
-                }
-            }
-            return result;
-        }
-
-        /////////////////////////////////////////////////////////////////////////////////////////////
-
-        // convert unicode character array to string
-        function char2str(ca) {
-            var result = "";
-            for (var i = 0; i < ca.length; i++) {
-                result += String.fromCharCode(ca[i]);
-            }
-            return result;
-        }
-
-        // convert string to unicode character array
-        function str2char(str) {
-            var result = new Array(str.length);
-            for (var i = 0; i < str.length; i++) {
-                result[i] = str.charCodeAt(i);
-            }
-            return result;
-        }
-
-        /////////////////////////////////////////////////////////////////////////////////////////////
-
-        // byte expressions (big endian)
-        function i2ba_be(i) {
-            return [0xff & i >> 24, 0xff & i >> 16, 0xff & i >> 8, 0xff & i >> 0];
-        }
-        function ba2i_be(bs) {
-            return bs[0] << 24 | bs[1] << 16 | bs[2] << 8 | bs[3] << 0;
-        }
-        function s2ba_be(i) {
-            return [0xff & i >> 8, 0xff & i >> 0];
-        }
-        function ba2s_be(bs) {
-            return 0 | bs[0] << 8 | bs[1] << 0;
-        }
-
-        // byte expressions (little endian)
-        function i2ba_le(i) {
-            return [0xff & i >> 0, 0xff & i >> 8, 0xff & i >> 16, 0xff & i >> 24];
-        }
-        function ba2i_le(bs) {
-            return 0 | bs[3] << 0 | bs[2] << 8 | bs[1] << 16 | bs[0] << 24;
-        }
-        function s2ba_le(i) {
-            return [0xff & i >> 0, 0xff & i >> 8];
-        }
-        function ba2s_le(bs) {
-            return 0 | bs[1] << 0 | bs[0] << 8;
-        }
-
-        function ia2ba_be(ia) {
-            var length = ia.length << 2;
-            var ba = new Array(length);
-            for (var ii = 0, bi = 0; ii < ia.length && bi < ba.length;) {
-                ba[bi++] = 0xff & ia[ii] >> 24;
-                ba[bi++] = 0xff & ia[ii] >> 16;
-                ba[bi++] = 0xff & ia[ii] >> 8;
-                ba[bi++] = 0xff & ia[ii] >> 0;
-                ii++;
-            }
-            return ba;
-        }
-        function ba2ia_be(ba) {
-            var length = ba.length + 3 >> 2;
-            var ia = new Array(length);;
-            for (var ii = 0, bi = 0; ii < ia.length && bi < ba.length;) {
-                ia[ii++] = (bi < ba.length ? ba[bi++] << 24 : 0) | (bi < ba.length ? ba[bi++] << 16 : 0) | (bi < ba.length ? ba[bi++] << 8 : 0) | (bi < ba.length ? ba[bi++] /*<< 0*/ : 0);
-            }
-            return ia;
-        }
-
-        function ia2ba_le(ia) {
-            var length = ia.length << 2;
-            var ba = new Array(length);
-            for (var ii = 0, bi = 0; ii < ia.length && bi < ba.length;) {
-                ba[bi++] = 0xff & ia[ii] >> 0;
-                ba[bi++] = 0xff & ia[ii] >> 8;
-                ba[bi++] = 0xff & ia[ii] >> 16;
-                ba[bi++] = 0xff & ia[ii] >> 24;
-                ii++;
-            }
-            return ba;
-        }
-        function ba2ia_le(ba) {
-            var length = ba.length + 3 >> 2;
-            var ia = new Array(length);;
-            for (var ii = 0, bi = 0; ii < ia.length && bi < ba.length;) {
-                ia[ii++] = (bi < ba.length ? ba[bi++] /*<< 0*/ : 0) | (bi < ba.length ? ba[bi++] << 8 : 0) | (bi < ba.length ? ba[bi++] << 16 : 0) | (bi < ba.length ? ba[bi++] << 24 : 0);
-            }
-            return ia;
-        }
-
-        /////////////////////////////////////////////////////////////////////////////////////////////
-
-        function trim(s) {
-            var result = "";
-            for (var idx = 0; idx < s.length; idx++) {
-                var c = s.charAt(idx);
-                if (c == "\s" || c == "\t" || c == "\r" || c == "\n") {} else {
-                    result += c;
-                }
-            }
-            return result;
-        }
-
-        /////////////////////////////////////////////////////////////////////////////////////////////
-
-        function mktst(encode, decode) {
-            return function (trial, from, to) {
-                var flg = true;
-                for (var i = 0; i < trial; i++) {
-                    for (var j = from; j < to; j++) {
-                        var arr = new Array(j);
-                        for (var k = 0; k < j; k++) arr[k] = Math.floor(Math.random() * 256);
-
-                        var s = encode(arr);
-                        var b = decode(s);
-
-                        // trace( "in:"+arr.length);
-                        // trace( "base64:"+s.length);
-                        // trace( "out:"+b.length);
-                        // trace( "in:"+arr);
-                        // trace( "base64:"+s );
-                        // trace( "out:"+b );
-                        trace("in :" + arr.length + ":" + base16_encode(arr));
-                        trace("b64:" + s.length + ":" + s);
-                        trace("out:" + b.length + ":" + base16_encode(arr));
-                        if (equals(arr, b)) {
-                            trace("OK! ( " + i + "," + j + ")");
-                        } else {
-                            trace("ERR ( " + i + "," + j + ")");
-                            flg = false;
-                        }
-                        trace("-----------");
-                    }
-                }
-                if (flg) {
-                    trace("ALL OK! ");
-                } else {
-                    trace("FOUND ERROR!");
-                }
-            };
-        }
-
-        // export
-
-        // base64
-        packageRoot.base64_encode = base64_encode;
-        packageRoot.base64_decode = base64_decode;
-        packageRoot.base64_test = mktst(base64_encode, base64_decode);
-
-        // base64ex
-        packageRoot.base64x_encode = base64x_encode;
-        packageRoot.base64x_decode = base64x_decode;
-        packageRoot.base64x_test = mktst(base64x_encode, base64x_decode);
-
-        packageRoot.base64x_pre_encode = base64x_pre_encode;
-        packageRoot.base64x_pre_decode = base64x_pre_decode;
-
-        // base16
-        packageRoot.base16_encode = base16_encode;
-        packageRoot.base16_decode = base16_decode;
-        packageRoot.base16 = base16;
-        packageRoot.hex = base16;
-
-        // utf8
-        packageRoot.utf82str = utf82str;
-        packageRoot.str2utf8 = str2utf8;
-        packageRoot.str2char = str2char;
-        packageRoot.char2str = char2str;
-
-        // byte expressions
-        packageRoot.i2ba = i2ba_be;
-        packageRoot.ba2i = ba2i_be;
-        packageRoot.i2ba_be = i2ba_be;
-        packageRoot.ba2i_be = ba2i_be;
-        packageRoot.i2ba_le = i2ba_le;
-        packageRoot.ba2i_le = ba2i_le;
-
-        packageRoot.s2ba = s2ba_be;
-        packageRoot.ba2s = ba2s_be;
-        packageRoot.s2ba_be = s2ba_be;
-        packageRoot.ba2s_be = ba2s_be;
-        packageRoot.s2ba_le = s2ba_le;
-        packageRoot.ba2s_le = ba2s_le;
-
-        packageRoot.ba2ia = ba2ia_be;
-        packageRoot.ia2ba = ia2ba_be;
-        packageRoot.ia2ba_be = ia2ba_be;
-        packageRoot.ba2ia_be = ba2ia_be;
-        packageRoot.ia2ba_le = ia2ba_le;
-        packageRoot.ba2ia_le = ba2ia_le;
-
-        // arrays
-        packageRoot.cmparr = equals;
-    }
-
-    initBinary(this);
-};
-
-module.exports = Binary;
-
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
-
-module.exports = function (ngModule) {
-    ngModule.controller('appCtrl', function ($rootScope, $scope, $http) {
-        $http.get('/username').success(function (data) {
-            if (data.login) {
-                $rootScope.login = data.login;
-            }
-        });
-    });
-};
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-/**
- * Created by Nikcher on 19.03.2017.
- */
-module.exports = function (ngModule) {
-    ngModule.controller('singUpCtrl', function ($rootScope, $scope, validationService, saltService) {
-        var formValid;
-
-        /*==========INPUTS===========*/
-        if ($('.bs-float-label input').length) {
-            var bs_float_on_class = "on";
-            var bs_float_show_class = "show";
-
-            $('.float-input').on('bs-check-value', function () {
-                var _bs_label = $(this).closest('.bs-float-label').find('.float-label');
-                if (this.value !== '') {
-                    _bs_label.addClass(bs_float_show_class);
-                } else {
-                    _bs_label.removeClass(bs_float_show_class);
-                }
-            }).on("keyup", function () {
-                $(this).trigger("bs-check-value");
-                var formGroup = $(this).parents('.form-group');
-                var glyphicon = formGroup.find('.form-control-feedback');
-                if (!!this.value) {
-                    validationService.resetValidationError(formGroup, glyphicon);
-                } else {
-                    validationService.showValidationError(formGroup, glyphicon);
-                }
-            }).on("focus", function () {
-                $(this).closest(".bs-float-label").find('.float-label').addClass(bs_float_on_class);
-                $(this).closest(".bs-float-label").find('.input-group-addon').addClass("select-label");
-            }).on("blur", function () {
-                $(this).closest(".bs-float-label").find('.float-label').removeClass(bs_float_on_class);
-                $(this).closest(".bs-float-label").find('.input-group-addon').removeClass("select-label");
-            }).trigger("bs-check-value");
-        }
-        /*========================================*/
-
-        /*
-        * ===============LOGIN==============*/
-        $scope.singUp = function (login, password) {
-
-            formValid = true;
-            $('.error-validation').each(function () {
-                this.remove();
-            });
-
-            if (typeof login === 'undefined' || !login) {
-                formValid = false;
-                var formGroup = $('.form-group.login-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-                var errorMessage = "Введите логин";
-                validationService.showValidationError(formGroup, glyphicon, errorMessage);
-                formGroup = glyphicon = errorMessage = null;
-            } else {
-                var formGroup = $('.form-group.login-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                validationService.resetValidationError(formGroup, glyphicon);
-                formGroup = glyphicon = null;
-            }
-            if (typeof password === 'undefined' || !password) {
-                formValid = false;
-                var formGroup = $('.form-group.password-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                var errorMessage = "Введите пароль";
-                validationService.showValidationError(formGroup, glyphicon, errorMessage);
-                formGroup = glyphicon = errorMessage = null;
-            } else {
-                var formGroup = $('.form-group.password-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                validationService.resetValidationError(formGroup, glyphicon);
-                formGroup = glyphicon = null;
-            }
-
-            if (formValid) {
-                saltService.toSalt(login, password);
-                //TODO sent to service
-            }
-        };
-        //===============================================
-    });
-};
-
-/***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-/**
- * Created by Nikcher on 20.03.2017.
- */
-module.exports = function (ngModule) {
-    ngModule.controller('registrationCtrl', function ($rootScope, $window, $scope, validationService, registrationService) {
-        $scope.registrationService = registrationService;
-        var messagesError = ['Введите логин', 'Введите пароль', 'Повторите пароль'];
-        if ($('.bs-float-label input').length) {
-            var bs_float_on_class = "on";
-            var bs_float_show_class = "show";
-
-            $('.float-input').on('bs-check-value', function () {
-                var _bs_label = $(this).closest('.bs-float-label').find('.float-label');
-                if (this.value !== '') {
-                    _bs_label.addClass(bs_float_show_class);
-                } else {
-                    _bs_label.removeClass(bs_float_show_class);
-                }
-            }).on("keyup", function () {
-                $(this).trigger("bs-check-value");
-                var formGroup = $(this).parents('.form-group');
-                var glyphicon = formGroup.find('.form-control-feedback');
-                if (!!this.value) {
-                    validationService.resetValidationError(formGroup, glyphicon);
-                } else {
-                    validationService.showValidationError(formGroup, glyphicon);
-                }
-            }).on("focus", function () {
-                $(this).closest(".bs-float-label").find('.float-label').addClass(bs_float_on_class);
-                $(this).closest(".bs-float-label").find('.input-group-addon').addClass("select-label");
-            }).on("blur", function () {
-                $(this).closest(".bs-float-label").find('.float-label').removeClass(bs_float_on_class);
-                $(this).closest(".bs-float-label").find('.input-group-addon').removeClass("select-label");
-            }).trigger("bs-check-value");
-        };
-
-        /*
-         * ===============REGISTRATION==============*/
-
-        $scope.toRegister = function (user) {
-            formValid = true;
-            if (typeof user === 'undefined' || !user) {
-                var i = 0;
-                $('input').each(function () {
-                    var formGroup = $(this).parents('.form-group');
-                    var glyphicon = formGroup.find('.form-control-feedback');
-                    validationService.showValidationError(formGroup, glyphicon, messagesError[i]);
-                    i++;
-                });
-                i = null;
-                return;
-            }
-
-            if (typeof user.login === 'undefined' || !user.login) {
-                formValid = false;
-                var formGroup = $('.form-group.login-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                var errorMessage = "Введите логин";
-                validationService.showValidationError(formGroup, glyphicon, errorMessage);
-                formGroup = glyphicon = errorMessage = null;
-            } else {
-                var formGroup = $('.form-group.login-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                validationService.resetValidationError(formGroup, glyphicon);
-                formGroup = glyphicon = null;
-            }
-
-            if (typeof user.password === 'undefined' || !user.password) {
-                formValid = false;
-                var formGroup = $('.form-group.password-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                var errorMessage = "Введите пароль";
-                validationService.showValidationError(formGroup, glyphicon, errorMessage);
-                formGroup = glyphicon = errorMessage = null;
-            } else {
-                var formGroup = $('.form-group.password-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                validationService.resetValidationError(formGroup, glyphicon);
-                formGroup = glyphicon = null;
-            }
-
-            if (typeof user.passwordRepeat === 'undefined' || !user.passwordRepeat) {
-                formValid = false;
-                var formGroup = $('.form-group.passwordRepeat-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                var errorMessage = "Повторите пароль";
-                validationService.showValidationError(formGroup, glyphicon, errorMessage);
-                formGroup = glyphicon = errorMessage = null;
-            } else {
-                var formGroup = $('.form-group.passwordRepeat-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                validationService.resetValidationError(formGroup, glyphicon);
-                formGroup = glyphicon = null;
-            }
-
-            if (user.passwordRepeat != user.password) {
-                formValid = false;
-                var formGroup = $('.form-group.passwordRepeat-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-                validationService.showValidationError(formGroup, glyphicon);
-
-                formGroup = $('.form-group.passwordRepeat-field-form');
-                glyphicon = formGroup.find('.form-control-feedback');
-
-                var errorMessage = "Пароли не совпадают";
-                validationService.showValidationError(formGroup, glyphicon, errorMessage);
-                formGroup = glyphicon = errorMessage = null;
-            }
-            if (formValid) {
-                //TODO sent to ser
-                registrationService.toRegister(user);
-            }
-        };
-
-        //===============================================
-    });
-};
-
-/***/ },
-/* 9 */
-/***/ function(module, exports, __webpack_require__) {
-
-/**
- * Created by Nikcher on 28.03.2017.
- */
-
-module.exports = function (ngModule) {
-    var Binary = __webpack_require__(5);
-    var binary = new Binary();
-    var md5 = __webpack_require__(19);
-    ngModule.factory('registrationService', function ($http, $rootScope, $location, $route) {
-
-        return {
-            toRegister: function (user) {
-                var cipherPassword = encryptString(user.password);
-                $http({
-                    method: "post",
-                    url: "/cipher",
-                    data: {
-                        password: cipherPassword
-                    }
-
-                }).success(function (pswdServer) {
-                    var cipherPasswordServer = decryptString(pswdServer);
-                    $http({
-                        method: "post",
-                        url: "/registration",
-                        data: {
-                            login: user.login,
-                            password: cipherPasswordServer
-                        }
-                    }).success(function (data, status) {
-                        switch (status) {
-                            case 200:
-                                if (data.login) {
-                                    $rootScope.login = data.login;
-                                    $location.path('/');
-                                }
-                                break;
-                            case 403:
-                                //TODO user exists
-                                break;
-                            default:
-                        }
-                    }).error(function (data, status, headers, configs) {
-                        console.error(status);
-                    });
-                }).error(function (error, status) {
-                    console.error(error);
-                });
-            }
-        };
-        function encryptString(str) {
-            var hashCodeArr = binary.str2char(md5(str));
-            var charArr_new = hashCodeArr.map(function (code) {
-                return code ^ 123;
-            });
-            return binary.char2str(charArr_new);
-        };
-        function decryptString(str) {
-
-            var hashCodeArrServer = binary.str2char(str);
-            var charArr_newServer = hashCodeArrServer.map(function (code) {
-                return code ^ 123;
-            });
-            return binary.char2str(charArr_newServer);
-        }
-    });
-};
-
-/***/ },
-/* 10 */
-/***/ function(module, exports) {
-
-/**
- * Created by Nikcher on 28.03.2017.
- */
-module.exports = function (ngModule) {
-    ngModule.factory('saltService', function ($http, $rootScope, loginService) {
-
-        return {
-            toSalt: function (login, password) {
-
-                $http({
-                    method: "post",
-                    url: "/salt",
-                    data: {
-                        login: login
-                    }
-
-                }).success(function (answer, status) {
-                    if (status === 200) {
-                        loginService.toLogin(answer.answer, password);
-                    } else if (status === 403) {
-                        //TODO error login
-                    }
-                });
-            }
-        };
-    });
-};
-
-/***/ },
-/* 11 */
-/***/ function(module, exports) {
-
-/**
- * Created by Nikcher on 21.03.2017.
- */
-module.exports = function (ngModule) {
-    ngModule.factory('validationService', function ($http, $rootScope, $location) {
-
-        return {
-            showValidationError: function (formGroup, glyphicon, messageError) {
-                formGroup.addClass('has-error').removeClass('has-success');
-                glyphicon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
-                formGroup.find('.error-validation').remove();
-
-                if (messageError) {
-                    var msgElem = document.createElement('div');
-                    msgElem.innerHTML = messageError;
-                    $(msgElem).addClass('error-validation');
-                    formGroup.append(msgElem);
-                }
-            },
-            resetValidationError: function (formGroup, glyphicon, messageError) {
-                formGroup.addClass('has-success').removeClass('has-error');
-                glyphicon.addClass('glyphicon-ok').removeClass('glyphicon-remove');
-
-                formGroup.find('.error-validation').remove();
-            }
-        };
-    });
-};
-
-/***/ },
-/* 12 */
-/***/ function(module, exports) {
-
-"use strict";
-'use strict'
-
-exports.byteLength = byteLength
-exports.toByteArray = toByteArray
-exports.fromByteArray = fromByteArray
-
-var lookup = []
-var revLookup = []
-var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
-
-var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-for (var i = 0, len = code.length; i < len; ++i) {
-  lookup[i] = code[i]
-  revLookup[code.charCodeAt(i)] = i
-}
-
-revLookup['-'.charCodeAt(0)] = 62
-revLookup['_'.charCodeAt(0)] = 63
-
-function placeHoldersCount (b64) {
-  var len = b64.length
-  if (len % 4 > 0) {
-    throw new Error('Invalid string. Length must be a multiple of 4')
-  }
-
-  // the number of equal signs (place holders)
-  // if there are two placeholders, than the two characters before it
-  // represent one byte
-  // if there is only one, then the three characters before it represent 2 bytes
-  // this is just a cheap hack to not do indexOf twice
-  return b64[len - 2] === '=' ? 2 : b64[len - 1] === '=' ? 1 : 0
-}
-
-function byteLength (b64) {
-  // base64 is 4/3 + up to two characters of the original data
-  return b64.length * 3 / 4 - placeHoldersCount(b64)
-}
-
-function toByteArray (b64) {
-  var i, j, l, tmp, placeHolders, arr
-  var len = b64.length
-  placeHolders = placeHoldersCount(b64)
-
-  arr = new Arr(len * 3 / 4 - placeHolders)
-
-  // if there are placeholders, only get up to the last complete 4 chars
-  l = placeHolders > 0 ? len - 4 : len
-
-  var L = 0
-
-  for (i = 0, j = 0; i < l; i += 4, j += 3) {
-    tmp = (revLookup[b64.charCodeAt(i)] << 18) | (revLookup[b64.charCodeAt(i + 1)] << 12) | (revLookup[b64.charCodeAt(i + 2)] << 6) | revLookup[b64.charCodeAt(i + 3)]
-    arr[L++] = (tmp >> 16) & 0xFF
-    arr[L++] = (tmp >> 8) & 0xFF
-    arr[L++] = tmp & 0xFF
-  }
-
-  if (placeHolders === 2) {
-    tmp = (revLookup[b64.charCodeAt(i)] << 2) | (revLookup[b64.charCodeAt(i + 1)] >> 4)
-    arr[L++] = tmp & 0xFF
-  } else if (placeHolders === 1) {
-    tmp = (revLookup[b64.charCodeAt(i)] << 10) | (revLookup[b64.charCodeAt(i + 1)] << 4) | (revLookup[b64.charCodeAt(i + 2)] >> 2)
-    arr[L++] = (tmp >> 8) & 0xFF
-    arr[L++] = tmp & 0xFF
-  }
-
-  return arr
-}
-
-function tripletToBase64 (num) {
-  return lookup[num >> 18 & 0x3F] + lookup[num >> 12 & 0x3F] + lookup[num >> 6 & 0x3F] + lookup[num & 0x3F]
-}
-
-function encodeChunk (uint8, start, end) {
-  var tmp
-  var output = []
-  for (var i = start; i < end; i += 3) {
-    tmp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
-    output.push(tripletToBase64(tmp))
-  }
-  return output.join('')
-}
-
-function fromByteArray (uint8) {
-  var tmp
-  var len = uint8.length
-  var extraBytes = len % 3 // if we have 1 byte left, pad 2 bytes
-  var output = ''
-  var parts = []
-  var maxChunkLength = 16383 // must be multiple of 3
-
-  // go through the array every three bytes, we'll deal with trailing stuff later
-  for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
-    parts.push(encodeChunk(uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)))
-  }
-
-  // pad the end with zeros, but make sure to not forget the extra bytes
-  if (extraBytes === 1) {
-    tmp = uint8[len - 1]
-    output += lookup[tmp >> 2]
-    output += lookup[(tmp << 4) & 0x3F]
-    output += '=='
-  } else if (extraBytes === 2) {
-    tmp = (uint8[len - 2] << 8) + (uint8[len - 1])
-    output += lookup[tmp >> 10]
-    output += lookup[(tmp >> 4) & 0x3F]
-    output += lookup[(tmp << 2) & 0x3F]
-    output += '='
-  }
-
-  parts.push(output)
-
-  return parts.join('')
-}
-
-
-/***/ },
-/* 13 */
-/***/ function(module, exports) {
-
-(function() {
-  var base64map
-      = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
-
-  crypt = {
-    // Bit-wise rotation left
-    rotl: function(n, b) {
-      return (n << b) | (n >>> (32 - b));
-    },
-
-    // Bit-wise rotation right
-    rotr: function(n, b) {
-      return (n << (32 - b)) | (n >>> b);
-    },
-
-    // Swap big-endian to little-endian and vice versa
-    endian: function(n) {
-      // If number given, swap endian
-      if (n.constructor == Number) {
-        return crypt.rotl(n, 8) & 0x00FF00FF | crypt.rotl(n, 24) & 0xFF00FF00;
-      }
-
-      // Else, assume array and swap all items
-      for (var i = 0; i < n.length; i++)
-        n[i] = crypt.endian(n[i]);
-      return n;
-    },
-
-    // Generate an array of any length of random bytes
-    randomBytes: function(n) {
-      for (var bytes = []; n > 0; n--)
-        bytes.push(Math.floor(Math.random() * 256));
-      return bytes;
-    },
-
-    // Convert a byte array to big-endian 32-bit words
-    bytesToWords: function(bytes) {
-      for (var words = [], i = 0, b = 0; i < bytes.length; i++, b += 8)
-        words[b >>> 5] |= bytes[i] << (24 - b % 32);
-      return words;
-    },
-
-    // Convert big-endian 32-bit words to a byte array
-    wordsToBytes: function(words) {
-      for (var bytes = [], b = 0; b < words.length * 32; b += 8)
-        bytes.push((words[b >>> 5] >>> (24 - b % 32)) & 0xFF);
-      return bytes;
-    },
-
-    // Convert a byte array to a hex string
-    bytesToHex: function(bytes) {
-      for (var hex = [], i = 0; i < bytes.length; i++) {
-        hex.push((bytes[i] >>> 4).toString(16));
-        hex.push((bytes[i] & 0xF).toString(16));
-      }
-      return hex.join('');
-    },
-
-    // Convert a hex string to a byte array
-    hexToBytes: function(hex) {
-      for (var bytes = [], c = 0; c < hex.length; c += 2)
-        bytes.push(parseInt(hex.substr(c, 2), 16));
-      return bytes;
-    },
-
-    // Convert a byte array to a base-64 string
-    bytesToBase64: function(bytes) {
-      for (var base64 = [], i = 0; i < bytes.length; i += 3) {
-        var triplet = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2];
-        for (var j = 0; j < 4; j++)
-          if (i * 8 + j * 6 <= bytes.length * 8)
-            base64.push(base64map.charAt((triplet >>> 6 * (3 - j)) & 0x3F));
-          else
-            base64.push('=');
-      }
-      return base64.join('');
-    },
-
-    // Convert a base-64 string to a byte array
-    base64ToBytes: function(base64) {
-      // Remove non-base-64 characters
-      base64 = base64.replace(/[^A-Z0-9+\/]/ig, '');
-
-      for (var bytes = [], i = 0, imod4 = 0; i < base64.length;
-          imod4 = ++i % 4) {
-        if (imod4 == 0) continue;
-        bytes.push(((base64map.indexOf(base64.charAt(i - 1))
-            & (Math.pow(2, -2 * imod4 + 8) - 1)) << (imod4 * 2))
-            | (base64map.indexOf(base64.charAt(i)) >>> (6 - imod4 * 2)));
-      }
-      return bytes;
-    }
-  };
-
-  module.exports = crypt;
-})();
-
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(15)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, ".main-page {\n  background-image: url(" + __webpack_require__(22) + ");\n}\n.c-modal {\n  text-align: center;\n}\n.navbar-nav a {\n  color: #FFFFFF;\n}\n.navbar-form .btn,\n.login-form-element .btn {\n  color: #FFFFFF;\n  font-weight: bold;\n  font-size: small;\n}\n.navbar-form .btn.button-background:active,\n.login-form-element .btn.button-background:active {\n  background-color: #0087ff;\n}\n.navbar-form .btn.singup:hover,\n.login-form-element .btn.singup:hover {\n  text-decoration: underline;\n}\n.button-background {\n  background-color: #0096ff;\n  color: #FFFFFF;\n}\n.button-background:hover {\n  background-color: #00a5ff;\n  color: #FFFFFF;\n}\n@media screen and (min-width: 768px) {\n  .c-modal:before {\n    display: inline-block;\n    vertical-align: middle;\n    content: \" \";\n    height: 100%;\n  }\n}\n.c-modal.in .c-modal-dialog {\n  opacity: 1;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.c-modal-dialog {\n  display: inline-block;\n  text-align: left;\n  vertical-align: middle;\n  opacity: 0;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.login-form {\n  top: 130px;\n}\n.login-form .title {\n  color: #FFFFFF;\n  font-size: 27px;\n  text-align: center;\n  margin-top: 10px;\n}\n.login-button {\n  width: 100%;\n  margin-top: 20px;\n}\n.login-form-element {\n  left: 15px;\n}\n.login-form-element.login-field {\n  margin-top: 25px;\n}\n.login-form-element.password-field {\n  margin-top: 10px;\n}\n.background-login-form {\n  width: 100%;\n  height: 100%;\n  border-radius: 10px;\n  background-color: #FFFFFF;\n  position: absolute;\n  opacity: 0.3;\n}\n.float-label {\n  position: absolute;\n  top: 0px;\n  left: 17px;\n  -webkit-transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  opacity: 0;\n  color: #FFFFFF;\n}\n.float-label.show {\n  top: -20px;\n  left: 17px;\n  opacity: 1;\n}\n.main-img {\n  background-image: url(" + __webpack_require__(23) + ");\n  background-size: 100% auto;\n  background-repeat: no-repeat;\n  position: absolute;\n  width: 100%;\n  height: 550px;\n  min-height: 350px;\n}\n.select-label {\n  color: #61C3FF;\n}\n@media screen and (max-width: 650px) {\n  .login-form {\n    top: 55px;\n  }\n}\n@media screen and (max-width: 750px) {\n  .main-img {\n    background-image: none;\n  }\n  .background-login-form {\n    background-color: #000000;\n  }\n}\n.error-validation {\n  margin-left: 31px;\n  margin-bottom: -5px;\n  color: red;\n  font-size: medium;\n}\n", ""]);
-
-// exports
-
-
-/***/ },
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(Buffer) {/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function(useSourceMap) {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		return this.map(function (item) {
-			var content = cssWithMappingToString(item, useSourceMap);
-			if(item[2]) {
-				return "@media " + item[2] + "{" + content + "}";
-			} else {
-				return content;
-			}
-		}).join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-function cssWithMappingToString(item, useSourceMap) {
-	var content = item[1] || '';
-	var cssMapping = item[3];
-	if (!cssMapping) {
-		return content;
-	}
-
-	if (useSourceMap) {
-		var sourceMapping = toComment(cssMapping);
-		var sourceURLs = cssMapping.sources.map(function (source) {
-			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
-		});
-
-		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
-	}
-
-	return [content].join('\n');
-}
-
-// Adapted from convert-source-map (MIT)
-function toComment(sourceMap) {
-  var base64 = new Buffer(JSON.stringify(sourceMap)).toString('base64');
-  var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
-
-  return '/*# ' + data + ' */';
-}
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0).Buffer))
-
-/***/ },
-/* 16 */
-/***/ function(module, exports) {
-
-exports.read = function (buffer, offset, isLE, mLen, nBytes) {
-  var e, m
-  var eLen = nBytes * 8 - mLen - 1
-  var eMax = (1 << eLen) - 1
-  var eBias = eMax >> 1
-  var nBits = -7
-  var i = isLE ? (nBytes - 1) : 0
-  var d = isLE ? -1 : 1
-  var s = buffer[offset + i]
-
-  i += d
-
-  e = s & ((1 << (-nBits)) - 1)
-  s >>= (-nBits)
-  nBits += eLen
-  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {}
-
-  m = e & ((1 << (-nBits)) - 1)
-  e >>= (-nBits)
-  nBits += mLen
-  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {}
-
-  if (e === 0) {
-    e = 1 - eBias
-  } else if (e === eMax) {
-    return m ? NaN : ((s ? -1 : 1) * Infinity)
-  } else {
-    m = m + Math.pow(2, mLen)
-    e = e - eBias
-  }
-  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
-}
-
-exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
-  var e, m, c
-  var eLen = nBytes * 8 - mLen - 1
-  var eMax = (1 << eLen) - 1
-  var eBias = eMax >> 1
-  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
-  var i = isLE ? 0 : (nBytes - 1)
-  var d = isLE ? 1 : -1
-  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
-
-  value = Math.abs(value)
-
-  if (isNaN(value) || value === Infinity) {
-    m = isNaN(value) ? 1 : 0
-    e = eMax
-  } else {
-    e = Math.floor(Math.log(value) / Math.LN2)
-    if (value * (c = Math.pow(2, -e)) < 1) {
-      e--
-      c *= 2
-    }
-    if (e + eBias >= 1) {
-      value += rt / c
-    } else {
-      value += rt * Math.pow(2, 1 - eBias)
-    }
-    if (value * c >= 2) {
-      e++
-      c /= 2
-    }
-
-    if (e + eBias >= eMax) {
-      m = 0
-      e = eMax
-    } else if (e + eBias >= 1) {
-      m = (value * c - 1) * Math.pow(2, mLen)
-      e = e + eBias
-    } else {
-      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
-      e = 0
-    }
-  }
-
-  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
-
-  e = (e << mLen) | m
-  eLen += mLen
-  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
-
-  buffer[offset + i - d] |= s * 128
-}
-
-
-/***/ },
-/* 17 */
-/***/ function(module, exports) {
-
-/*!
- * Determine if an object is a Buffer
- *
- * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
- * @license  MIT
- */
-
-// The _isBuffer check is for Safari 5-7 support, because it's missing
-// Object.prototype.constructor. Remove this eventually
-module.exports = function (obj) {
-  return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer)
-}
-
-function isBuffer (obj) {
-  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
-}
-
-// For Node v0.10 support. Remove this eventually.
-function isSlowBuffer (obj) {
-  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
-}
-
-
-/***/ },
-/* 18 */
-/***/ function(module, exports) {
-
-var toString = {}.toString;
-
-module.exports = Array.isArray || function (arr) {
-  return toString.call(arr) == '[object Array]';
-};
-
-
-/***/ },
-/* 19 */
-/***/ function(module, exports, __webpack_require__) {
-
 (function(){
-  var crypt = __webpack_require__(13),
-      utf8 = __webpack_require__(1).utf8,
-      isBuffer = __webpack_require__(17),
-      bin = __webpack_require__(1).bin,
+  var crypt = __webpack_require__(15),
+      utf8 = __webpack_require__(2).utf8,
+      isBuffer = __webpack_require__(19),
+      bin = __webpack_require__(2).bin,
 
   // The core
   md5 = function (message, options) {
@@ -3441,7 +2575,920 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports = function (ngModule) {
+    __webpack_require__(7)(ngModule);
+    __webpack_require__(8)(ngModule);
+    __webpack_require__(9)(ngModule);
+    __webpack_require__(27)(ngModule);
+};
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+/**
+ * Created by Nikcher on 21.03.2017.
+ */
+module.exports = function (ngModule) {
+    __webpack_require__(13)(ngModule);
+    __webpack_require__(11)(ngModule);
+    __webpack_require__(12)(ngModule);
+    __webpack_require__(10)(ngModule);
+    __webpack_require__(28)(ngModule);
+};
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(16);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(21)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/less-loader/lib/loader.js!./common.less", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/less-loader/lib/loader.js!./common.less");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+module.exports = function (ngModule) {
+    ngModule.controller('appCtrl', function ($rootScope, $scope, $http) {
+        $http.get('/username').success(function (data) {
+            if (data.login) {
+                $rootScope.login = data.login;
+            }
+        });
+    });
+};
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+/**
+ * Created by Nikcher on 19.03.2017.
+ */
+module.exports = function (ngModule) {
+    ngModule.controller('singUpCtrl', function ($rootScope, $scope, validationService, saltService) {
+        var formValid;
+
+        /*==========INPUTS===========*/
+        if ($('.bs-float-label input').length) {
+            var bs_float_on_class = "on";
+            var bs_float_show_class = "show";
+
+            $('.float-input').on('bs-check-value', function () {
+                var _bs_label = $(this).closest('.bs-float-label').find('.float-label');
+                if (this.value !== '') {
+                    _bs_label.addClass(bs_float_show_class);
+                } else {
+                    _bs_label.removeClass(bs_float_show_class);
+                }
+            }).on("keyup", function () {
+                $(this).trigger("bs-check-value");
+                var formGroup = $(this).parents('.form-group');
+                var glyphicon = formGroup.find('.form-control-feedback');
+                if (!!this.value) {
+                    validationService.resetValidationError(formGroup, glyphicon);
+                } else {
+                    validationService.showValidationError(formGroup, glyphicon);
+                }
+            }).on("focus", function () {
+                $(this).closest(".bs-float-label").find('.float-label').addClass(bs_float_on_class);
+                $(this).closest(".bs-float-label").find('.input-group-addon').addClass("select-label");
+            }).on("blur", function () {
+                $(this).closest(".bs-float-label").find('.float-label').removeClass(bs_float_on_class);
+                $(this).closest(".bs-float-label").find('.input-group-addon').removeClass("select-label");
+            }).trigger("bs-check-value");
+        }
+        /*========================================*/
+
+        /*
+        * ===============LOGIN==============*/
+        $scope.singUp = function (login, password) {
+
+            formValid = true;
+            $('.error-validation').each(function () {
+                this.remove();
+            });
+
+            if (typeof login === 'undefined' || !login) {
+                formValid = false;
+                var formGroup = $('.form-group.login-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+                var errorMessage = "Введите логин";
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
+            } else {
+                var formGroup = $('.form-group.login-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                validationService.resetValidationError(formGroup, glyphicon);
+                formGroup = glyphicon = null;
+            }
+            if (typeof password === 'undefined' || !password) {
+                formValid = false;
+                var formGroup = $('.form-group.password-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                var errorMessage = "Введите пароль";
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
+            } else {
+                var formGroup = $('.form-group.password-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                validationService.resetValidationError(formGroup, glyphicon);
+                formGroup = glyphicon = null;
+            }
+
+            if (formValid) {
+                saltService.toSalt(login, password);
+                //TODO sent to service
+            }
+        };
+        //===============================================
+    });
+};
+
+/***/ },
+/* 9 */
+/***/ function(module, exports) {
+
+/**
+ * Created by Nikcher on 20.03.2017.
+ */
+module.exports = function (ngModule) {
+    ngModule.controller('registrationCtrl', function ($rootScope, $window, $scope, validationService, registrationService) {
+        $scope.registrationService = registrationService;
+        var messagesError = ['Введите логин', 'Введите пароль', 'Повторите пароль'];
+        if ($('.bs-float-label input').length) {
+            var bs_float_on_class = "on";
+            var bs_float_show_class = "show";
+
+            $('.float-input').on('bs-check-value', function () {
+                var _bs_label = $(this).closest('.bs-float-label').find('.float-label');
+                if (this.value !== '') {
+                    _bs_label.addClass(bs_float_show_class);
+                } else {
+                    _bs_label.removeClass(bs_float_show_class);
+                }
+            }).on("keyup", function () {
+                $(this).trigger("bs-check-value");
+                var formGroup = $(this).parents('.form-group');
+                var glyphicon = formGroup.find('.form-control-feedback');
+                if (!!this.value) {
+                    validationService.resetValidationError(formGroup, glyphicon);
+                } else {
+                    validationService.showValidationError(formGroup, glyphicon);
+                }
+            }).on("focus", function () {
+                $(this).closest(".bs-float-label").find('.float-label').addClass(bs_float_on_class);
+                $(this).closest(".bs-float-label").find('.input-group-addon').addClass("select-label");
+            }).on("blur", function () {
+                $(this).closest(".bs-float-label").find('.float-label').removeClass(bs_float_on_class);
+                $(this).closest(".bs-float-label").find('.input-group-addon').removeClass("select-label");
+            }).trigger("bs-check-value");
+        };
+
+        /*
+         * ===============REGISTRATION==============*/
+
+        $scope.toRegister = function (user) {
+            formValid = true;
+            if (typeof user === 'undefined' || !user) {
+                var i = 0;
+                $('input').each(function () {
+                    var formGroup = $(this).parents('.form-group');
+                    var glyphicon = formGroup.find('.form-control-feedback');
+                    validationService.showValidationError(formGroup, glyphicon, messagesError[i]);
+                    i++;
+                });
+                i = null;
+                return;
+            }
+
+            if (typeof user.login === 'undefined' || !user.login) {
+                formValid = false;
+                var formGroup = $('.form-group.login-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                var errorMessage = "Введите логин";
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
+            } else {
+                var formGroup = $('.form-group.login-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                validationService.resetValidationError(formGroup, glyphicon);
+                formGroup = glyphicon = null;
+            }
+
+            if (typeof user.password === 'undefined' || !user.password) {
+                formValid = false;
+                var formGroup = $('.form-group.password-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                var errorMessage = "Введите пароль";
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
+            } else {
+                var formGroup = $('.form-group.password-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                validationService.resetValidationError(formGroup, glyphicon);
+                formGroup = glyphicon = null;
+            }
+
+            if (typeof user.passwordRepeat === 'undefined' || !user.passwordRepeat) {
+                formValid = false;
+                var formGroup = $('.form-group.passwordRepeat-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                var errorMessage = "Повторите пароль";
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
+            } else {
+                var formGroup = $('.form-group.passwordRepeat-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                validationService.resetValidationError(formGroup, glyphicon);
+                formGroup = glyphicon = null;
+            }
+
+            if (user.passwordRepeat != user.password) {
+                formValid = false;
+                var formGroup = $('.form-group.passwordRepeat-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+                validationService.showValidationError(formGroup, glyphicon);
+
+                formGroup = $('.form-group.passwordRepeat-field-form');
+                glyphicon = formGroup.find('.form-control-feedback');
+
+                var errorMessage = "Пароли не совпадают";
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
+            }
+            if (formValid) {
+                //TODO sent to ser
+                registrationService.toRegister(user);
+            }
+        };
+
+        //===============================================
+    });
+};
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+/**
+ * Created by Nikcher on 04.04.2017.
+ */
+module.exports = function (ngModule) {
+    var Binary = __webpack_require__(0);
+    var binary = new Binary();
+    var md5 = __webpack_require__(3);
+    ngModule.factory('loginService', function ($http, $rootScope, $location) {
+
+        return {
+            toLogin: function (answer, password) {
+                console.log(answer.iter);
+                var saltPassword = md5(password);
+                console.log(saltPassword);
+                for (var i = 0; i < answer.iter; i++) {
+                    saltPassword = md5(answer.salt + saltPassword + answer.salt);
+                    console.log(saltPassword);
+                }
+
+                $http({
+                    method: "post",
+                    url: "/login",
+                    data: {
+                        saltPassword: saltPassword
+                    }
+
+                }).success(function (data, status) {
+                    if (status === 200) {
+                        if (data.login) {
+                            $rootScope.login = data.login;
+                            $location.path('/');
+                        }
+                    } else if (status === 403) {
+                        //TODO error login
+                    }
+                });
+            }
+        };
+    });
+};
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+/**
+ * Created by Nikcher on 28.03.2017.
+ */
+
+module.exports = function (ngModule) {
+    var Binary = __webpack_require__(0);
+    var binary = new Binary();
+    var md5 = __webpack_require__(3);
+    ngModule.factory('registrationService', function ($http, $rootScope, $location, $route) {
+
+        return {
+            toRegister: function (user) {
+                var cipherPassword = encryptString(user.password);
+                $http({
+                    method: "post",
+                    url: "/cipher",
+                    data: {
+                        password: cipherPassword
+                    }
+
+                }).success(function (pswdServer) {
+                    var cipherPasswordServer = decryptString(pswdServer);
+                    $http({
+                        method: "post",
+                        url: "/registration",
+                        data: {
+                            login: user.login,
+                            password: cipherPasswordServer
+                        }
+                    }).success(function (data, status) {
+                        switch (status) {
+                            case 200:
+                                if (data.login) {
+                                    $rootScope.login = data.login;
+                                    $location.path('/');
+                                }
+                                break;
+                            case 403:
+                                //TODO user exists
+                                break;
+                            default:
+                        }
+                    }).error(function (data, status, headers, configs) {
+                        console.error(status);
+                    });
+                }).error(function (error, status) {
+                    console.error(error);
+                });
+            }
+        };
+        function encryptString(str) {
+            var hashCodeArr = binary.str2char(md5(str));
+            var charArr_new = hashCodeArr.map(function (code) {
+                return code ^ 123;
+            });
+            return binary.char2str(charArr_new);
+        };
+        function decryptString(str) {
+
+            var hashCodeArrServer = binary.str2char(str);
+            var charArr_newServer = hashCodeArrServer.map(function (code) {
+                return code ^ 123;
+            });
+            return binary.char2str(charArr_newServer);
+        }
+    });
+};
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+/**
+ * Created by Nikcher on 28.03.2017.
+ */
+module.exports = function (ngModule) {
+    ngModule.factory('saltService', function ($http, $rootScope, loginService) {
+
+        return {
+            toSalt: function (login, password) {
+
+                $http({
+                    method: "post",
+                    url: "/salt",
+                    data: {
+                        login: login
+                    }
+
+                }).success(function (answer, status) {
+                    if (status === 200) {
+                        loginService.toLogin(answer.answer, password);
+                    } else if (status === 403) {
+                        //TODO error login
+                    }
+                });
+            }
+        };
+    });
+};
+
+/***/ },
+/* 13 */
+/***/ function(module, exports) {
+
+/**
+ * Created by Nikcher on 21.03.2017.
+ */
+module.exports = function (ngModule) {
+    ngModule.factory('validationService', function ($http, $rootScope, $location) {
+
+        return {
+            showValidationError: function (formGroup, glyphicon, messageError) {
+                formGroup.addClass('has-error').removeClass('has-success');
+                glyphicon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
+                formGroup.find('.error-validation').remove();
+
+                if (messageError) {
+                    var msgElem = document.createElement('div');
+                    msgElem.innerHTML = messageError;
+                    $(msgElem).addClass('error-validation');
+                    formGroup.append(msgElem);
+                }
+            },
+            resetValidationError: function (formGroup, glyphicon, messageError) {
+                formGroup.addClass('has-success').removeClass('has-error');
+                glyphicon.addClass('glyphicon-ok').removeClass('glyphicon-remove');
+
+                formGroup.find('.error-validation').remove();
+            }
+        };
+    });
+};
+
+/***/ },
+/* 14 */
+/***/ function(module, exports) {
+
+"use strict";
+'use strict'
+
+exports.byteLength = byteLength
+exports.toByteArray = toByteArray
+exports.fromByteArray = fromByteArray
+
+var lookup = []
+var revLookup = []
+var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
+
+var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+for (var i = 0, len = code.length; i < len; ++i) {
+  lookup[i] = code[i]
+  revLookup[code.charCodeAt(i)] = i
+}
+
+revLookup['-'.charCodeAt(0)] = 62
+revLookup['_'.charCodeAt(0)] = 63
+
+function placeHoldersCount (b64) {
+  var len = b64.length
+  if (len % 4 > 0) {
+    throw new Error('Invalid string. Length must be a multiple of 4')
+  }
+
+  // the number of equal signs (place holders)
+  // if there are two placeholders, than the two characters before it
+  // represent one byte
+  // if there is only one, then the three characters before it represent 2 bytes
+  // this is just a cheap hack to not do indexOf twice
+  return b64[len - 2] === '=' ? 2 : b64[len - 1] === '=' ? 1 : 0
+}
+
+function byteLength (b64) {
+  // base64 is 4/3 + up to two characters of the original data
+  return b64.length * 3 / 4 - placeHoldersCount(b64)
+}
+
+function toByteArray (b64) {
+  var i, j, l, tmp, placeHolders, arr
+  var len = b64.length
+  placeHolders = placeHoldersCount(b64)
+
+  arr = new Arr(len * 3 / 4 - placeHolders)
+
+  // if there are placeholders, only get up to the last complete 4 chars
+  l = placeHolders > 0 ? len - 4 : len
+
+  var L = 0
+
+  for (i = 0, j = 0; i < l; i += 4, j += 3) {
+    tmp = (revLookup[b64.charCodeAt(i)] << 18) | (revLookup[b64.charCodeAt(i + 1)] << 12) | (revLookup[b64.charCodeAt(i + 2)] << 6) | revLookup[b64.charCodeAt(i + 3)]
+    arr[L++] = (tmp >> 16) & 0xFF
+    arr[L++] = (tmp >> 8) & 0xFF
+    arr[L++] = tmp & 0xFF
+  }
+
+  if (placeHolders === 2) {
+    tmp = (revLookup[b64.charCodeAt(i)] << 2) | (revLookup[b64.charCodeAt(i + 1)] >> 4)
+    arr[L++] = tmp & 0xFF
+  } else if (placeHolders === 1) {
+    tmp = (revLookup[b64.charCodeAt(i)] << 10) | (revLookup[b64.charCodeAt(i + 1)] << 4) | (revLookup[b64.charCodeAt(i + 2)] >> 2)
+    arr[L++] = (tmp >> 8) & 0xFF
+    arr[L++] = tmp & 0xFF
+  }
+
+  return arr
+}
+
+function tripletToBase64 (num) {
+  return lookup[num >> 18 & 0x3F] + lookup[num >> 12 & 0x3F] + lookup[num >> 6 & 0x3F] + lookup[num & 0x3F]
+}
+
+function encodeChunk (uint8, start, end) {
+  var tmp
+  var output = []
+  for (var i = start; i < end; i += 3) {
+    tmp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
+    output.push(tripletToBase64(tmp))
+  }
+  return output.join('')
+}
+
+function fromByteArray (uint8) {
+  var tmp
+  var len = uint8.length
+  var extraBytes = len % 3 // if we have 1 byte left, pad 2 bytes
+  var output = ''
+  var parts = []
+  var maxChunkLength = 16383 // must be multiple of 3
+
+  // go through the array every three bytes, we'll deal with trailing stuff later
+  for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
+    parts.push(encodeChunk(uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)))
+  }
+
+  // pad the end with zeros, but make sure to not forget the extra bytes
+  if (extraBytes === 1) {
+    tmp = uint8[len - 1]
+    output += lookup[tmp >> 2]
+    output += lookup[(tmp << 4) & 0x3F]
+    output += '=='
+  } else if (extraBytes === 2) {
+    tmp = (uint8[len - 2] << 8) + (uint8[len - 1])
+    output += lookup[tmp >> 10]
+    output += lookup[(tmp >> 4) & 0x3F]
+    output += lookup[(tmp << 2) & 0x3F]
+    output += '='
+  }
+
+  parts.push(output)
+
+  return parts.join('')
+}
+
+
+/***/ },
+/* 15 */
+/***/ function(module, exports) {
+
+(function() {
+  var base64map
+      = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
+
+  crypt = {
+    // Bit-wise rotation left
+    rotl: function(n, b) {
+      return (n << b) | (n >>> (32 - b));
+    },
+
+    // Bit-wise rotation right
+    rotr: function(n, b) {
+      return (n << (32 - b)) | (n >>> b);
+    },
+
+    // Swap big-endian to little-endian and vice versa
+    endian: function(n) {
+      // If number given, swap endian
+      if (n.constructor == Number) {
+        return crypt.rotl(n, 8) & 0x00FF00FF | crypt.rotl(n, 24) & 0xFF00FF00;
+      }
+
+      // Else, assume array and swap all items
+      for (var i = 0; i < n.length; i++)
+        n[i] = crypt.endian(n[i]);
+      return n;
+    },
+
+    // Generate an array of any length of random bytes
+    randomBytes: function(n) {
+      for (var bytes = []; n > 0; n--)
+        bytes.push(Math.floor(Math.random() * 256));
+      return bytes;
+    },
+
+    // Convert a byte array to big-endian 32-bit words
+    bytesToWords: function(bytes) {
+      for (var words = [], i = 0, b = 0; i < bytes.length; i++, b += 8)
+        words[b >>> 5] |= bytes[i] << (24 - b % 32);
+      return words;
+    },
+
+    // Convert big-endian 32-bit words to a byte array
+    wordsToBytes: function(words) {
+      for (var bytes = [], b = 0; b < words.length * 32; b += 8)
+        bytes.push((words[b >>> 5] >>> (24 - b % 32)) & 0xFF);
+      return bytes;
+    },
+
+    // Convert a byte array to a hex string
+    bytesToHex: function(bytes) {
+      for (var hex = [], i = 0; i < bytes.length; i++) {
+        hex.push((bytes[i] >>> 4).toString(16));
+        hex.push((bytes[i] & 0xF).toString(16));
+      }
+      return hex.join('');
+    },
+
+    // Convert a hex string to a byte array
+    hexToBytes: function(hex) {
+      for (var bytes = [], c = 0; c < hex.length; c += 2)
+        bytes.push(parseInt(hex.substr(c, 2), 16));
+      return bytes;
+    },
+
+    // Convert a byte array to a base-64 string
+    bytesToBase64: function(bytes) {
+      for (var base64 = [], i = 0; i < bytes.length; i += 3) {
+        var triplet = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2];
+        for (var j = 0; j < 4; j++)
+          if (i * 8 + j * 6 <= bytes.length * 8)
+            base64.push(base64map.charAt((triplet >>> 6 * (3 - j)) & 0x3F));
+          else
+            base64.push('=');
+      }
+      return base64.join('');
+    },
+
+    // Convert a base-64 string to a byte array
+    base64ToBytes: function(base64) {
+      // Remove non-base-64 characters
+      base64 = base64.replace(/[^A-Z0-9+\/]/ig, '');
+
+      for (var bytes = [], i = 0, imod4 = 0; i < base64.length;
+          imod4 = ++i % 4) {
+        if (imod4 == 0) continue;
+        bytes.push(((base64map.indexOf(base64.charAt(i - 1))
+            & (Math.pow(2, -2 * imod4 + 8) - 1)) << (imod4 * 2))
+            | (base64map.indexOf(base64.charAt(i)) >>> (6 - imod4 * 2)));
+      }
+      return bytes;
+    }
+  };
+
+  module.exports = crypt;
+})();
+
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(17)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, ".main-page {\n  background-image: url(" + __webpack_require__(23) + ");\n}\n.c-modal {\n  text-align: center;\n}\n.navbar-nav a {\n  color: #FFFFFF;\n}\n.navbar-form .btn,\n.login-form-element .btn {\n  color: #FFFFFF;\n  font-weight: bold;\n  font-size: small;\n}\n.navbar-form .btn.button-background:active,\n.login-form-element .btn.button-background:active {\n  background-color: #0087ff;\n}\n.navbar-form .btn.singup:hover,\n.login-form-element .btn.singup:hover {\n  text-decoration: underline;\n}\n.button-background {\n  background-color: #0096ff;\n  color: #FFFFFF;\n}\n.button-background:hover {\n  background-color: #00a5ff;\n  color: #FFFFFF;\n}\n@media screen and (min-width: 768px) {\n  .c-modal:before {\n    display: inline-block;\n    vertical-align: middle;\n    content: \" \";\n    height: 100%;\n  }\n}\n.c-modal.in .c-modal-dialog {\n  opacity: 1;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.c-modal-dialog {\n  display: inline-block;\n  text-align: left;\n  vertical-align: middle;\n  opacity: 0;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.login-form {\n  top: 130px;\n}\n.login-form .title {\n  color: #FFFFFF;\n  font-size: 27px;\n  text-align: center;\n  margin-top: 10px;\n}\n.login-button {\n  width: 100%;\n  margin-top: 20px;\n}\n.login-form-element {\n  left: 15px;\n}\n.login-form-element.login-field {\n  margin-top: 25px;\n}\n.login-form-element.password-field {\n  margin-top: 10px;\n}\n.background-login-form {\n  width: 100%;\n  height: 100%;\n  border-radius: 10px;\n  background-color: #FFFFFF;\n  position: absolute;\n  opacity: 0.3;\n}\n.float-label {\n  position: absolute;\n  top: 0px;\n  left: 17px;\n  -webkit-transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  opacity: 0;\n  color: #FFFFFF;\n}\n.float-label.show {\n  top: -20px;\n  left: 17px;\n  opacity: 1;\n}\n.main-img {\n  background-image: url(" + __webpack_require__(24) + ");\n  background-size: 100% auto;\n  background-repeat: no-repeat;\n  position: absolute;\n  width: 100%;\n  height: 550px;\n  min-height: 350px;\n}\n.select-label {\n  color: #61C3FF;\n}\n@media screen and (max-width: 650px) {\n  .login-form {\n    top: 55px;\n  }\n}\n@media screen and (max-width: 750px) {\n  .main-img {\n    background-image: none;\n  }\n  .background-login-form {\n    background-color: #000000;\n  }\n}\n.error-validation {\n  margin-left: 31px;\n  margin-bottom: -5px;\n  color: red;\n  font-size: medium;\n}\n.login-main {\n  display: inline-block;\n  color: white;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  font-family: ZagBold;\n}\n.btn-singout {\n  margin-bottom: 10px;\n  margin-left: 10px;\n}\n", ""]);
+
+// exports
+
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(Buffer) {/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap) {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+  var base64 = new Buffer(JSON.stringify(sourceMap)).toString('base64');
+  var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+  return '/*# ' + data + ' */';
+}
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1).Buffer))
+
+/***/ },
+/* 18 */
+/***/ function(module, exports) {
+
+exports.read = function (buffer, offset, isLE, mLen, nBytes) {
+  var e, m
+  var eLen = nBytes * 8 - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var nBits = -7
+  var i = isLE ? (nBytes - 1) : 0
+  var d = isLE ? -1 : 1
+  var s = buffer[offset + i]
+
+  i += d
+
+  e = s & ((1 << (-nBits)) - 1)
+  s >>= (-nBits)
+  nBits += eLen
+  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+
+  m = e & ((1 << (-nBits)) - 1)
+  e >>= (-nBits)
+  nBits += mLen
+  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+
+  if (e === 0) {
+    e = 1 - eBias
+  } else if (e === eMax) {
+    return m ? NaN : ((s ? -1 : 1) * Infinity)
+  } else {
+    m = m + Math.pow(2, mLen)
+    e = e - eBias
+  }
+  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
+}
+
+exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
+  var e, m, c
+  var eLen = nBytes * 8 - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
+  var i = isLE ? 0 : (nBytes - 1)
+  var d = isLE ? 1 : -1
+  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+
+  value = Math.abs(value)
+
+  if (isNaN(value) || value === Infinity) {
+    m = isNaN(value) ? 1 : 0
+    e = eMax
+  } else {
+    e = Math.floor(Math.log(value) / Math.LN2)
+    if (value * (c = Math.pow(2, -e)) < 1) {
+      e--
+      c *= 2
+    }
+    if (e + eBias >= 1) {
+      value += rt / c
+    } else {
+      value += rt * Math.pow(2, 1 - eBias)
+    }
+    if (value * c >= 2) {
+      e++
+      c /= 2
+    }
+
+    if (e + eBias >= eMax) {
+      m = 0
+      e = eMax
+    } else if (e + eBias >= 1) {
+      m = (value * c - 1) * Math.pow(2, mLen)
+      e = e + eBias
+    } else {
+      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
+      e = 0
+    }
+  }
+
+  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
+
+  e = (e << mLen) | m
+  eLen += mLen
+  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
+
+  buffer[offset + i - d] |= s * 128
+}
+
+
+/***/ },
+/* 19 */
+/***/ function(module, exports) {
+
+/*!
+ * Determine if an object is a Buffer
+ *
+ * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * @license  MIT
+ */
+
+// The _isBuffer check is for Safari 5-7 support, because it's missing
+// Object.prototype.constructor. Remove this eventually
+module.exports = function (obj) {
+  return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer)
+}
+
+function isBuffer (obj) {
+  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
+}
+
+// For Node v0.10 support. Remove this eventually.
+function isSlowBuffer (obj) {
+  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
+}
+
+
+/***/ },
 /* 20 */
+/***/ function(module, exports) {
+
+var toString = {}.toString;
+
+module.exports = Array.isArray || function (arr) {
+  return toString.call(arr) == '[object Array]';
+};
+
+
+/***/ },
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 /*
@@ -3465,7 +3512,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(21);
+	fixUrls = __webpack_require__(22);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -3718,7 +3765,7 @@ function updateLink(linkElement, options, obj) {
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports) {
 
 
@@ -3787,19 +3834,19 @@ module.exports = function (css) {
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "./img/31285c5ad879cfc119ef5dbd3892bc93.png";
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "./img/41d61da7a43b26fabd5542cb40ba37b6.jpg";
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports) {
 
 var g;
@@ -3824,11 +3871,11 @@ module.exports = g;
 
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__css_common_less__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__css_common_less__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__css_common_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__css_common_less__);
 
 
@@ -3843,45 +3890,42 @@ var SM = angular.module('SM', ["ngRoute"]).config(function ($routeProvider) {
     });
 });
 
-__webpack_require__(2)(SM);
-__webpack_require__(3)(SM);
+__webpack_require__(4)(SM);
+__webpack_require__(5)(SM);
 
 /***/ },
-/* 26 */
-/***/ function(module, exports, __webpack_require__) {
+/* 27 */
+/***/ function(module, exports) {
 
-/**
- * Created by Nikcher on 04.04.2017.
- */
+
 module.exports = function (ngModule) {
-    var Binary = __webpack_require__(5);
-    var binary = new Binary();
-    var md5 = __webpack_require__(19);
-    ngModule.factory('loginService', function ($http, $rootScope, $location) {
+    ngModule.controller('singOutCtrl', function ($rootScope, $scope, singOutService) {
+        $scope.singOut = function () {
+            if ($rootScope.login) {
+                singOutService.singOut();
+            }
+        };
+    });
+};
 
+/***/ },
+/* 28 */
+/***/ function(module, exports) {
+
+
+module.exports = function (ngModule) {
+    ngModule.factory('singOutService', function ($http, $rootScope, loginService) {
         return {
-            toLogin: function (answer, password) {
-                console.log(answer.iter);
-                var saltPassword = md5(password);
-                console.log(saltPassword);
-                for (var i = 0; i < answer.iter; i++) {
-                    saltPassword = md5(answer.salt + saltPassword + answer.salt);
-                    console.log(saltPassword);
-                }
+            singOut: function (login, password) {
 
                 $http({
                     method: "post",
-                    url: "/login",
-                    data: {
-                        saltPassword: saltPassword
-                    }
+                    url: "/singout"
 
-                }).success(function (data, status) {
+                }).success(function (answer, status) {
                     if (status === 200) {
-                        if (data.login) {
-                            $rootScope.login = data.login;
-                            $location.path('/');
-                        }
+                        console.log('test');
+                        delete $rootScope.login;
                     } else if (status === 403) {
                         //TODO error login
                     }
