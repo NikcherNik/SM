@@ -31,12 +31,16 @@ exports.post = function (req, res, next ) {
             if(saltPassword === saltPasswordClient){
                 console.log("User successfully login");
                 res.status(200).send({
+                    code:100,
                     login: login
                 });
             }else{
                 console.log("ERROR PASSWORD");
                 req.session.login = undefined;
-                res.status(403);
+                res.status(200).send({
+                    code: 101,
+                    error: 'Неверное имя пользователя и пароль'
+                });
             }
 
         }

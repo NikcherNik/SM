@@ -5,16 +5,13 @@ module.exports = function (ngModule) {
     var Binary = require('../../binary.js');
     var binary = new Binary();
     var md5 = require('md5');
-    ngModule.factory('loginService',function ($http,$rootScope,$location) {
+    ngModule.factory('loginService',function ($http,$rootScope,$location,validationService) {
 
         return{
             toLogin: function (answer,password) {
-                console.log(answer.iter);
                 var saltPassword = md5(password);
-                console.log(saltPassword);
                 for(var i=0; i < answer.iter; i++){
                     saltPassword = md5(answer.salt+saltPassword+answer.salt);
-                    console.log(saltPassword);
                 }
 
                 $http({
@@ -25,13 +22,25 @@ module.exports = function (ngModule) {
                     },
 
                 }).success(function (data, status) {
+                    console.log(status)
                     if(status === 200){
-                        if(data.login){
-                            $rootScope.login = data.login;
-                            $location.path('/');
+                        if(data.code != 101){
+                            if(data.login){
+                                $rootScope.login = data.login;
+                                $location.path('/');
+                            }
+                        }else{
+                            var formGroup = $('.form-group.password-field-form');
+                            var glyphicon = formGroup.find('.form-control-feedback');
+
+                            var errorMessage = "Неверный логин или пароль";
+                            validationService.showValidationError(formGroup,glyphicon,errorMessage);
+
+                            formGroup = $('.form-group.login-field-form');
+                            glyphicon = formGroup.find('.form-control-feedback');
+                            validationService.showValidationError(formGroup,glyphicon,"");
+                            formGroup = glyphicon = errorMessage = null;
                         }
-                    }else if(status === 403){
-                        //TODO error login
                     }
                 })
             }

@@ -33,10 +33,12 @@ exports.post = function (req, res, next ) {
                 req.session.iter = iter;
 
                 res.status(200).send({
+                    code: 100,
                     answer: answer
                 });
             }else {
-                res.status(403).send({
+                res.status(200).send({
+                    code: 101,
                     error: "Неверный пользователь или пароль"
                 });
             }
