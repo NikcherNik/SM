@@ -6,13 +6,16 @@ module.exports = function (ngModule) {
     var binary = new Binary();
     var md5 = require('md5');
     ngModule.factory('loginService',function ($http,$rootScope,$location,validationService) {
-
+    var loginError = false;
         return{
             toLogin: function (answer,password) {
                 var saltPassword = md5(password);
                 for(var i=0; i < answer.iter; i++){
                     saltPassword = md5(answer.salt+saltPassword+answer.salt);
                 }
+                var formGroup = $('.form-group.password-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+                validationService.resetLoginError(formGroup,glyphicon);
 
                 $http({
                     method: "post",
@@ -22,7 +25,6 @@ module.exports = function (ngModule) {
                     },
 
                 }).success(function (data, status) {
-                    console.log(status)
                     if(status === 200){
                         if(data.code != 101){
                             if(data.login){
@@ -30,15 +32,14 @@ module.exports = function (ngModule) {
                                 $location.path('/');
                             }
                         }else{
-                            var formGroup = $('.form-group.password-field-form');
-                            var glyphicon = formGroup.find('.form-control-feedback');
-
                             var errorMessage = "Неверный логин или пароль";
-                            validationService.showValidationError(formGroup,glyphicon,errorMessage);
+
+                            validationService.showValidationError(formGroup,glyphicon,errorMessage, !loginError);
 
                             formGroup = $('.form-group.login-field-form');
                             glyphicon = formGroup.find('.form-control-feedback');
                             validationService.showValidationError(formGroup,glyphicon,"");
+                            
                             formGroup = glyphicon = errorMessage = null;
                         }
                     }

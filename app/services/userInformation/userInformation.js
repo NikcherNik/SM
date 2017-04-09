@@ -13,7 +13,6 @@ module.exports = function (ngModule) {
 
                 }).success(function (data) {
                     if(data.login){
-                        console.log(data.login)
                         $rootScope.login = data.login;
                     }
                 }).error(function (error, status) {

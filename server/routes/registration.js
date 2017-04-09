@@ -33,7 +33,6 @@ exports.post = function (req, res, next ) {
             if(results[0].count == 0){
                 saveNewUser(login, newPassword);
                 req.session.login = login;
-                console.log(req.session.login);
                 res.status(200).send({
                     login: login
                 });

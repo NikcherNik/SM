@@ -6,7 +6,11 @@ module.exports = function (ngModule) {
 
         return{
             toSalt: function (login,password) {
-                
+
+                var formGroup = $('.form-group.password-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+                validationService.resetLoginError(formGroup,glyphicon);
+
                 $http({
                     method: "post",
                     url: "/salt",
@@ -19,11 +23,10 @@ module.exports = function (ngModule) {
                         if(answer.code != 101){
                             loginService.toLogin(answer.answer,password);
                         }else {
-                            var formGroup = $('.form-group.password-field-form');
-                            var glyphicon = formGroup.find('.form-control-feedback');
+
 
                             var errorMessage = "Неверный логин или пароль";
-                            validationService.showValidationError(formGroup,glyphicon,errorMessage);
+                            validationService.showValidationError(formGroup,glyphicon,errorMessage, true);
 
                             formGroup = $('.form-group.login-field-form');
                             glyphicon = formGroup.find('.form-control-feedback');

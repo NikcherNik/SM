@@ -7,10 +7,8 @@ module.exports = function (ngModule) {
                 $http({
                     method: "post",
                     url: "/singout",
-
                 }).success(function (answer, status) {
                     if(status === 200){
-                        console.log('test');
                         delete $rootScope.login;
                     }else if(status === 403){
                         //TODO error login

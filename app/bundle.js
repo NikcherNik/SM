@@ -61,7 +61,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 26);
+/******/ 	return __webpack_require__(__webpack_require__.s = 28);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -587,9 +587,9 @@ module.exports = Binary;
 
 'use strict'
 
-var base64 = __webpack_require__(14)
-var ieee754 = __webpack_require__(18)
-var isArray = __webpack_require__(20)
+var base64 = __webpack_require__(16)
+var ieee754 = __webpack_require__(20)
+var isArray = __webpack_require__(22)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2367,7 +2367,7 @@ function isnan (val) {
   return val !== val // eslint-disable-line no-self-compare
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1).Buffer, __webpack_require__(25)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1).Buffer, __webpack_require__(27)))
 
 /***/ },
 /* 2 */
@@ -2413,9 +2413,9 @@ module.exports = charenc;
 /***/ function(module, exports, __webpack_require__) {
 
 (function(){
-  var crypt = __webpack_require__(15),
+  var crypt = __webpack_require__(17),
       utf8 = __webpack_require__(2).utf8,
-      isBuffer = __webpack_require__(19),
+      isBuffer = __webpack_require__(21),
       bin = __webpack_require__(2).bin,
 
   // The core
@@ -2582,7 +2582,7 @@ module.exports = function (ngModule) {
     __webpack_require__(7)(ngModule);
     __webpack_require__(8)(ngModule);
     __webpack_require__(9)(ngModule);
-    __webpack_require__(27)(ngModule);
+    __webpack_require__(10)(ngModule);
 };
 
 /***/ },
@@ -2593,11 +2593,11 @@ module.exports = function (ngModule) {
  * Created by Nikcher on 21.03.2017.
  */
 module.exports = function (ngModule) {
+    __webpack_require__(15)(ngModule);
+    __webpack_require__(12)(ngModule);
     __webpack_require__(13)(ngModule);
     __webpack_require__(11)(ngModule);
-    __webpack_require__(12)(ngModule);
-    __webpack_require__(10)(ngModule);
-    __webpack_require__(28)(ngModule);
+    __webpack_require__(14)(ngModule);
 };
 
 /***/ },
@@ -2607,10 +2607,10 @@ module.exports = function (ngModule) {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(16);
+var content = __webpack_require__(18);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(21)(content, {});
+var update = __webpack_require__(23)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2860,6 +2860,21 @@ module.exports = function (ngModule) {
 
 /***/ },
 /* 10 */
+/***/ function(module, exports) {
+
+
+module.exports = function (ngModule) {
+    ngModule.controller('singOutCtrl', function ($rootScope, $scope, singOutService) {
+        $scope.singOut = function () {
+            if ($rootScope.login) {
+                singOutService.singOut();
+            }
+        };
+    });
+};
+
+/***/ },
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 /**
@@ -2870,13 +2885,16 @@ module.exports = function (ngModule) {
     var binary = new Binary();
     var md5 = __webpack_require__(3);
     ngModule.factory('loginService', function ($http, $rootScope, $location, validationService) {
-
+        var loginError = false;
         return {
             toLogin: function (answer, password) {
                 var saltPassword = md5(password);
                 for (var i = 0; i < answer.iter; i++) {
                     saltPassword = md5(answer.salt + saltPassword + answer.salt);
                 }
+                var formGroup = $('.form-group.password-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+                validationService.resetLoginError(formGroup, glyphicon);
 
                 $http({
                     method: "post",
@@ -2886,7 +2904,6 @@ module.exports = function (ngModule) {
                     }
 
                 }).success(function (data, status) {
-                    console.log(status);
                     if (status === 200) {
                         if (data.code != 101) {
                             if (data.login) {
@@ -2894,15 +2911,14 @@ module.exports = function (ngModule) {
                                 $location.path('/');
                             }
                         } else {
-                            var formGroup = $('.form-group.password-field-form');
-                            var glyphicon = formGroup.find('.form-control-feedback');
-
                             var errorMessage = "Неверный логин или пароль";
-                            validationService.showValidationError(formGroup, glyphicon, errorMessage);
+
+                            validationService.showValidationError(formGroup, glyphicon, errorMessage, !loginError);
 
                             formGroup = $('.form-group.login-field-form');
                             glyphicon = formGroup.find('.form-control-feedback');
                             validationService.showValidationError(formGroup, glyphicon, "");
+
                             formGroup = glyphicon = errorMessage = null;
                         }
                     }
@@ -2913,7 +2929,7 @@ module.exports = function (ngModule) {
 };
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 /**
@@ -2985,7 +3001,7 @@ module.exports = function (ngModule) {
 };
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports) {
 
 /**
@@ -2996,6 +3012,10 @@ module.exports = function (ngModule) {
 
         return {
             toSalt: function (login, password) {
+
+                var formGroup = $('.form-group.password-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+                validationService.resetLoginError(formGroup, glyphicon);
 
                 $http({
                     method: "post",
@@ -3009,11 +3029,9 @@ module.exports = function (ngModule) {
                         if (answer.code != 101) {
                             loginService.toLogin(answer.answer, password);
                         } else {
-                            var formGroup = $('.form-group.password-field-form');
-                            var glyphicon = formGroup.find('.form-control-feedback');
 
                             var errorMessage = "Неверный логин или пароль";
-                            validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                            validationService.showValidationError(formGroup, glyphicon, errorMessage, true);
 
                             formGroup = $('.form-group.login-field-form');
                             glyphicon = formGroup.find('.form-control-feedback');
@@ -3030,7 +3048,32 @@ module.exports = function (ngModule) {
 };
 
 /***/ },
-/* 13 */
+/* 14 */
+/***/ function(module, exports) {
+
+
+module.exports = function (ngModule) {
+    ngModule.factory('singOutService', function ($http, $rootScope, loginService) {
+        return {
+            singOut: function (login, password) {
+
+                $http({
+                    method: "post",
+                    url: "/singout"
+                }).success(function (answer, status) {
+                    if (status === 200) {
+                        delete $rootScope.login;
+                    } else if (status === 403) {
+                        //TODO error login
+                    }
+                });
+            }
+        };
+    });
+};
+
+/***/ },
+/* 15 */
 /***/ function(module, exports) {
 
 /**
@@ -3040,15 +3083,20 @@ module.exports = function (ngModule) {
     ngModule.factory('validationService', function ($http, $rootScope, $location) {
 
         return {
-            showValidationError: function (formGroup, glyphicon, messageError) {
+            showValidationError: function (formGroup, glyphicon, messageError, loginRegistrationError = false) {
                 formGroup.addClass('has-error').removeClass('has-success');
                 glyphicon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
                 formGroup.find('.error-validation').remove();
 
-                if (messageError) {
+                if (messageError && !loginRegistrationError) {
                     var msgElem = document.createElement('div');
                     msgElem.innerHTML = messageError;
                     $(msgElem).addClass('error-validation');
+                    formGroup.append(msgElem);
+                } else if (messageError && loginRegistrationError) {
+                    var msgElem = document.createElement('div');
+                    msgElem.innerHTML = messageError;
+                    $(msgElem).addClass('error-login');
                     formGroup.append(msgElem);
                 }
             },
@@ -3057,13 +3105,19 @@ module.exports = function (ngModule) {
                 glyphicon.addClass('glyphicon-ok').removeClass('glyphicon-remove');
 
                 formGroup.find('.error-validation').remove();
+            },
+            resetLoginError: function (formGroup, glyphicon, messageError) {
+                formGroup.addClass('has-success').removeClass('has-error');
+                glyphicon.addClass('glyphicon-ok').removeClass('glyphicon-remove');
+
+                formGroup.find('.error-login').remove();
             }
         };
     });
 };
 
 /***/ },
-/* 14 */
+/* 16 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -3184,7 +3238,7 @@ function fromByteArray (uint8) {
 
 
 /***/ },
-/* 15 */
+/* 17 */
 /***/ function(module, exports) {
 
 (function() {
@@ -3286,21 +3340,21 @@ function fromByteArray (uint8) {
 
 
 /***/ },
-/* 16 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(17)(undefined);
+exports = module.exports = __webpack_require__(19)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, ".main-page {\n  background-image: url(" + __webpack_require__(23) + ");\n}\n.c-modal {\n  text-align: center;\n}\n.navbar-nav a {\n  color: #FFFFFF;\n}\n.navbar-form .btn,\n.login-form-element .btn {\n  color: #FFFFFF;\n  font-weight: bold;\n  font-size: small;\n}\n.navbar-form .btn.button-background:active,\n.login-form-element .btn.button-background:active {\n  background-color: #0087ff;\n}\n.navbar-form .btn.singup:hover,\n.login-form-element .btn.singup:hover {\n  text-decoration: underline;\n}\n.button-background {\n  background-color: #0096ff;\n  color: #FFFFFF;\n}\n.button-background:hover {\n  background-color: #00a5ff;\n  color: #FFFFFF;\n}\n@media screen and (min-width: 768px) {\n  .c-modal:before {\n    display: inline-block;\n    vertical-align: middle;\n    content: \" \";\n    height: 100%;\n  }\n}\n.c-modal.in .c-modal-dialog {\n  opacity: 1;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.c-modal-dialog {\n  display: inline-block;\n  text-align: left;\n  vertical-align: middle;\n  opacity: 0;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.login-form {\n  top: 130px;\n}\n.login-form .title {\n  color: #FFFFFF;\n  font-size: 27px;\n  text-align: center;\n  margin-top: 10px;\n}\n.login-button {\n  width: 100%;\n  margin-top: 20px;\n}\n.login-form-element {\n  left: 15px;\n}\n.login-form-element.login-field {\n  margin-top: 25px;\n}\n.login-form-element.password-field {\n  margin-top: 10px;\n}\n.background-login-form {\n  width: 100%;\n  height: 100%;\n  border-radius: 10px;\n  background-color: #FFFFFF;\n  position: absolute;\n  opacity: 0.3;\n}\n.float-label {\n  position: absolute;\n  top: 0px;\n  left: 17px;\n  -webkit-transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  opacity: 0;\n  color: #FFFFFF;\n}\n.float-label.show {\n  top: -20px;\n  left: 17px;\n  opacity: 1;\n}\n.main-img {\n  background-image: url(" + __webpack_require__(24) + ");\n  background-size: 100% auto;\n  background-repeat: no-repeat;\n  position: absolute;\n  width: 100%;\n  height: 550px;\n  min-height: 350px;\n}\n.select-label {\n  color: #61C3FF;\n}\n@media screen and (max-width: 650px) {\n  .login-form {\n    top: 55px;\n  }\n}\n@media screen and (max-width: 750px) {\n  .main-img {\n    background-image: none;\n  }\n  .background-login-form {\n    background-color: #000000;\n  }\n}\n.error-validation {\n  margin-left: 31px;\n  margin-bottom: -5px;\n  color: red;\n  font-size: medium;\n}\n.login-main {\n  display: inline-block;\n  color: white;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  font-family: ZagBold;\n}\n.btn-singout {\n  margin-bottom: 10px;\n  margin-left: 10px;\n}\n", ""]);
+exports.push([module.i, ".main-page {\n  background-image: url(" + __webpack_require__(25) + ");\n}\n.c-modal {\n  text-align: center;\n}\n.navbar-nav a {\n  color: #FFFFFF;\n}\n.navbar-form .btn,\n.login-form-element .btn {\n  color: #FFFFFF;\n  font-weight: bold;\n  font-size: small;\n}\n.navbar-form .btn.button-background:active,\n.login-form-element .btn.button-background:active {\n  background-color: #0087ff;\n}\n.navbar-form .btn.singup:hover,\n.login-form-element .btn.singup:hover {\n  text-decoration: underline;\n}\n.button-background {\n  background-color: #0096ff;\n  color: #FFFFFF;\n}\n.button-background:hover {\n  background-color: #00a5ff;\n  color: #FFFFFF;\n}\n@media screen and (min-width: 768px) {\n  .c-modal:before {\n    display: inline-block;\n    vertical-align: middle;\n    content: \" \";\n    height: 100%;\n  }\n}\n.c-modal.in .c-modal-dialog {\n  opacity: 1;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.c-modal-dialog {\n  display: inline-block;\n  text-align: left;\n  vertical-align: middle;\n  opacity: 0;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.login-form {\n  top: 130px;\n}\n.login-form .title {\n  color: #FFFFFF;\n  font-size: 27px;\n  text-align: center;\n  margin-top: 10px;\n}\n.login-button {\n  width: 100%;\n  margin-top: 20px;\n}\n.login-form-element {\n  left: 15px;\n}\n.login-form-element.login-field {\n  margin-top: 25px;\n}\n.login-form-element.password-field {\n  margin-top: 10px;\n}\n.background-login-form {\n  width: 100%;\n  height: 100%;\n  border-radius: 10px;\n  background-color: #FFFFFF;\n  position: absolute;\n  opacity: 0.3;\n}\n.float-label {\n  position: absolute;\n  top: 0px;\n  left: 17px;\n  -webkit-transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  opacity: 0;\n  color: #FFFFFF;\n}\n.float-label.show {\n  top: -20px;\n  left: 17px;\n  opacity: 1;\n}\n.main-img {\n  background-image: url(" + __webpack_require__(26) + ");\n  background-size: 100% auto;\n  background-repeat: no-repeat;\n  position: absolute;\n  width: 100%;\n  height: 550px;\n  min-height: 350px;\n}\n.select-label {\n  color: #61C3FF;\n}\n@media screen and (max-width: 650px) {\n  .login-form {\n    top: 55px;\n  }\n}\n@media screen and (max-width: 750px) {\n  .main-img {\n    background-image: none;\n  }\n  .background-login-form {\n    background-color: #000000;\n  }\n}\n.error-validation,\n.error-login {\n  margin-left: 31px;\n  margin-bottom: -5px;\n  color: red;\n  font-size: medium;\n}\n.login-main {\n  display: inline-block;\n  color: white;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  font-family: ZagBold;\n}\n.btn-singout {\n  margin-bottom: 10px;\n  margin-left: 10px;\n}\n", ""]);
 
 // exports
 
 
 /***/ },
-/* 17 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -3382,7 +3436,7 @@ function toComment(sourceMap) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1).Buffer))
 
 /***/ },
-/* 18 */
+/* 20 */
 /***/ function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -3472,7 +3526,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 
 /***/ },
-/* 19 */
+/* 21 */
 /***/ function(module, exports) {
 
 /*!
@@ -3499,7 +3553,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ },
-/* 20 */
+/* 22 */
 /***/ function(module, exports) {
 
 var toString = {}.toString;
@@ -3510,7 +3564,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ },
-/* 21 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 /*
@@ -3534,7 +3588,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(22);
+	fixUrls = __webpack_require__(24);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -3787,7 +3841,7 @@ function updateLink(linkElement, options, obj) {
 
 
 /***/ },
-/* 22 */
+/* 24 */
 /***/ function(module, exports) {
 
 
@@ -3856,19 +3910,19 @@ module.exports = function (css) {
 
 
 /***/ },
-/* 23 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "./img/31285c5ad879cfc119ef5dbd3892bc93.png";
 
 /***/ },
-/* 24 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "./img/41d61da7a43b26fabd5542cb40ba37b6.jpg";
 
 /***/ },
-/* 25 */
+/* 27 */
 /***/ function(module, exports) {
 
 var g;
@@ -3893,7 +3947,7 @@ module.exports = g;
 
 
 /***/ },
-/* 26 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3914,48 +3968,6 @@ var SM = angular.module('SM', ["ngRoute"]).config(function ($routeProvider) {
 
 __webpack_require__(4)(SM);
 __webpack_require__(5)(SM);
-
-/***/ },
-/* 27 */
-/***/ function(module, exports) {
-
-
-module.exports = function (ngModule) {
-    ngModule.controller('singOutCtrl', function ($rootScope, $scope, singOutService) {
-        $scope.singOut = function () {
-            if ($rootScope.login) {
-                singOutService.singOut();
-            }
-        };
-    });
-};
-
-/***/ },
-/* 28 */
-/***/ function(module, exports) {
-
-
-module.exports = function (ngModule) {
-    ngModule.factory('singOutService', function ($http, $rootScope, loginService) {
-        return {
-            singOut: function (login, password) {
-
-                $http({
-                    method: "post",
-                    url: "/singout"
-
-                }).success(function (answer, status) {
-                    if (status === 200) {
-                        console.log('test');
-                        delete $rootScope.login;
-                    } else if (status === 403) {
-                        //TODO error login
-                    }
-                });
-            }
-        };
-    });
-};
 
 /***/ }
 /******/ ]);

@@ -4,8 +4,9 @@ var session = require('express-session');
 exports.post = function (req, res, next ) {
 
     if(req.session.login){
-        res.status(200).send();
+        req.session.login = '';
+        res.status(200).send({});
     }else {
-        res.status(403).send();
+        res.status(403);
     }
 };

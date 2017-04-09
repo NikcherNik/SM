@@ -36,6 +36,8 @@ var expiryDate = new Date( Date.now() + 60 * 60 * 1000 ); // 1 hour
 app.use(session({
     key: 'save_money',
     secret: 'SaveMoney20-06',
+    saveUninitialized: false,
+    resave: false,
     store: new SessionStore(options),
     cookie: {
         httpOnly: true,
@@ -59,11 +61,11 @@ try {
 
 //=============Send files===================
 app.get('/',function (req,res) {
-    res.sendfile(__dirname+'/index.html');
+    res.sendFile (__dirname+'/index.html');
 });
 
 app.get('/app/bundle.js',function (req,res) {
-    res.sendfile(__dirname+'/app/bundle.js')
+    res.sendFile (__dirname+'/app/bundle.js')
 });
 
 app.get('/username',function (req,res) {

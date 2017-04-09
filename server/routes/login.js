@@ -29,13 +29,11 @@ exports.post = function (req, res, next ) {
                 saltPassword = md5(salt+saltPassword+salt);
             }
             if(saltPassword === saltPasswordClient){
-                console.log("User successfully login");
                 res.status(200).send({
                     code:100,
                     login: login
                 });
             }else{
-                console.log("ERROR PASSWORD");
                 req.session.login = undefined;
                 res.status(200).send({
                     code: 101,

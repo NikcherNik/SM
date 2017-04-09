@@ -17,5 +17,4 @@ DataBase.prototype.connect = function () {
     this.save_money.connect();
     this.save_money.query("SET SESSION wait_timeout = 604800"); // 7 days timeout
 }
-
 module.exports = DataBase;
