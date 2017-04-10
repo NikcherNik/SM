@@ -6,11 +6,17 @@ module.exports = function (ngModule) {
     var Binary = require('../../binary.js');
     var binary = new Binary();
     var md5 = require('md5');
-    ngModule.factory('registrationService',function ($http,$rootScope,$location,$route) {
+    ngModule.factory('registrationService',function ($http,$rootScope,$location,$route, validationService) {
 
         return{
             toRegister: function (user) {
                 var cipherPassword = encryptString(user.password);
+
+                var loginError = true;
+                var formGroup = $('.form-group.passwordRepeat-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+                validationService.resetLoginError(formGroup,glyphicon);
+
                 $http({
                     method: "post",
                     url: "/cipher",
@@ -29,18 +35,19 @@ module.exports = function (ngModule) {
                         },
                     })
                         .success(function (data, status) {
-                            switch (status){
-                                case 200:
-                                    if(data.login){
-                                        $rootScope.login = data.login;
-                                        $location.path('/');
-                                    }
-                                    break;
-                                case 403:
-                                    //TODO user exists
-                                    break;
-                                default:
+                            if(status === 200){
+                                if(data.code === 100){
+                                    $rootScope.login = data.login;
+                                    $location.path('/');
+                                }else if(data.code === 101){
+                                    var errorMessage = "Логин занят";
+
+                                    validationService.showValidationError(formGroup,glyphicon,errorMessage, loginError);
+
+                                    formGroup = glyphicon = errorMessage = null;
+                                }
                             }
+
                         })
                         .error(function (data, status, headers, configs) {
                             console.error(status)

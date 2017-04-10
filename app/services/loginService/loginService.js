@@ -6,7 +6,7 @@ module.exports = function (ngModule) {
     var binary = new Binary();
     var md5 = require('md5');
     ngModule.factory('loginService',function ($http,$rootScope,$location,validationService) {
-    var loginError = false;
+    var loginError = true;
         return{
             toLogin: function (answer,password) {
                 var saltPassword = md5(password);
@@ -34,11 +34,7 @@ module.exports = function (ngModule) {
                         }else{
                             var errorMessage = "Неверный логин или пароль";
 
-                            validationService.showValidationError(formGroup,glyphicon,errorMessage, !loginError);
-
-                            formGroup = $('.form-group.login-field-form');
-                            glyphicon = formGroup.find('.form-control-feedback');
-                            validationService.showValidationError(formGroup,glyphicon,"");
+                            validationService.showValidationError(formGroup,glyphicon,errorMessage, loginError);
                             
                             formGroup = glyphicon = errorMessage = null;
                         }

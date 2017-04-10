@@ -18,9 +18,9 @@ module.exports = function (ngModule) {
                     _bs_label.removeClass(bs_float_show_class);
                 }
             })
-                    .on("keyup",function(){
+                .on("keyup",function(){
                     $(this).trigger("bs-check-value");
-                    var formGroup = $(this).parents('.form-group');
+                    var formGroup = $(this).parents('.form-group').not('.passwordRepeat-field-form');
                     var glyphicon = formGroup.find('.form-control-feedback');
                     if(!!this.value){
                         validationService.resetValidationError(formGroup,glyphicon);
@@ -43,6 +43,10 @@ module.exports = function (ngModule) {
 
         $scope.toRegister = function (user) {
             formValid = true;
+
+            $('.error-login').each(function () {
+                this.remove();
+            });
             if(typeof (user) === 'undefined' || !user){
                 var i = 0;
                 $('input').each(function () {

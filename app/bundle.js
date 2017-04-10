@@ -2754,7 +2754,7 @@ module.exports = function (ngModule) {
                 }
             }).on("keyup", function () {
                 $(this).trigger("bs-check-value");
-                var formGroup = $(this).parents('.form-group');
+                var formGroup = $(this).parents('.form-group').not('.passwordRepeat-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
                 if (!!this.value) {
                     validationService.resetValidationError(formGroup, glyphicon);
@@ -2775,6 +2775,10 @@ module.exports = function (ngModule) {
 
         $scope.toRegister = function (user) {
             formValid = true;
+
+            $('.error-login').each(function () {
+                this.remove();
+            });
             if (typeof user === 'undefined' || !user) {
                 var i = 0;
                 $('input').each(function () {
@@ -2885,7 +2889,7 @@ module.exports = function (ngModule) {
     var binary = new Binary();
     var md5 = __webpack_require__(3);
     ngModule.factory('loginService', function ($http, $rootScope, $location, validationService) {
-        var loginError = false;
+        var loginError = true;
         return {
             toLogin: function (answer, password) {
                 var saltPassword = md5(password);
@@ -2913,11 +2917,7 @@ module.exports = function (ngModule) {
                         } else {
                             var errorMessage = "Неверный логин или пароль";
 
-                            validationService.showValidationError(formGroup, glyphicon, errorMessage, !loginError);
-
-                            formGroup = $('.form-group.login-field-form');
-                            glyphicon = formGroup.find('.form-control-feedback');
-                            validationService.showValidationError(formGroup, glyphicon, "");
+                            validationService.showValidationError(formGroup, glyphicon, errorMessage, loginError);
 
                             formGroup = glyphicon = errorMessage = null;
                         }
@@ -2940,11 +2940,17 @@ module.exports = function (ngModule) {
     var Binary = __webpack_require__(0);
     var binary = new Binary();
     var md5 = __webpack_require__(3);
-    ngModule.factory('registrationService', function ($http, $rootScope, $location, $route) {
+    ngModule.factory('registrationService', function ($http, $rootScope, $location, $route, validationService) {
 
         return {
             toRegister: function (user) {
                 var cipherPassword = encryptString(user.password);
+
+                var loginError = true;
+                var formGroup = $('.form-group.passwordRepeat-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+                validationService.resetLoginError(formGroup, glyphicon);
+
                 $http({
                     method: "post",
                     url: "/cipher",
@@ -2962,17 +2968,17 @@ module.exports = function (ngModule) {
                             password: cipherPasswordServer
                         }
                     }).success(function (data, status) {
-                        switch (status) {
-                            case 200:
-                                if (data.login) {
-                                    $rootScope.login = data.login;
-                                    $location.path('/');
-                                }
-                                break;
-                            case 403:
-                                //TODO user exists
-                                break;
-                            default:
+                        if (status === 200) {
+                            if (data.code === 100) {
+                                $rootScope.login = data.login;
+                                $location.path('/');
+                            } else if (data.code === 101) {
+                                var errorMessage = "Логин занят";
+
+                                validationService.showValidationError(formGroup, glyphicon, errorMessage, loginError);
+
+                                formGroup = glyphicon = errorMessage = null;
+                            }
                         }
                     }).error(function (data, status, headers, configs) {
                         console.error(status);

@@ -34,10 +34,13 @@ exports.post = function (req, res, next ) {
                 saveNewUser(login, newPassword);
                 req.session.login = login;
                 res.status(200).send({
+                    code: 100,
                     login: login
                 });
             }else {
-                res.status(403);
+                res.status(200).send({
+                    code: 101,
+                });
             }
         }
     ],function (err) {
