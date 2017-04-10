@@ -20,7 +20,7 @@ module.exports = function (ngModule) {
             })
                 .on("keyup",function(){
                     $(this).trigger("bs-check-value");
-                    var formGroup = $(this).parents('.form-group').not('.passwordRepeat-field-form');
+                    var formGroup = $(this).parents('.form-group');
                     var glyphicon = formGroup.find('.form-control-feedback');
                     if(!!this.value){
                         validationService.resetValidationError(formGroup,glyphicon);
@@ -43,15 +43,17 @@ module.exports = function (ngModule) {
 
         $scope.toRegister = function (user) {
             formValid = true;
+            $('#registrationBtn').focus();
 
-            $('.error-login').each(function () {
-                this.remove();
-            });
+            var formGroup = $('.form-group.passwordRepeat-field-form');
+            var glyphicon = formGroup.find('.form-control-feedback');
+            validationService.resetLoginError(formGroup,glyphicon);
+
             if(typeof (user) === 'undefined' || !user){
                 var i = 0;
                 $('input').each(function () {
-                    var formGroup = $(this).parents('.form-group');
-                    var glyphicon = formGroup.find('.form-control-feedback');
+                    formGroup = $(this).parents('.form-group');
+                    glyphicon = formGroup.find('.form-control-feedback');
                     validationService.showValidationError(formGroup,glyphicon,messagesError[i]);
                     i++;
                 });
@@ -64,7 +66,7 @@ module.exports = function (ngModule) {
                 var formGroup = $('.form-group.login-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
 
-                var errorMessage = "Введите логин";
+                var errorMessage = messagesError[0];
                 validationService.showValidationError(formGroup,glyphicon,errorMessage);
                 formGroup = glyphicon = errorMessage = null;
 
@@ -81,7 +83,7 @@ module.exports = function (ngModule) {
                 var formGroup = $('.form-group.password-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
 
-                 var errorMessage = "Введите пароль";
+                 var errorMessage = messagesError[1];
                  validationService.showValidationError(formGroup,glyphicon,errorMessage);
                  formGroup = glyphicon = errorMessage = null;
             }else {
@@ -97,7 +99,7 @@ module.exports = function (ngModule) {
                 var formGroup = $('.form-group.passwordRepeat-field-form');
                 var glyphicon = formGroup.find('.form-control-feedback');
 
-                var errorMessage = "Повторите пароль";
+                var errorMessage = messagesError[2];
                 validationService.showValidationError(formGroup,glyphicon,errorMessage);
                 formGroup = glyphicon = errorMessage = null;
             }else {

@@ -44,9 +44,14 @@ module.exports = function (ngModule) {
         $scope.singUp = function (login,password) {
 
             formValid = true;
+            $('#loginBtn').focus();
             $('.error-validation').each(function () {
                 this.remove();
             });
+
+            var formGroup = $('.form-group.password-field-form');
+            var glyphicon = formGroup.find('.form-control-feedback');
+            validationService.resetLoginError(formGroup,glyphicon);
 
             if(typeof (login) === 'undefined' || !login){
                 formValid = false;
