@@ -28,7 +28,7 @@ module.exports = function (ngModule) {
                     if(status === 200){
                         if(data.code != 101){
                             if(data.login){
-                                $rootScope.login = data.login;
+                                $rootScope.login =  decodeURI(data.login);
                                 $location.path('/');
                             }
                         }else{

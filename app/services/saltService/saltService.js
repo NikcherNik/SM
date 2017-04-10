@@ -15,7 +15,7 @@ module.exports = function (ngModule) {
                     method: "post",
                     url: "/salt",
                     data: {
-                        login: login
+                        login: encodeURI(login)
                     },
 
                 }).success(function (answer, status) {

@@ -2918,7 +2918,7 @@ module.exports = function (ngModule) {
                     if (status === 200) {
                         if (data.code != 101) {
                             if (data.login) {
-                                $rootScope.login = data.login;
+                                $rootScope.login = decodeURI(data.login);
                                 $location.path('/');
                             }
                         } else {
@@ -2971,13 +2971,13 @@ module.exports = function (ngModule) {
                         method: "post",
                         url: "/registration",
                         data: {
-                            login: user.login,
+                            login: encodeURI(user.login),
                             password: cipherPasswordServer
                         }
                     }).success(function (data, status) {
                         if (status === 200) {
                             if (data.code === 100) {
-                                $rootScope.login = data.login;
+                                $rootScope.login = decodeURI(data.login);
                                 $location.path('/');
                             } else if (data.code === 101) {
                                 var errorMessage = "Логин занят";
@@ -3034,7 +3034,7 @@ module.exports = function (ngModule) {
                     method: "post",
                     url: "/salt",
                     data: {
-                        login: login
+                        login: encodeURI(login)
                     }
 
                 }).success(function (answer, status) {
