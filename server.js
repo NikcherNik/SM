@@ -67,6 +67,9 @@ app.get('/',function (req,res) {
 app.get('/app/bundle.js',function (req,res) {
     res.sendFile (__dirname+'/app/bundle.js')
 });
+app.get('/firebase-messaging-sw.js',function (req,res) {
+    res.sendFile (__dirname+'/firebase-messaging-sw.js')
+});
 
 app.get('/username',function (req,res) {
     if(req.session.login){
