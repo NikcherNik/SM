@@ -21,13 +21,15 @@ var options = {
     table: 'sessions'
 }
 
-
 var router = express.Router();
 
 var http = require('http').Server(app);
 
-app.use(express.static('app'));
+
 app.use(express.static('node_modules'));
+app.use(express.static('app'));
+app.use(express.static('css'));
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
@@ -77,6 +79,10 @@ app.get('/username',function (req,res) {
             login : req.session.login
         })
     }else res.send('undefined')
+});
+
+app.get('*', function(req, res){
+    res.sendfile(__dirname+'/server/404page.html', 404);
 });
 
 //=========================================

@@ -61,7 +61,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 28);
+/******/ 	return __webpack_require__(__webpack_require__.s = 29);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -587,9 +587,9 @@ module.exports = Binary;
 
 'use strict'
 
-var base64 = __webpack_require__(16)
-var ieee754 = __webpack_require__(20)
-var isArray = __webpack_require__(22)
+var base64 = __webpack_require__(17)
+var ieee754 = __webpack_require__(21)
+var isArray = __webpack_require__(23)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2367,7 +2367,7 @@ function isnan (val) {
   return val !== val // eslint-disable-line no-self-compare
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1).Buffer, __webpack_require__(27)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1).Buffer, __webpack_require__(28)))
 
 /***/ },
 /* 2 */
@@ -2413,9 +2413,9 @@ module.exports = charenc;
 /***/ function(module, exports, __webpack_require__) {
 
 (function(){
-  var crypt = __webpack_require__(17),
+  var crypt = __webpack_require__(18),
       utf8 = __webpack_require__(2).utf8,
-      isBuffer = __webpack_require__(21),
+      isBuffer = __webpack_require__(22),
       bin = __webpack_require__(2).bin,
 
   // The core
@@ -2581,8 +2581,9 @@ module.exports = charenc;
 module.exports = function (ngModule) {
     __webpack_require__(7)(ngModule);
     __webpack_require__(8)(ngModule);
-    __webpack_require__(9)(ngModule);
     __webpack_require__(10)(ngModule);
+    __webpack_require__(11)(ngModule);
+    __webpack_require__(9)(ngModule);
 };
 
 /***/ },
@@ -2593,11 +2594,11 @@ module.exports = function (ngModule) {
  * Created by Nikcher on 21.03.2017.
  */
 module.exports = function (ngModule) {
-    __webpack_require__(15)(ngModule);
-    __webpack_require__(12)(ngModule);
+    __webpack_require__(16)(ngModule);
     __webpack_require__(13)(ngModule);
-    __webpack_require__(11)(ngModule);
     __webpack_require__(14)(ngModule);
+    __webpack_require__(12)(ngModule);
+    __webpack_require__(15)(ngModule);
 };
 
 /***/ },
@@ -2607,10 +2608,10 @@ module.exports = function (ngModule) {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(18);
+var content = __webpack_require__(19);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(23)(content, {});
+var update = __webpack_require__(24)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -2760,6 +2761,14 @@ module.exports = function (ngModule) {
 /* 9 */
 /***/ function(module, exports) {
 
+module.exports = function (ngModule) {
+    ngModule.controller('mainCtrl', function ($rootScope, $scope, singOutService) {});
+};
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
 /**
  * Created by Nikcher on 20.03.2017.
  */
@@ -2891,7 +2900,7 @@ module.exports = function (ngModule) {
 };
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports) {
 
 
@@ -2906,7 +2915,7 @@ module.exports = function (ngModule) {
 };
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 /**
@@ -2957,7 +2966,7 @@ module.exports = function (ngModule) {
 };
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 /**
@@ -3035,7 +3044,7 @@ module.exports = function (ngModule) {
 };
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports) {
 
 /**
@@ -3082,7 +3091,7 @@ module.exports = function (ngModule) {
 };
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports) {
 
 
@@ -3107,7 +3116,7 @@ module.exports = function (ngModule) {
 };
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports) {
 
 /**
@@ -3151,7 +3160,7 @@ module.exports = function (ngModule) {
 };
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports) {
 
 "use strict";
@@ -3272,7 +3281,7 @@ function fromByteArray (uint8) {
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports) {
 
 (function() {
@@ -3374,21 +3383,21 @@ function fromByteArray (uint8) {
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(19)(undefined);
+exports = module.exports = __webpack_require__(20)(undefined);
 // imports
 
 
 // module
-exports.push([module.i, ".main-page {\n  background-image: url(" + __webpack_require__(29) + ");\n}\n.c-modal {\n  text-align: center;\n}\n.navbar-nav a {\n  color: #FFFFFF;\n}\n.navbar-form .btn,\n.login-form-element .btn {\n  color: #FFFFFF;\n  font-weight: bold;\n  font-size: small;\n}\n.navbar-form .btn.button-background:active,\n.login-form-element .btn.button-background:active {\n  background-color: #0087ff;\n}\n.navbar-form .btn.singup:hover,\n.login-form-element .btn.singup:hover {\n  text-decoration: underline;\n}\n.button-background {\n  background-color: #0096ff;\n  color: #FFFFFF;\n}\n.button-background:hover {\n  background-color: #00a5ff;\n  color: #FFFFFF;\n}\n@media screen and (min-width: 768px) {\n  .c-modal:before {\n    display: inline-block;\n    vertical-align: middle;\n    content: \" \";\n    height: 100%;\n  }\n}\n.c-modal.in .c-modal-dialog {\n  opacity: 1;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.c-modal-dialog {\n  display: inline-block;\n  text-align: left;\n  vertical-align: middle;\n  opacity: 0;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.login-form {\n  top: 130px;\n}\n.login-form .title {\n  color: #FFFFFF;\n  font-size: 27px;\n  text-align: center;\n  margin-top: 10px;\n}\n.login-button {\n  width: 100%;\n  margin-top: 20px;\n}\n.login-form-element {\n  left: 15px;\n}\n.login-form-element.login-field {\n  margin-top: 25px;\n}\n.login-form-element.password-field {\n  margin-top: 10px;\n}\n.background-login-form {\n  width: 100%;\n  height: 100%;\n  border-radius: 10px;\n  background-color: #FFFFFF;\n  position: absolute;\n  opacity: 0.4;\n}\n.float-label {\n  position: absolute;\n  top: 0px;\n  left: 17px;\n  -webkit-transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  opacity: 0;\n  color: #FFFFFF;\n}\n.float-label.show {\n  top: -20px;\n  left: 17px;\n  opacity: 1;\n}\n.main-img {\n  background-image: url(" + __webpack_require__(26) + ");\n  background-size: 100% auto;\n  background-repeat: no-repeat;\n  position: absolute;\n  width: 100%;\n  height: 550px;\n  min-height: 350px;\n  opacity: 0.3;\n}\n.select-label {\n  color: #61C3FF;\n}\n@media screen and (max-width: 650px) {\n  .login-form {\n    top: 55px;\n  }\n}\n@media screen and (max-width: 750px) {\n  .main-img {\n    background-image: none;\n  }\n  .background-login-form {\n    background-color: #000000;\n  }\n}\n.error-validation,\n.error-login {\n  margin-left: 31px;\n  margin-bottom: -5px;\n  color: red;\n  font-size: medium;\n}\n.login-main {\n  display: inline-block;\n  color: white;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  font: 20px/25px \"Roboto\", sans-serif;\n}\n.btn-singout {\n  margin-bottom: 10px;\n  margin-left: 10px;\n}\n", ""]);
+exports.push([module.i, ".main-page {\n  background-image: url(" + __webpack_require__(26) + ");\n}\n.c-modal {\n  text-align: center;\n}\n.navbar-nav a {\n  color: #FFFFFF;\n}\n.navbar-form .btn,\n.login-form-element .btn {\n  color: #FFFFFF;\n  font-weight: bold;\n  font-size: small;\n}\n.navbar-form .btn.button-background:active,\n.login-form-element .btn.button-background:active {\n  background-color: #0087ff;\n}\n.navbar-form .btn.singup:hover,\n.login-form-element .btn.singup:hover {\n  text-decoration: underline;\n}\n.button-background {\n  background-color: #0096ff;\n  color: #FFFFFF;\n  border-radius: 4px;\n}\n.button-background:hover {\n  background-color: #00a5ff;\n  color: #FFFFFF;\n}\n@media screen and (min-width: 768px) {\n  .c-modal:before {\n    display: inline-block;\n    vertical-align: middle;\n    content: \" \";\n    height: 100%;\n  }\n}\n.c-modal.in .c-modal-dialog {\n  opacity: 1;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.c-modal-dialog {\n  display: inline-block;\n  text-align: left;\n  vertical-align: middle;\n  opacity: 0;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.login-form {\n  top: 95px;\n}\n.login-form .title {\n  color: #FFFFFF;\n  font-size: 27px;\n  text-align: center;\n  margin-top: 10px;\n}\n.login-button {\n  width: 100%;\n  margin-top: 20px;\n}\n.login-form-element {\n  left: 15px;\n}\n.login-form-element.login-field {\n  margin-top: 25px;\n}\n.login-form-element.password-field {\n  margin-top: 10px;\n}\n.background-form {\n  width: 100%;\n  height: 100%;\n  border-radius: 10px;\n  background-color: #FFFFFF;\n  position: absolute;\n  opacity: 0.4;\n  box-shadow: 5px 5px 4px 0px rgba(0, 0, 0, 0.5);\n}\n.float-input {\n  margin: 0;\n}\n.float-label {\n  position: absolute;\n  top: 0px;\n  left: 17px;\n  -webkit-transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  opacity: 0;\n  color: #FFFFFF;\n}\n.float-label.show {\n  top: -20px;\n  left: 17px;\n  opacity: 1;\n}\n.main-img {\n  background-image: url(" + __webpack_require__(27) + ");\n  background-size: 100% auto;\n  background-repeat: no-repeat;\n  position: absolute;\n  width: 100%;\n  height: 550px;\n  min-height: 350px;\n  opacity: 0.3;\n}\n.select-label {\n  color: #61C3FF;\n}\n@media screen and (max-width: 650px) {\n  .login-form {\n    top: 55px;\n  }\n}\n@media screen and (max-width: 750px) {\n  .main-img {\n    background-image: none;\n  }\n  .background-login-form {\n    background-color: #000000;\n  }\n}\n.error-validation,\n.error-login {\n  margin-left: 31px;\n  margin-bottom: -5px;\n  color: red;\n  font-size: medium;\n}\n.login-main {\n  display: inline-block;\n  color: white;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  font: 20px/25px \"Roboto\", sans-serif;\n}\n.btn-singout {\n  margin-bottom: 10px;\n  margin-left: 10px;\n}\n", ""]);
 
 // exports
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(Buffer) {/*
@@ -3470,7 +3479,7 @@ function toComment(sourceMap) {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1).Buffer))
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports) {
 
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -3560,7 +3569,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports) {
 
 /*!
@@ -3587,7 +3596,7 @@ function isSlowBuffer (obj) {
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports) {
 
 var toString = {}.toString;
@@ -3598,7 +3607,7 @@ module.exports = Array.isArray || function (arr) {
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 /*
@@ -3622,7 +3631,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(24);
+	fixUrls = __webpack_require__(25);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -3875,7 +3884,7 @@ function updateLink(linkElement, options, obj) {
 
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports) {
 
 
@@ -3944,14 +3953,19 @@ module.exports = function (css) {
 
 
 /***/ },
-/* 25 */,
 /* 26 */
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "./img/03983da3f1e00a0a366d41900e9ba5dc.png";
+
+/***/ },
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "./img/41d61da7a43b26fabd5542cb40ba37b6.jpg";
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports) {
 
 var g;
@@ -3976,7 +3990,7 @@ module.exports = g;
 
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3986,23 +4000,32 @@ module.exports = g;
 
 
 var SM = angular.module('SM', ["ngRoute"]).config(function ($routeProvider) {
-    $routeProvider.when('/registration', {
+    $routeProvider.when('/main', {
+        templateUrl: 'view/main.html',
+        controller: 'mainCtrl',
+        resolve: {
+            factory: checkRouting
+        }
+    }).when('/registration', {
         templateUrl: 'view/registration.html',
         controller: 'registrationCtrl'
     }).when('/login', {
         templateUrl: 'view/login.html',
         controller: 'singUpCtrl'
+    }).otherwise({
+        redirectTo: '/'
     });
 });
 
+var checkRouting = function ($q, $rootScope, $location) {
+    if ($rootScope.login) {
+        return true;
+    } else {
+        return false;
+    }
+};
 __webpack_require__(4)(SM);
 __webpack_require__(5)(SM);
-
-/***/ },
-/* 29 */
-/***/ function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "./img/03983da3f1e00a0a366d41900e9ba5dc.png";
 
 /***/ }
 /******/ ]);

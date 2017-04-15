@@ -30,6 +30,7 @@
 .button-background{
   background-color: rgba(0,150,255,1);
   color: #FFFFFF;
+  border-radius: 4px;
 }
 .button-background:hover{
   background-color: rgba(0,165,255,1);
@@ -63,7 +64,7 @@
 }
 
 .login-form{
-  top: 130px;
+  top: 95px;
   .title{
     color: #FFFFFF;
     font-size: 27px;
@@ -86,15 +87,18 @@
 .login-form-element.password-field{
   margin-top: 10px;
 }
-.background-login-form{
+.background-form{
   width: 100%;
   height: 100%;
   border-radius: 10px;
   background-color: #FFFFFF;
   position: absolute;
-  opacity: 0.4
+  opacity: 0.4;
+  box-shadow: 5px 5px 4px 0px rgba(0,0,0,0.5);
 }
-
+.float-input {
+  margin: 0;
+}
 .float-label {
   position:absolute;
   top:0px;

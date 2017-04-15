@@ -1,0 +1,18 @@
+.background-page{
+    background-image: url('../img/blue_body_background.png');
+}
+.error_message{
+    font-family: "MuseoSans-700",Helvetica,Arial,Verdana,sans-serif;
+    font-size: 55px;
+    font-weight: normal;
+    line-height: 65px;
+    text-shadow: 0px 1px 3px rgba(0,0,0,0.45);
+    color: #FFFFFF;
+
+    text-align: center;
+    left: 50%;
+    width: 600px;
+    height: 450px;
+    position: absolute;
+    margin-left: -300px;
+}
