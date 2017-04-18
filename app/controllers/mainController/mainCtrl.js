@@ -1,26 +1,7 @@
 module.exports = function (ngModule) {
-    ngModule.controller('mainCtrl',function ($rootScope,$scope, singOutService) {
+    ngModule.controller('mainCtrl',function ($rootScope,$scope, expensesService) {
 
         console.log(this)
-        this.lists = [
-            {
-                listName: 'list1',
-            },
-            {
-                listName: 'list2',
-            },
-            {
-                listName: 'list1',
-            },
-            {
-                listName: 'list2',
-            },
-            {
-                listName: 'list1',
-            },
-            {
-                listName: 'list2',
-            }
-        ]
+        this.lists = expensesService.getExpenses();
     });
 }

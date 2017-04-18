@@ -7,4 +7,5 @@ module.exports = function (ngModule) {
     require('./saltService/saltService.js')(ngModule);
     require('./loginService/loginService.js')(ngModule);
     require('./singOutService/singOutService.js')(ngModule);
+    require('./expenseService/expenseService.js')(ngModule);
 };
