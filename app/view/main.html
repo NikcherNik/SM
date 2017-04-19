@@ -2,9 +2,9 @@
 <section id="list-expenses" class="list-expenses"
          ng-controller="mainCtrl as mainCtrl">
 
-    <section class="list list-inline" ng-repeat="list in mainCtrl.lists">
+    <section ng-repeat="list in mainCtrl.lists">
 
-        <div class="col-md-2">
+        <div class="col-md-3">
             <div class="expense">
                 <div class="background-form"></div>
                 <div class="title">
@@ -12,5 +12,42 @@
                 </div>
             </div>
         </div>
+    </section>
+    <section class="new-list">
+        <form ng-submit="mainCtrl.addExpense()">
+                <div class="expense_new">
+                    <div class="background-form"></div>
+                    <div class="title">19.04.2017</div>
+                    <div class="table_container">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>№</th>
+                                <th>Раздел</th>
+                                <th>Сумма</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>продукты</td>
+                                <td>250</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>транспорт</td>
+                                <td>40</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>прочее</td>
+                                <td>150</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="total">Всего: <span>440</span></div>
+                </div>
+        </form>
     </section>
 </section>
