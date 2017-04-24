@@ -1,7 +1,7 @@
 
 import './css/common.less';
 
-var SM = angular.module('SM',["ngRoute"])
+var SM = angular.module('SM',["ngRoute","xeditable"])
     .config(function ($routeProvider ) {
         $routeProvider
             .when('/main',{
