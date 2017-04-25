@@ -17,36 +17,30 @@
                 <div class="expense_new">
                     <div class="background-form"></div>
                     <div class="title">19.04.2017</div>
-                    <div ng-controller="EditableFormCtrl" style="position: relative">
+                    <div ng-controller="EditableFormCtrl" class="table_container">
                         <table class="table table-bordered table-hover table-condensed">
                             <tr style="font-weight: bold">
-                                <td style="width:35%">Name</td>
-                                <td style="width:20%">Status</td>
-                                <td style="width:20%">Group</td>
-                                <td style="width:25%">Edit</td>
+                                <td style="width:30%">Раздел</td>
+                                <td style="width:40%">Сумма</td>
+                                <td style="width:30%"></td>
                             </tr>
-                            <tr ng-repeat="user in users">
-                                <td>
-                                    <!-- editable username (text with validation) -->
-                                    <span editable-text="user.name" e-name="name" e-form="rowform" onbeforesave="checkName($data, user.id)">
-                                      {{ user.name || 'empty' }}
-                                    </span>
-                                </td>
+                            <tr ng-repeat="expense in expenses">
                                 <td>
                                     <!-- editable status (select-local) -->
-                                    <span editable-select="user.status" e-name="status" e-form="rowform" e-ng-options="s.value as s.text for s in statuses">
-                                      {{ showStatus(user) }}
+                                    <span editable-select="expense.section" e-name="section" e-form="rowform" e-ng-options="s.value as s.text for s in sections">
+                                      {{ showSection(expense) }}
                                     </span>
                                 </td>
                                 <td>
-                                    <!-- editable group (select-remote) -->
-                                    <span editable-select="user.group" e-name="group" onshow="loadGroups()" e-form="rowform" e-ng-options="g.id as g.text for g in groups">
-                                      {{ showGroup(user) }}
+                                    <!-- editable username (text with validation) -->
+                                    <span editable-text="expense.amount" e-name="amount" e-form="rowform" onbeforesave="checkName($data, expense.id)">
+                                      {{ expense.amount || '0' }}
                                     </span>
                                 </td>
+
                                 <td style="white-space: nowrap">
                                     <!-- form -->
-                                    <form editable-form name="rowform" onbeforesave="saveUser($data, user.id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == user">
+                                    <form editable-form name="rowform" onbeforesave="saveUser($data, amount.id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == user">
                                         <button type="submit" ng-disabled="rowform.$waiting" class="btn btn-primary">
                                             save
                                         </button>

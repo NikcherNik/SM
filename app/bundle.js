@@ -2635,30 +2635,39 @@ if(false) {
 
 module.exports = function (ngModule) {
     ngModule.controller('EditableFormCtrl', function ($scope, $filter, $http) {
-        $scope.users = [{ id: 1, name: 'awesome user1', status: 2, group: 4, groupName: 'admin' }, { id: 2, name: 'awesome user2', status: undefined, group: 3, groupName: 'vip' }, { id: 3, name: 'awesome user3', status: 2, group: null }];
 
-        $scope.statuses = [{ value: 1, text: 'status1' }, { value: 2, text: 'status2' }, { value: 3, text: 'status3' }, { value: 4, text: 'status4' }];
+        $scope.expenses = [{
+            id: 1,
+            date: '19.04.2017',
+            section: 1,
+            amount: 250
+        }, {
+            id: 2,
+            date: '19.04.2017',
+            section: 4,
+            amount: 250
+        }];
 
-        $scope.groups = [];
-        $scope.loadGroups = function () {
-            return $scope.groups.length ? null : $http.get('/groups').success(function (data) {
-                $scope.groups = data;
-            });
-        };
+        $scope.sections = [{ value: 1, text: 'продукты' }, { value: 2, text: 'транспорт' }, { value: 3, text: 'одежда' }, { value: 4, text: 'прочее' }];
 
-        $scope.showGroup = function (user) {
-            if (user.group && $scope.groups.length) {
-                var selected = $filter('filter')($scope.groups, { id: user.group });
-                return selected.length ? selected[0].text : 'Not set';
-            } else {
-                return user.groupName || 'Not set';
-            }
-        };
+        /* $scope.loadGroups = function() {
+             return $scope.groups.length ? null : $http.get('/groups').success(function(data) {
+                 $scope.groups = data;
+             });
+         };
+           $scope.showGroup = function(user) {
+             if(user.group && $scope.groups.length) {
+                 var selected = $filter('filter')($scope.groups, {id: user.group});
+                 return selected.length ? selected[0].text : 'Not set';
+             } else {
+                 return user.groupName || 'Not set';
+             }
+         };*/
 
-        $scope.showStatus = function (user) {
+        $scope.showSection = function (expense) {
             var selected = [];
-            if (user.status) {
-                selected = $filter('filter')($scope.statuses, { value: user.status });
+            if (expense.section) {
+                selected = $filter('filter')($scope.sections, { value: expense.section });
             }
             return selected.length ? selected[0].text : 'Not set';
         };
@@ -2681,19 +2690,19 @@ module.exports = function (ngModule) {
 
         // remove user
         $scope.removeUser = function (index) {
-            $scope.users.splice(index, 1);
+            $scope.expenses.splice(index, 1);
         };
 
         // add user
         $scope.addUser = function () {
             console.log('asd');
             $scope.inserted = {
-                id: $scope.users.length + 1,
-                name: '',
-                status: null,
-                group: null
+                id: $scope.expenses.length + 1,
+                date: new Date(),
+                section: null,
+                amount: null
             };
-            $scope.users.push($scope.inserted);
+            $scope.expenses.push($scope.inserted);
         };
     });
 };
