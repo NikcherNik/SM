@@ -13,6 +13,18 @@
   }
 
 }
+
+.btn.edit{
+  background-image: url('../img/icons/edit.png');
+  background-repeat: no-repeat;
+  background-position: 3px;
+  background-size: 24px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50px;
+  background-color: #00FF7F;
+  border: none;
+}
 .navbar-form, .login-form-element{
   .btn {
     color: #FFFFFF;
@@ -26,19 +38,32 @@
   .btn.button-background:active {
     background-color: rgba(0,135,255,1);
   }
+  .btn.singup{
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: small;
+    position: relative;
+  }
+  .btn.singup:link{
+    box-shadow: none
+  }
   .btn.singup:hover{
-    text-decoration:underline;
+    text-decoration: underline;
   }
 }
-
-.button-background{
-  background-color: rgba(0,150,255,1);
+.btn.button-background:hover,
+.btn.button-background:focus,
+.btn.singup:hover,
+.btn.singup:focus
+{
   color: #FFFFFF;
+}
+.btn.button-background{
+  background-color: rgba(0,150,255,1);
   border-radius: 4px;
 }
-.button-background:hover{
+.btn.button-background:hover{
   background-color: rgba(0,165,255,1);
-  color: #FFFFFF;
 }
 @media screen and (min-width: 768px) {
   .c-modal:before {
