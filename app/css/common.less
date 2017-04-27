@@ -20,7 +20,7 @@
 .table-hover{
   background-color: rgba(255,255,255,0.1);
 }
-.btn.edit{
+.edit, .edit:focus{
   background-image: url('../img/icons/edit.png');
   background-repeat: no-repeat;
   background-position: 3px;
@@ -29,14 +29,22 @@
   height: 30px;
   background-color: #23A64E;
   border: none;
+  border-radius: 5px;
 }
-.btn.edit:hover{
+.edit:hover{
   background-color: #2ed07e;
   background-repeat: no-repeat;
   background-position: 3px;
   background-size: 24px;
 }
-.btn.delete{
+.edit:active{
+  background-color: #1a7e3b;
+  background-repeat: no-repeat;
+  background-position: 3px;
+  background-size: 24px;
+  border: none;
+}
+.delete{
   background-image: url('../img/icons/delete.png');
   background-repeat: no-repeat;
   background-position: 3px;
@@ -45,12 +53,19 @@
   height: 30px;
   background-color: #FF5300;
   border: none;
+  border-radius: 5px;
 }
-.btn.delete:hover{
+.delete:hover{
   background-color: #FFA000;
   background-repeat: no-repeat;
   background-position: 3px;
   background-size: 24px;
+}
+.delete:active{
+  background-repeat: no-repeat;
+  background-position: 3px;
+  background-size: 24px;
+  background-color: #e94c00;
 }
 .navbar-form, .login-form-element{
   .btn {
