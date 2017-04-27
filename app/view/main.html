@@ -18,7 +18,7 @@
                     <div class="background-form"></div>
                     <div class="title">19.04.2017</div>
                     <div ng-controller="EditableFormCtrl" class="table_container">
-                        <table class="table table-bordered table-hover table-condensed">
+                        <table class="table table-bordered ">
                             <tr style="font-weight: bold">
                                 <td style="width:30%">Раздел</td>
                                 <td style="width:40%">Сумма</td>
@@ -50,7 +50,7 @@
                                     </form>
                                     <div class="buttons" ng-show="!rowform.$visible">
                                         <button type="button" class="btn btn-primary edit" ng-click="rowform.$show()"></button>
-                                        <button type="button" class="btn btn-danger" ng-click="removeUser($index)">del</button>
+                                        <button type="button" class="btn btn-danger delete" ng-click="removeUser($index)"></button>
                                     </div>
                                 </td>
                             </tr>
