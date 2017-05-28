@@ -1,5 +1,5 @@
-
 import './css/common.less';
+import './css/menu.css';
 
 var SM = angular.module('SM',["ngRoute","xeditable"])
     .config(function ($routeProvider ) {
@@ -22,6 +22,13 @@ var SM = angular.module('SM',["ngRoute","xeditable"])
             .otherwise({
                 redirectTo: '/'
             });
+
+        //close menu button
+        $(document).ready(function () {
+            $(".navbar-toggle").on("click", function () {
+                $(this).toggleClass("active");
+            });
+        });
     });
 
 var checkRouting= function ($q, $rootScope, $location) {

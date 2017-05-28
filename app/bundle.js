@@ -61,7 +61,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 33);
+/******/ 	return __webpack_require__(__webpack_require__.s = 37);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -587,9 +587,9 @@ module.exports = Binary;
 
 'use strict'
 
-var base64 = __webpack_require__(19)
-var ieee754 = __webpack_require__(23)
-var isArray = __webpack_require__(25)
+var base64 = __webpack_require__(22)
+var ieee754 = __webpack_require__(26)
+var isArray = __webpack_require__(28)
 
 exports.Buffer = Buffer
 exports.SlowBuffer = SlowBuffer
@@ -2367,7 +2367,7 @@ function isnan (val) {
   return val !== val // eslint-disable-line no-self-compare
 }
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1).Buffer, __webpack_require__(32)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1).Buffer, __webpack_require__(36)))
 
 /***/ },
 /* 2 */
@@ -2412,10 +2412,92 @@ module.exports = charenc;
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
+/* WEBPACK VAR INJECTION */(function(Buffer) {/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap) {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+  var base64 = new Buffer(JSON.stringify(sourceMap)).toString('base64');
+  var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+  return '/*# ' + data + ' */';
+}
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1).Buffer))
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
 (function(){
-  var crypt = __webpack_require__(20),
+  var crypt = __webpack_require__(23),
       utf8 = __webpack_require__(2).utf8,
-      isBuffer = __webpack_require__(24),
+      isBuffer = __webpack_require__(27),
       bin = __webpack_require__(2).bin,
 
   // The core
@@ -2575,1197 +2657,7 @@ module.exports = charenc;
 
 
 /***/ },
-/* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-module.exports = function (ngModule) {
-    __webpack_require__(8)(ngModule);
-    __webpack_require__(9)(ngModule);
-    __webpack_require__(11)(ngModule);
-    __webpack_require__(12)(ngModule);
-    __webpack_require__(10)(ngModule);
-    __webpack_require__(7)(ngModule);
-};
-
-/***/ },
 /* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-/**
- * Created by Nikcher on 21.03.2017.
- */
-module.exports = function (ngModule) {
-    __webpack_require__(18)(ngModule);
-    __webpack_require__(15)(ngModule);
-    __webpack_require__(16)(ngModule);
-    __webpack_require__(14)(ngModule);
-    __webpack_require__(17)(ngModule);
-    __webpack_require__(13)(ngModule);
-};
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(21);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(26)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/less-loader/lib/loader.js!./common.less", function() {
-			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/less-loader/lib/loader.js!./common.less");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
-
-module.exports = function (ngModule) {
-    ngModule.controller('EditableFormCtrl', function ($scope, $filter, $http) {
-
-        $scope.expenses = [{
-            id: 1,
-            date: '19.04.2017',
-            section: 1,
-            amount: 250
-        }, {
-            id: 2,
-            date: '19.04.2017',
-            section: 4,
-            amount: 250
-        }];
-
-        $scope.sections = [{ value: 1, text: 'продукты' }, { value: 2, text: 'транспорт' }, { value: 3, text: 'одежда' }, { value: 4, text: 'прочее' }];
-
-        /* $scope.loadGroups = function() {
-             return $scope.groups.length ? null : $http.get('/groups').success(function(data) {
-                 $scope.groups = data;
-             });
-         };
-           $scope.showGroup = function(user) {
-             if(user.group && $scope.groups.length) {
-                 var selected = $filter('filter')($scope.groups, {id: user.group});
-                 return selected.length ? selected[0].text : 'Not set';
-             } else {
-                 return user.groupName || 'Not set';
-             }
-         };*/
-
-        $scope.showSection = function (expense) {
-            var selected = [];
-            if (expense.section) {
-                selected = $filter('filter')($scope.sections, { value: expense.section });
-            }
-            return selected.length ? selected[0].text : 'Not set';
-        };
-
-        $scope.checkName = function (data, id) {
-            console.log(data);
-            /*if (id === 2 && data !== 'awesome') {
-                return "Username 2 should be `awesome`";
-            }*/
-        };
-
-        $scope.saveUser = function (data, id) {
-            //$scope.user not updated yet
-
-            angular.extend(data, { id: id });
-            console.log(data);
-            console.log(id);
-            //return $http.post('/saveUser', data);
-        };
-
-        // remove user
-        $scope.removeUser = function (index) {
-            $scope.expenses.splice(index, 1);
-        };
-
-        // add user
-        $scope.addUser = function () {
-            console.log('asd');
-            $scope.inserted = {
-                id: $scope.expenses.length + 1,
-                date: new Date(),
-                section: null,
-                amount: null
-            };
-            $scope.expenses.push($scope.inserted);
-        };
-    });
-};
-
-/***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-module.exports = function (ngModule) {
-    ngModule.controller('appCtrl', function ($rootScope, $scope, $http) {
-        var config = {
-            apiKey: "AIzaSyA6Y82pVXiQ43ZbD1Fb5JODs8VRFbKXW4U",
-            authDomain: "savemoney-79d3f.firebaseapp.com",
-            databaseURL: "https://savemoney-79d3f.firebaseio.com",
-            projectId: "savemoney-79d3f",
-            storageBucket: "savemoney-79d3f.appspot.com",
-            messagingSenderId: "284795746971"
-        };
-        firebase.initializeApp(config);
-
-        const messaging = firebase.messaging();
-
-        messaging.requestPermission().then(function () {
-            return messaging.getToken();
-        }).then(function (token) {}).catch(function (err) {
-            console.log('Error Occured');
-        });
-        $http.get('/username').success(function (data) {
-            if (data.login) {
-                $rootScope.login = data.login;
-            }
-        });
-
-        messaging.onMessage(function (payload) {
-            console.log('onMessage: ', payload);
-        });
-    });
-};
-
-/***/ },
-/* 9 */
-/***/ function(module, exports) {
-
-/**
- * Created by Nikcher on 19.03.2017.
- */
-module.exports = function (ngModule) {
-    ngModule.controller('singUpCtrl', function ($rootScope, $scope, validationService, saltService) {
-        var formValid;
-
-        /*==========INPUTS===========*/
-        if ($('.bs-float-label input').length) {
-            var bs_float_on_class = "on";
-            var bs_float_show_class = "show";
-
-            $('.float-input').on('bs-check-value', function () {
-                var _bs_label = $(this).closest('.bs-float-label').find('.float-label');
-                if (this.value !== '') {
-                    _bs_label.addClass(bs_float_show_class);
-                } else {
-                    _bs_label.removeClass(bs_float_show_class);
-                }
-            }).on("keyup", function () {
-                $(this).trigger("bs-check-value");
-                var formGroup = $(this).parents('.form-group');
-                var glyphicon = formGroup.find('.form-control-feedback');
-                if (!!this.value) {
-                    validationService.resetValidationError(formGroup, glyphicon);
-                } else {
-                    validationService.showValidationError(formGroup, glyphicon);
-                }
-            }).on("focus", function () {
-                $(this).closest(".bs-float-label").find('.float-label').addClass(bs_float_on_class);
-                $(this).closest(".bs-float-label").find('.input-group-addon').addClass("select-label");
-            }).on("blur", function () {
-                $(this).closest(".bs-float-label").find('.float-label').removeClass(bs_float_on_class);
-                $(this).closest(".bs-float-label").find('.input-group-addon').removeClass("select-label");
-            }).trigger("bs-check-value");
-        }
-        /*========================================*/
-
-        /*
-        * ===============LOGIN==============*/
-        $scope.singUp = function (login, password) {
-
-            formValid = true;
-            $('#loginBtn').focus();
-            $('.error-validation').each(function () {
-                this.remove();
-            });
-
-            var formGroup = $('.form-group.password-field-form');
-            var glyphicon = formGroup.find('.form-control-feedback');
-            validationService.resetLoginError(formGroup, glyphicon);
-
-            if (typeof login === 'undefined' || !login) {
-                formValid = false;
-                var formGroup = $('.form-group.login-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-                var errorMessage = "Введите логин";
-                validationService.showValidationError(formGroup, glyphicon, errorMessage);
-                formGroup = glyphicon = errorMessage = null;
-            } else {
-                var formGroup = $('.form-group.login-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                validationService.resetValidationError(formGroup, glyphicon);
-                formGroup = glyphicon = null;
-            }
-            if (typeof password === 'undefined' || !password) {
-                formValid = false;
-                var formGroup = $('.form-group.password-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                var errorMessage = "Введите пароль";
-                validationService.showValidationError(formGroup, glyphicon, errorMessage);
-                formGroup = glyphicon = errorMessage = null;
-            } else {
-                var formGroup = $('.form-group.password-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                validationService.resetValidationError(formGroup, glyphicon);
-                formGroup = glyphicon = null;
-            }
-
-            if (formValid) {
-                saltService.toSalt(login, password);
-                //TODO sent to service
-            }
-        };
-        //===============================================
-    });
-};
-
-/***/ },
-/* 10 */
-/***/ function(module, exports) {
-
-module.exports = function (ngModule) {
-    ngModule.controller('mainCtrl', function ($rootScope, $scope, $filter, expensesService) {
-
-        console.log(this);
-        this.lists = expensesService.getExpenses();
-
-        $scope.user = {
-            id: 1,
-            name: 'awesome user',
-            status: 2,
-            group: 4,
-            groupName: 'admin'
-        };
-
-        $scope.statuses = [{ value: 1, text: 'status1' }, { value: 2, text: 'status2' }, { value: 3, text: 'status3' }, { value: 4, text: 'status4' }];
-
-        $scope.groups = [];
-        $scope.loadGroups = function () {
-            return $scope.groups.length ? null : $http.get('/groups').success(function (data) {
-                $scope.groups = data;
-            });
-        };
-
-        $scope.showGroup = function () {
-            if ($scope.groups.length) {
-                var selected = $filter('filter')($scope.groups, { id: $scope.user.group });
-                return selected.length ? selected[0].text : 'Not set';
-            } else {
-                return $scope.user.groupName;
-            }
-        };
-
-        $scope.checkName = function (data) {
-            if (data !== 'awesome' && data !== 'error') {
-                return "Username should be `awesome` or `error`";
-            }
-        };
-
-        $scope.saveUser = function () {
-            // $scope.user already updated!
-            return $http.post('/saveUser', $scope.user).error(function (err) {
-                if (err.field && err.msg) {
-                    // err like {field: "name", msg: "Server-side error for this username!"}
-                    $scope.editableForm.$setError(err.field, err.msg);
-                } else {
-                    // unknown error
-                    $scope.editableForm.$setError('name', 'Unknown error!');
-                }
-            });
-        };
-    });
-};
-
-/***/ },
-/* 11 */
-/***/ function(module, exports) {
-
-/**
- * Created by Nikcher on 20.03.2017.
- */
-module.exports = function (ngModule) {
-    ngModule.controller('registrationCtrl', function ($rootScope, $window, $scope, validationService, registrationService) {
-        $scope.registrationService = registrationService;
-        var messagesError = ['Введите логин', 'Введите пароль', 'Повторите пароль'];
-        if ($('.bs-float-label input').length) {
-            var bs_float_on_class = "on";
-            var bs_float_show_class = "show";
-
-            $('.float-input').on('bs-check-value', function () {
-                var _bs_label = $(this).closest('.bs-float-label').find('.float-label');
-                if (this.value !== '') {
-                    _bs_label.addClass(bs_float_show_class);
-                } else {
-                    _bs_label.removeClass(bs_float_show_class);
-                }
-            }).on("keyup", function () {
-                $(this).trigger("bs-check-value");
-                var formGroup = $(this).parents('.form-group');
-                var glyphicon = formGroup.find('.form-control-feedback');
-                if (!!this.value) {
-                    validationService.resetValidationError(formGroup, glyphicon);
-                } else {
-                    validationService.showValidationError(formGroup, glyphicon);
-                }
-            }).on("focus", function () {
-                $(this).closest(".bs-float-label").find('.float-label').addClass(bs_float_on_class);
-                $(this).closest(".bs-float-label").find('.input-group-addon').addClass("select-label");
-            }).on("blur", function () {
-                $(this).closest(".bs-float-label").find('.float-label').removeClass(bs_float_on_class);
-                $(this).closest(".bs-float-label").find('.input-group-addon').removeClass("select-label");
-            }).trigger("bs-check-value");
-        };
-
-        /*
-         * ===============REGISTRATION==============*/
-
-        $scope.toRegister = function (user) {
-            formValid = true;
-            $('#registrationBtn').focus();
-
-            var formGroup = $('.form-group.passwordRepeat-field-form');
-            var glyphicon = formGroup.find('.form-control-feedback');
-            validationService.resetLoginError(formGroup, glyphicon);
-
-            if (typeof user === 'undefined' || !user) {
-                var i = 0;
-                $('input').each(function () {
-                    formGroup = $(this).parents('.form-group');
-                    glyphicon = formGroup.find('.form-control-feedback');
-                    validationService.showValidationError(formGroup, glyphicon, messagesError[i]);
-                    i++;
-                });
-                i = null;
-                return;
-            }
-
-            if (typeof user.login === 'undefined' || !user.login) {
-                formValid = false;
-                var formGroup = $('.form-group.login-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                var errorMessage = messagesError[0];
-                validationService.showValidationError(formGroup, glyphicon, errorMessage);
-                formGroup = glyphicon = errorMessage = null;
-            } else {
-                var formGroup = $('.form-group.login-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                validationService.resetValidationError(formGroup, glyphicon);
-                formGroup = glyphicon = null;
-            }
-
-            if (typeof user.password === 'undefined' || !user.password) {
-                formValid = false;
-                var formGroup = $('.form-group.password-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                var errorMessage = messagesError[1];
-                validationService.showValidationError(formGroup, glyphicon, errorMessage);
-                formGroup = glyphicon = errorMessage = null;
-            } else {
-                var formGroup = $('.form-group.password-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                validationService.resetValidationError(formGroup, glyphicon);
-                formGroup = glyphicon = null;
-            }
-
-            if (typeof user.passwordRepeat === 'undefined' || !user.passwordRepeat) {
-                formValid = false;
-                var formGroup = $('.form-group.passwordRepeat-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                var errorMessage = messagesError[2];
-                validationService.showValidationError(formGroup, glyphicon, errorMessage);
-                formGroup = glyphicon = errorMessage = null;
-            } else {
-                var formGroup = $('.form-group.passwordRepeat-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-
-                validationService.resetValidationError(formGroup, glyphicon);
-                formGroup = glyphicon = null;
-            }
-
-            if (user.passwordRepeat != user.password) {
-                formValid = false;
-                var formGroup = $('.form-group.passwordRepeat-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-                validationService.showValidationError(formGroup, glyphicon);
-
-                formGroup = $('.form-group.passwordRepeat-field-form');
-                glyphicon = formGroup.find('.form-control-feedback');
-
-                var errorMessage = "Пароли не совпадают";
-                validationService.showValidationError(formGroup, glyphicon, errorMessage);
-                formGroup = glyphicon = errorMessage = null;
-            }
-            if (formValid) {
-                //TODO sent to ser
-                registrationService.toRegister(user);
-            }
-        };
-
-        //===============================================
-    });
-};
-
-/***/ },
-/* 12 */
-/***/ function(module, exports) {
-
-
-module.exports = function (ngModule) {
-    ngModule.controller('singOutCtrl', function ($rootScope, $scope, singOutService) {
-        $scope.singOut = function () {
-            if ($rootScope.login) {
-                singOutService.singOut();
-            }
-        };
-    });
-};
-
-/***/ },
-/* 13 */
-/***/ function(module, exports) {
-
-
-module.exports = function (ngModule) {
-
-    ngModule.factory('expensesService', function ($http, $rootScope) {
-
-        var service = {};
-        var expenses = [{
-            id: 1,
-            name: "expenses1"
-        }, {
-            id: 2,
-            name: "expenses2"
-        }, {
-            id: 3,
-            name: "expenses3"
-        }];
-
-        service.getExpenses = function () {
-            return expenses;
-        };
-
-        return service;
-    });
-};
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-/**
- * Created by Nikcher on 04.04.2017.
- */
-module.exports = function (ngModule) {
-    var Binary = __webpack_require__(0);
-    var binary = new Binary();
-    var md5 = __webpack_require__(3);
-    ngModule.factory('loginService', function ($http, $rootScope, $location, validationService) {
-        var loginError = true;
-        return {
-            toLogin: function (answer, password) {
-                var saltPassword = md5(password);
-                for (var i = 0; i < answer.iter; i++) {
-                    saltPassword = md5(answer.salt + saltPassword + answer.salt);
-                }
-                var formGroup = $('.form-group.password-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-                validationService.resetLoginError(formGroup, glyphicon);
-
-                $http({
-                    method: "post",
-                    url: "/login",
-                    data: {
-                        saltPassword: saltPassword
-                    }
-
-                }).success(function (data, status) {
-                    if (status === 200) {
-                        if (data.code != 101) {
-                            if (data.login) {
-                                $rootScope.login = decodeURI(data.login);
-                                $location.path('/');
-                            }
-                        } else {
-                            var errorMessage = "Неверный логин или пароль";
-
-                            validationService.showValidationError(formGroup, glyphicon, errorMessage, loginError);
-
-                            formGroup = glyphicon = errorMessage = null;
-                        }
-                    }
-                });
-            }
-        };
-    });
-};
-
-/***/ },
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
-/**
- * Created by Nikcher on 28.03.2017.
- */
-
-module.exports = function (ngModule) {
-    var Binary = __webpack_require__(0);
-    var binary = new Binary();
-    var md5 = __webpack_require__(3);
-    ngModule.factory('registrationService', function ($http, $rootScope, $location, $route, validationService) {
-
-        return {
-            toRegister: function (user) {
-                var cipherPassword = encryptString(user.password);
-
-                var loginError = true;
-                var formGroup = $('.form-group.passwordRepeat-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-                validationService.resetLoginError(formGroup, glyphicon);
-
-                $http({
-                    method: "post",
-                    url: "/cipher",
-                    data: {
-                        password: cipherPassword
-                    }
-
-                }).success(function (pswdServer) {
-                    var cipherPasswordServer = decryptString(pswdServer);
-                    $http({
-                        method: "post",
-                        url: "/registration",
-                        data: {
-                            login: encodeURI(user.login),
-                            password: cipherPasswordServer
-                        }
-                    }).success(function (data, status) {
-                        if (status === 200) {
-                            if (data.code === 100) {
-                                $rootScope.login = decodeURI(data.login);
-                                $location.path('/');
-                            } else if (data.code === 101) {
-                                var errorMessage = "Логин занят";
-
-                                validationService.showValidationError(formGroup, glyphicon, errorMessage, loginError);
-
-                                formGroup = glyphicon = errorMessage = null;
-                            }
-                        }
-                    }).error(function (data, status, headers, configs) {
-                        console.error(status);
-                    });
-                }).error(function (error, status) {
-                    console.error(error);
-                });
-            }
-        };
-        function encryptString(str) {
-            var hashCodeArr = binary.str2char(md5(str));
-            var charArr_new = hashCodeArr.map(function (code) {
-                return code ^ 123;
-            });
-            return binary.char2str(charArr_new);
-        };
-        function decryptString(str) {
-
-            var hashCodeArrServer = binary.str2char(str);
-            var charArr_newServer = hashCodeArrServer.map(function (code) {
-                return code ^ 123;
-            });
-            return binary.char2str(charArr_newServer);
-        }
-    });
-};
-
-/***/ },
-/* 16 */
-/***/ function(module, exports) {
-
-/**
- * Created by Nikcher on 28.03.2017.
- */
-module.exports = function (ngModule) {
-    ngModule.factory('saltService', function ($http, $rootScope, loginService, validationService) {
-
-        return {
-            toSalt: function (login, password) {
-
-                var formGroup = $('.form-group.password-field-form');
-                var glyphicon = formGroup.find('.form-control-feedback');
-                validationService.resetLoginError(formGroup, glyphicon);
-
-                $http({
-                    method: "post",
-                    url: "/salt",
-                    data: {
-                        login: encodeURI(login)
-                    }
-
-                }).success(function (answer, status) {
-                    if (status === 200) {
-                        if (answer.code != 101) {
-                            loginService.toLogin(answer.answer, password);
-                        } else {
-
-                            var errorMessage = "Неверный логин или пароль";
-                            validationService.showValidationError(formGroup, glyphicon, errorMessage, true);
-
-                            formGroup = $('.form-group.login-field-form');
-                            glyphicon = formGroup.find('.form-control-feedback');
-                            validationService.showValidationError(formGroup, glyphicon, "");
-                            formGroup = glyphicon = errorMessage = null;
-                        }
-                    } else if (status === 102) {
-                        //TODO error login
-                    }
-                });
-            }
-        };
-    });
-};
-
-/***/ },
-/* 17 */
-/***/ function(module, exports) {
-
-
-module.exports = function (ngModule) {
-    ngModule.factory('singOutService', function ($http, $rootScope, loginService) {
-        return {
-            singOut: function (login, password) {
-
-                $http({
-                    method: "post",
-                    url: "/singout"
-                }).success(function (answer, status) {
-                    if (status === 200) {
-                        delete $rootScope.login;
-                    } else if (status === 403) {
-                        //TODO error login
-                    }
-                });
-            }
-        };
-    });
-};
-
-/***/ },
-/* 18 */
-/***/ function(module, exports) {
-
-/**
- * Created by Nikcher on 21.03.2017.
- */
-module.exports = function (ngModule) {
-    ngModule.factory('validationService', function ($http, $rootScope, $location) {
-
-        return {
-            showValidationError: function (formGroup, glyphicon, messageError, loginRegistrationError = false) {
-                formGroup.addClass('has-error').removeClass('has-success');
-                glyphicon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
-                formGroup.find('.error-validation').remove();
-
-                if (messageError && !loginRegistrationError) {
-                    var msgElem = document.createElement('div');
-                    msgElem.innerHTML = messageError;
-                    $(msgElem).addClass('error-validation');
-                    formGroup.append(msgElem);
-                } else if (messageError && loginRegistrationError) {
-                    var msgElem = document.createElement('div');
-                    msgElem.innerHTML = messageError;
-                    $(msgElem).addClass('error-login');
-                    formGroup.append(msgElem);
-                }
-            },
-            resetValidationError: function (formGroup, glyphicon, messageError) {
-                formGroup.addClass('has-success').removeClass('has-error');
-                glyphicon.addClass('glyphicon-ok').removeClass('glyphicon-remove');
-
-                formGroup.find('.error-validation').remove();
-            },
-            resetLoginError: function (formGroup, glyphicon, messageError) {
-                formGroup.addClass('has-success').removeClass('has-error');
-                glyphicon.addClass('glyphicon-ok').removeClass('glyphicon-remove');
-
-                formGroup.find('.error-login').remove();
-            }
-        };
-    });
-};
-
-/***/ },
-/* 19 */
-/***/ function(module, exports) {
-
-"use strict";
-'use strict'
-
-exports.byteLength = byteLength
-exports.toByteArray = toByteArray
-exports.fromByteArray = fromByteArray
-
-var lookup = []
-var revLookup = []
-var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
-
-var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
-for (var i = 0, len = code.length; i < len; ++i) {
-  lookup[i] = code[i]
-  revLookup[code.charCodeAt(i)] = i
-}
-
-revLookup['-'.charCodeAt(0)] = 62
-revLookup['_'.charCodeAt(0)] = 63
-
-function placeHoldersCount (b64) {
-  var len = b64.length
-  if (len % 4 > 0) {
-    throw new Error('Invalid string. Length must be a multiple of 4')
-  }
-
-  // the number of equal signs (place holders)
-  // if there are two placeholders, than the two characters before it
-  // represent one byte
-  // if there is only one, then the three characters before it represent 2 bytes
-  // this is just a cheap hack to not do indexOf twice
-  return b64[len - 2] === '=' ? 2 : b64[len - 1] === '=' ? 1 : 0
-}
-
-function byteLength (b64) {
-  // base64 is 4/3 + up to two characters of the original data
-  return b64.length * 3 / 4 - placeHoldersCount(b64)
-}
-
-function toByteArray (b64) {
-  var i, j, l, tmp, placeHolders, arr
-  var len = b64.length
-  placeHolders = placeHoldersCount(b64)
-
-  arr = new Arr(len * 3 / 4 - placeHolders)
-
-  // if there are placeholders, only get up to the last complete 4 chars
-  l = placeHolders > 0 ? len - 4 : len
-
-  var L = 0
-
-  for (i = 0, j = 0; i < l; i += 4, j += 3) {
-    tmp = (revLookup[b64.charCodeAt(i)] << 18) | (revLookup[b64.charCodeAt(i + 1)] << 12) | (revLookup[b64.charCodeAt(i + 2)] << 6) | revLookup[b64.charCodeAt(i + 3)]
-    arr[L++] = (tmp >> 16) & 0xFF
-    arr[L++] = (tmp >> 8) & 0xFF
-    arr[L++] = tmp & 0xFF
-  }
-
-  if (placeHolders === 2) {
-    tmp = (revLookup[b64.charCodeAt(i)] << 2) | (revLookup[b64.charCodeAt(i + 1)] >> 4)
-    arr[L++] = tmp & 0xFF
-  } else if (placeHolders === 1) {
-    tmp = (revLookup[b64.charCodeAt(i)] << 10) | (revLookup[b64.charCodeAt(i + 1)] << 4) | (revLookup[b64.charCodeAt(i + 2)] >> 2)
-    arr[L++] = (tmp >> 8) & 0xFF
-    arr[L++] = tmp & 0xFF
-  }
-
-  return arr
-}
-
-function tripletToBase64 (num) {
-  return lookup[num >> 18 & 0x3F] + lookup[num >> 12 & 0x3F] + lookup[num >> 6 & 0x3F] + lookup[num & 0x3F]
-}
-
-function encodeChunk (uint8, start, end) {
-  var tmp
-  var output = []
-  for (var i = start; i < end; i += 3) {
-    tmp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
-    output.push(tripletToBase64(tmp))
-  }
-  return output.join('')
-}
-
-function fromByteArray (uint8) {
-  var tmp
-  var len = uint8.length
-  var extraBytes = len % 3 // if we have 1 byte left, pad 2 bytes
-  var output = ''
-  var parts = []
-  var maxChunkLength = 16383 // must be multiple of 3
-
-  // go through the array every three bytes, we'll deal with trailing stuff later
-  for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
-    parts.push(encodeChunk(uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)))
-  }
-
-  // pad the end with zeros, but make sure to not forget the extra bytes
-  if (extraBytes === 1) {
-    tmp = uint8[len - 1]
-    output += lookup[tmp >> 2]
-    output += lookup[(tmp << 4) & 0x3F]
-    output += '=='
-  } else if (extraBytes === 2) {
-    tmp = (uint8[len - 2] << 8) + (uint8[len - 1])
-    output += lookup[tmp >> 10]
-    output += lookup[(tmp >> 4) & 0x3F]
-    output += lookup[(tmp << 2) & 0x3F]
-    output += '='
-  }
-
-  parts.push(output)
-
-  return parts.join('')
-}
-
-
-/***/ },
-/* 20 */
-/***/ function(module, exports) {
-
-(function() {
-  var base64map
-      = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
-
-  crypt = {
-    // Bit-wise rotation left
-    rotl: function(n, b) {
-      return (n << b) | (n >>> (32 - b));
-    },
-
-    // Bit-wise rotation right
-    rotr: function(n, b) {
-      return (n << (32 - b)) | (n >>> b);
-    },
-
-    // Swap big-endian to little-endian and vice versa
-    endian: function(n) {
-      // If number given, swap endian
-      if (n.constructor == Number) {
-        return crypt.rotl(n, 8) & 0x00FF00FF | crypt.rotl(n, 24) & 0xFF00FF00;
-      }
-
-      // Else, assume array and swap all items
-      for (var i = 0; i < n.length; i++)
-        n[i] = crypt.endian(n[i]);
-      return n;
-    },
-
-    // Generate an array of any length of random bytes
-    randomBytes: function(n) {
-      for (var bytes = []; n > 0; n--)
-        bytes.push(Math.floor(Math.random() * 256));
-      return bytes;
-    },
-
-    // Convert a byte array to big-endian 32-bit words
-    bytesToWords: function(bytes) {
-      for (var words = [], i = 0, b = 0; i < bytes.length; i++, b += 8)
-        words[b >>> 5] |= bytes[i] << (24 - b % 32);
-      return words;
-    },
-
-    // Convert big-endian 32-bit words to a byte array
-    wordsToBytes: function(words) {
-      for (var bytes = [], b = 0; b < words.length * 32; b += 8)
-        bytes.push((words[b >>> 5] >>> (24 - b % 32)) & 0xFF);
-      return bytes;
-    },
-
-    // Convert a byte array to a hex string
-    bytesToHex: function(bytes) {
-      for (var hex = [], i = 0; i < bytes.length; i++) {
-        hex.push((bytes[i] >>> 4).toString(16));
-        hex.push((bytes[i] & 0xF).toString(16));
-      }
-      return hex.join('');
-    },
-
-    // Convert a hex string to a byte array
-    hexToBytes: function(hex) {
-      for (var bytes = [], c = 0; c < hex.length; c += 2)
-        bytes.push(parseInt(hex.substr(c, 2), 16));
-      return bytes;
-    },
-
-    // Convert a byte array to a base-64 string
-    bytesToBase64: function(bytes) {
-      for (var base64 = [], i = 0; i < bytes.length; i += 3) {
-        var triplet = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2];
-        for (var j = 0; j < 4; j++)
-          if (i * 8 + j * 6 <= bytes.length * 8)
-            base64.push(base64map.charAt((triplet >>> 6 * (3 - j)) & 0x3F));
-          else
-            base64.push('=');
-      }
-      return base64.join('');
-    },
-
-    // Convert a base-64 string to a byte array
-    base64ToBytes: function(base64) {
-      // Remove non-base-64 characters
-      base64 = base64.replace(/[^A-Z0-9+\/]/ig, '');
-
-      for (var bytes = [], i = 0, imod4 = 0; i < base64.length;
-          imod4 = ++i % 4) {
-        if (imod4 == 0) continue;
-        bytes.push(((base64map.indexOf(base64.charAt(i - 1))
-            & (Math.pow(2, -2 * imod4 + 8) - 1)) << (imod4 * 2))
-            | (base64map.indexOf(base64.charAt(i)) >>> (6 - imod4 * 2)));
-      }
-      return bytes;
-    }
-  };
-
-  module.exports = crypt;
-})();
-
-
-/***/ },
-/* 21 */
-/***/ function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(22)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, ".main-page {\n  background-image: url(" + __webpack_require__(28) + ");\n}\n.c-modal {\n  text-align: center;\n}\n.navbar-nav a {\n  color: #FFFFFF;\n}\n.editable-input {\n  border: none;\n  background-color: rgba(0, 0, 0, 0.1);\n}\n.table-hover {\n  background-color: rgba(255, 255, 255, 0.1);\n}\n.edit,\n.edit:focus {\n  background-image: url(" + __webpack_require__(30) + ");\n  background-repeat: no-repeat;\n  background-position: 3px;\n  background-size: 24px;\n  width: 30px;\n  height: 30px;\n  background-color: #23A64E;\n  border: none;\n  border-radius: 5px;\n}\n.edit:hover {\n  background-color: #2ed07e;\n  background-repeat: no-repeat;\n  background-position: 3px;\n  background-size: 24px;\n}\n.edit:active {\n  background-color: #1a7e3b;\n  background-repeat: no-repeat;\n  background-position: 3px;\n  background-size: 24px;\n  border: none;\n}\n.delete {\n  background-image: url(" + __webpack_require__(29) + ");\n  background-repeat: no-repeat;\n  background-position: 3px;\n  background-size: 24px;\n  width: 30px;\n  height: 30px;\n  background-color: #FF5300;\n  border: none;\n  border-radius: 5px;\n}\n.delete:hover {\n  background-color: #FFA000;\n  background-repeat: no-repeat;\n  background-position: 3px;\n  background-size: 24px;\n}\n.delete:active {\n  background-repeat: no-repeat;\n  background-position: 3px;\n  background-size: 24px;\n  background-color: #e94c00;\n}\n.navbar-form .btn,\n.login-form-element .btn {\n  color: #FFFFFF;\n  font-weight: bold;\n  font-size: small;\n}\n.navbar-form .btn.btn-singout,\n.login-form-element .btn.btn-singout {\n  margin-bottom: 5px;\n  margin-left: 10px;\n}\n.navbar-form .btn.button-background:active,\n.login-form-element .btn.button-background:active {\n  background-color: #0087ff;\n}\n.navbar-form .btn.singup,\n.login-form-element .btn.singup {\n  color: #FFFFFF;\n  font-weight: bold;\n  font-size: small;\n  position: relative;\n}\n.navbar-form .btn.singup:link,\n.login-form-element .btn.singup:link {\n  box-shadow: none;\n}\n.navbar-form .btn.singup:hover,\n.login-form-element .btn.singup:hover {\n  text-decoration: underline;\n}\n.btn.button-background:hover,\n.btn.button-background:focus,\n.btn.singup:hover,\n.btn.singup:focus {\n  color: #FFFFFF;\n}\n.btn.button-background {\n  background-color: #0096ff;\n  border-radius: 4px;\n}\n.btn.button-background:hover {\n  background-color: #00a5ff;\n}\n@media screen and (min-width: 768px) {\n  .c-modal:before {\n    display: inline-block;\n    vertical-align: middle;\n    content: \" \";\n    height: 100%;\n  }\n}\n.c-modal.in .c-modal-dialog {\n  opacity: 1;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.c-modal-dialog {\n  display: inline-block;\n  text-align: left;\n  vertical-align: middle;\n  opacity: 0;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.login-form {\n  top: 95px;\n}\n.login-form .title {\n  color: #FFFFFF;\n  font-size: 27px;\n  text-align: center;\n  margin-top: 10px;\n}\n.expense_new {\n  display: inline-block;\n  margin-bottom: 15px;\n  position: relative;\n  min-height: 150px;\n  color: #FFFFFF;\n  font: 14px/16px \"Roboto\", sans-serif;\n}\n.expense_new .table_container {\n  margin: 15px;\n  position: relative;\n}\n.expense_new .title {\n  width: 100px;\n  margin-left: auto;\n  margin-right: auto;\n  margin-top: 5px;\n  text-align: center;\n  font-weight: bold;\n}\n.expense_new .total {\n  margin-left: 15px;\n  margin-bottom: 15px;\n  font-weight: bold;\n}\n.expense {\n  margin-bottom: 15px;\n  position: relative;\n  min-height: 150px;\n}\n.expense .title {\n  margin-left: 15px;\n  position: relative;\n}\n.expenseSize {\n  position: relative;\n}\n.list-expenses {\n  margin-left: auto;\n  margin-right: auto;\n  margin-top: 150px;\n  width: 65%;\n  left: 10%;\n}\n.login-button {\n  width: 100%;\n  margin-top: 20px;\n}\n.login-form-element {\n  left: 15px;\n}\n.login-form-element.login-field {\n  margin-top: 25px;\n}\n.login-form-element.password-field {\n  margin-top: 10px;\n}\n.background-form {\n  width: 100%;\n  height: 100%;\n  border-radius: 10px;\n  background-color: #FFFFFF;\n  position: absolute;\n  opacity: 0.4;\n  box-shadow: 5px 5px 4px 0px rgba(0, 0, 0, 0.5);\n}\n.float-input {\n  margin: 0;\n}\n.float-label {\n  position: absolute;\n  top: 0px;\n  left: 17px;\n  -webkit-transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  opacity: 0;\n  color: #FFFFFF;\n}\n.float-label.show {\n  top: -20px;\n  left: 17px;\n  opacity: 1;\n}\n.main-img {\n  background-image: url(" + __webpack_require__(31) + ");\n  background-size: 100% auto;\n  background-repeat: no-repeat;\n  position: absolute;\n  width: 100%;\n  height: 550px;\n  min-height: 350px;\n  opacity: 0.3;\n}\n.select-label {\n  color: #61C3FF;\n}\n@media screen and (max-width: 650px) {\n  .login-form {\n    top: 55px;\n  }\n}\n@media screen and (max-width: 750px) {\n  .main-img {\n    background-image: none;\n  }\n  .background-login-form {\n    background-color: #000000;\n  }\n}\n.error-validation,\n.error-login {\n  margin-left: 31px;\n  margin-bottom: -5px;\n  color: red;\n  font-size: medium;\n}\n.login-main {\n  display: inline-block;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  font-family: \"MuseoSans-700\", Helvetica, Arial, Verdana, sans-serif;\n  font-size: 22px;\n  font-weight: normal;\n  line-height: 22px;\n  text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.45);\n  color: #FFFFFF;\n}\n[ng\\:cloak],\n[ng-cloak],\n.ng-cloak {\n  display: none;\n}\n", ""]);
-
-// exports
-
-
-/***/ },
-/* 22 */
-/***/ function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(Buffer) {/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-// css base code, injected by the css-loader
-module.exports = function(useSourceMap) {
-	var list = [];
-
-	// return the list of modules as css string
-	list.toString = function toString() {
-		return this.map(function (item) {
-			var content = cssWithMappingToString(item, useSourceMap);
-			if(item[2]) {
-				return "@media " + item[2] + "{" + content + "}";
-			} else {
-				return content;
-			}
-		}).join("");
-	};
-
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-function cssWithMappingToString(item, useSourceMap) {
-	var content = item[1] || '';
-	var cssMapping = item[3];
-	if (!cssMapping) {
-		return content;
-	}
-
-	if (useSourceMap) {
-		var sourceMapping = toComment(cssMapping);
-		var sourceURLs = cssMapping.sources.map(function (source) {
-			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
-		});
-
-		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
-	}
-
-	return [content].join('\n');
-}
-
-// Adapted from convert-source-map (MIT)
-function toComment(sourceMap) {
-  var base64 = new Buffer(JSON.stringify(sourceMap)).toString('base64');
-  var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
-
-  return '/*# ' + data + ' */';
-}
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1).Buffer))
-
-/***/ },
-/* 23 */
-/***/ function(module, exports) {
-
-exports.read = function (buffer, offset, isLE, mLen, nBytes) {
-  var e, m
-  var eLen = nBytes * 8 - mLen - 1
-  var eMax = (1 << eLen) - 1
-  var eBias = eMax >> 1
-  var nBits = -7
-  var i = isLE ? (nBytes - 1) : 0
-  var d = isLE ? -1 : 1
-  var s = buffer[offset + i]
-
-  i += d
-
-  e = s & ((1 << (-nBits)) - 1)
-  s >>= (-nBits)
-  nBits += eLen
-  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {}
-
-  m = e & ((1 << (-nBits)) - 1)
-  e >>= (-nBits)
-  nBits += mLen
-  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {}
-
-  if (e === 0) {
-    e = 1 - eBias
-  } else if (e === eMax) {
-    return m ? NaN : ((s ? -1 : 1) * Infinity)
-  } else {
-    m = m + Math.pow(2, mLen)
-    e = e - eBias
-  }
-  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
-}
-
-exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
-  var e, m, c
-  var eLen = nBytes * 8 - mLen - 1
-  var eMax = (1 << eLen) - 1
-  var eBias = eMax >> 1
-  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
-  var i = isLE ? 0 : (nBytes - 1)
-  var d = isLE ? 1 : -1
-  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
-
-  value = Math.abs(value)
-
-  if (isNaN(value) || value === Infinity) {
-    m = isNaN(value) ? 1 : 0
-    e = eMax
-  } else {
-    e = Math.floor(Math.log(value) / Math.LN2)
-    if (value * (c = Math.pow(2, -e)) < 1) {
-      e--
-      c *= 2
-    }
-    if (e + eBias >= 1) {
-      value += rt / c
-    } else {
-      value += rt * Math.pow(2, 1 - eBias)
-    }
-    if (value * c >= 2) {
-      e++
-      c /= 2
-    }
-
-    if (e + eBias >= eMax) {
-      m = 0
-      e = eMax
-    } else if (e + eBias >= 1) {
-      m = (value * c - 1) * Math.pow(2, mLen)
-      e = e + eBias
-    } else {
-      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
-      e = 0
-    }
-  }
-
-  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
-
-  e = (e << mLen) | m
-  eLen += mLen
-  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
-
-  buffer[offset + i - d] |= s * 128
-}
-
-
-/***/ },
-/* 24 */
-/***/ function(module, exports) {
-
-/*!
- * Determine if an object is a Buffer
- *
- * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
- * @license  MIT
- */
-
-// The _isBuffer check is for Safari 5-7 support, because it's missing
-// Object.prototype.constructor. Remove this eventually
-module.exports = function (obj) {
-  return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer)
-}
-
-function isBuffer (obj) {
-  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
-}
-
-// For Node v0.10 support. Remove this eventually.
-function isSlowBuffer (obj) {
-  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
-}
-
-
-/***/ },
-/* 25 */
-/***/ function(module, exports) {
-
-var toString = {}.toString;
-
-module.exports = Array.isArray || function (arr) {
-  return toString.call(arr) == '[object Array]';
-};
-
-
-/***/ },
-/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 /*
@@ -3789,7 +2681,7 @@ var stylesInDom = {},
 	singletonElement = null,
 	singletonCounter = 0,
 	styleElementsInsertedAtTop = [],
-	fixUrls = __webpack_require__(27);
+	fixUrls = __webpack_require__(29);
 
 module.exports = function(list, options) {
 	if(typeof DEBUG !== "undefined" && DEBUG) {
@@ -4042,7 +2934,1155 @@ function updateLink(linkElement, options, obj) {
 
 
 /***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports = function (ngModule) {
+    __webpack_require__(11)(ngModule);
+    __webpack_require__(12)(ngModule);
+    __webpack_require__(14)(ngModule);
+    __webpack_require__(15)(ngModule);
+    __webpack_require__(13)(ngModule);
+    __webpack_require__(10)(ngModule);
+};
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+/**
+ * Created by Nikcher on 21.03.2017.
+ */
+module.exports = function (ngModule) {
+    __webpack_require__(21)(ngModule);
+    __webpack_require__(18)(ngModule);
+    __webpack_require__(19)(ngModule);
+    __webpack_require__(17)(ngModule);
+    __webpack_require__(20)(ngModule);
+    __webpack_require__(16)(ngModule);
+};
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(24);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(5)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/less-loader/lib/loader.js!./common.less", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/less-loader/lib/loader.js!./common.less");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(25);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(5)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../node_modules/css-loader/index.js!../../node_modules/less-loader/lib/loader.js!./menu.css", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js!../../node_modules/less-loader/lib/loader.js!./menu.css");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+module.exports = function (ngModule) {
+    ngModule.controller('EditableFormCtrl', function ($scope, $filter, $http) {
+
+        $scope.expenses = [{
+            id: 1,
+            date: '19.04.2017',
+            section: 1,
+            amount: 250
+        }, {
+            id: 2,
+            date: '19.04.2017',
+            section: 4,
+            amount: 250
+        }];
+
+        $scope.sections = [{ value: 1, text: 'продукты' }, { value: 2, text: 'транспорт' }, { value: 3, text: 'одежда' }, { value: 4, text: 'прочее' }];
+
+        /* $scope.loadGroups = function() {
+             return $scope.groups.length ? null : $http.get('/groups').success(function(data) {
+                 $scope.groups = data;
+             });
+         };
+           $scope.showGroup = function(user) {
+             if(user.group && $scope.groups.length) {
+                 var selected = $filter('filter')($scope.groups, {id: user.group});
+                 return selected.length ? selected[0].text : 'Not set';
+             } else {
+                 return user.groupName || 'Not set';
+             }
+         };*/
+
+        $scope.showSection = function (expense) {
+            var selected = [];
+            if (expense.section) {
+                selected = $filter('filter')($scope.sections, { value: expense.section });
+            }
+            return selected.length ? selected[0].text : 'Not set';
+        };
+
+        $scope.checkName = function (data, id) {
+            console.log(data);
+            /*if (id === 2 && data !== 'awesome') {
+                return "Username 2 should be `awesome`";
+            }*/
+        };
+
+        $scope.saveUser = function (data, id) {
+            //$scope.user not updated yet
+
+            angular.extend(data, { id: id });
+            console.log(data);
+            console.log(id);
+            //return $http.post('/saveUser', data);
+        };
+
+        // remove user
+        $scope.removeUser = function (index) {
+            $scope.expenses.splice(index, 1);
+        };
+
+        // add user
+        $scope.addUser = function () {
+            console.log('asd');
+            $scope.inserted = {
+                id: $scope.expenses.length + 1,
+                date: new Date(),
+                section: null,
+                amount: null
+            };
+            $scope.expenses.push($scope.inserted);
+        };
+    });
+};
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+module.exports = function (ngModule) {
+    ngModule.controller('appCtrl', function ($rootScope, $scope, $http) {
+        var config = {
+            apiKey: "AIzaSyA6Y82pVXiQ43ZbD1Fb5JODs8VRFbKXW4U",
+            authDomain: "savemoney-79d3f.firebaseapp.com",
+            databaseURL: "https://savemoney-79d3f.firebaseio.com",
+            projectId: "savemoney-79d3f",
+            storageBucket: "savemoney-79d3f.appspot.com",
+            messagingSenderId: "284795746971"
+        };
+        firebase.initializeApp(config);
+
+        const messaging = firebase.messaging();
+
+        messaging.requestPermission().then(function () {
+            return messaging.getToken();
+        }).then(function (token) {}).catch(function (err) {
+            console.log('Error Occured');
+        });
+        $http.get('/username').success(function (data) {
+            if (data.login) {
+                $rootScope.login = data.login;
+            }
+        });
+
+        messaging.onMessage(function (payload) {
+            console.log('onMessage: ', payload);
+        });
+    });
+};
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+/**
+ * Created by Nikcher on 19.03.2017.
+ */
+module.exports = function (ngModule) {
+    ngModule.controller('singUpCtrl', function ($rootScope, $scope, validationService, saltService) {
+        var formValid;
+
+        /*==========INPUTS===========*/
+        if ($('.bs-float-label input').length) {
+            var bs_float_on_class = "on";
+            var bs_float_show_class = "show";
+
+            $('.float-input').on('bs-check-value', function () {
+                var _bs_label = $(this).closest('.bs-float-label').find('.float-label');
+                if (this.value !== '') {
+                    _bs_label.addClass(bs_float_show_class);
+                } else {
+                    _bs_label.removeClass(bs_float_show_class);
+                }
+            }).on("keyup", function () {
+                $(this).trigger("bs-check-value");
+                var formGroup = $(this).parents('.form-group');
+                var glyphicon = formGroup.find('.form-control-feedback');
+                if (!!this.value) {
+                    validationService.resetValidationError(formGroup, glyphicon);
+                } else {
+                    validationService.showValidationError(formGroup, glyphicon);
+                }
+            }).on("focus", function () {
+                $(this).closest(".bs-float-label").find('.float-label').addClass(bs_float_on_class);
+                $(this).closest(".bs-float-label").find('.input-group-addon').addClass("select-label");
+            }).on("blur", function () {
+                $(this).closest(".bs-float-label").find('.float-label').removeClass(bs_float_on_class);
+                $(this).closest(".bs-float-label").find('.input-group-addon').removeClass("select-label");
+            }).trigger("bs-check-value");
+        }
+        /*========================================*/
+
+        /*
+        * ===============LOGIN==============*/
+        $scope.singUp = function (login, password) {
+
+            formValid = true;
+            $('#loginBtn').focus();
+            $('.error-validation').each(function () {
+                this.remove();
+            });
+
+            var formGroup = $('.form-group.password-field-form');
+            var glyphicon = formGroup.find('.form-control-feedback');
+            validationService.resetLoginError(formGroup, glyphicon);
+
+            if (typeof login === 'undefined' || !login) {
+                formValid = false;
+                var formGroup = $('.form-group.login-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+                var errorMessage = "Введите логин";
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
+            } else {
+                var formGroup = $('.form-group.login-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                validationService.resetValidationError(formGroup, glyphicon);
+                formGroup = glyphicon = null;
+            }
+            if (typeof password === 'undefined' || !password) {
+                formValid = false;
+                var formGroup = $('.form-group.password-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                var errorMessage = "Введите пароль";
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
+            } else {
+                var formGroup = $('.form-group.password-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                validationService.resetValidationError(formGroup, glyphicon);
+                formGroup = glyphicon = null;
+            }
+
+            if (formValid) {
+                saltService.toSalt(login, password);
+                //TODO sent to service
+            }
+        };
+        //===============================================
+    });
+};
+
+/***/ },
+/* 13 */
+/***/ function(module, exports) {
+
+module.exports = function (ngModule) {
+    ngModule.controller('mainCtrl', function ($rootScope, $scope, $filter, expensesService) {
+
+        console.log(this);
+        this.lists = expensesService.getExpenses();
+
+        $scope.user = {
+            id: 1,
+            name: 'awesome user',
+            status: 2,
+            group: 4,
+            groupName: 'admin'
+        };
+
+        $scope.statuses = [{ value: 1, text: 'status1' }, { value: 2, text: 'status2' }, { value: 3, text: 'status3' }, { value: 4, text: 'status4' }];
+
+        $scope.groups = [];
+        $scope.loadGroups = function () {
+            return $scope.groups.length ? null : $http.get('/groups').success(function (data) {
+                $scope.groups = data;
+            });
+        };
+
+        $scope.showGroup = function () {
+            if ($scope.groups.length) {
+                var selected = $filter('filter')($scope.groups, { id: $scope.user.group });
+                return selected.length ? selected[0].text : 'Not set';
+            } else {
+                return $scope.user.groupName;
+            }
+        };
+
+        $scope.checkName = function (data) {
+            if (data !== 'awesome' && data !== 'error') {
+                return "Username should be `awesome` or `error`";
+            }
+        };
+
+        $scope.saveUser = function () {
+            // $scope.user already updated!
+            return $http.post('/saveUser', $scope.user).error(function (err) {
+                if (err.field && err.msg) {
+                    // err like {field: "name", msg: "Server-side error for this username!"}
+                    $scope.editableForm.$setError(err.field, err.msg);
+                } else {
+                    // unknown error
+                    $scope.editableForm.$setError('name', 'Unknown error!');
+                }
+            });
+        };
+    });
+};
+
+/***/ },
+/* 14 */
+/***/ function(module, exports) {
+
+/**
+ * Created by Nikcher on 20.03.2017.
+ */
+module.exports = function (ngModule) {
+    ngModule.controller('registrationCtrl', function ($rootScope, $window, $scope, validationService, registrationService) {
+        $scope.registrationService = registrationService;
+        var messagesError = ['Введите логин', 'Введите пароль', 'Повторите пароль'];
+        if ($('.bs-float-label input').length) {
+            var bs_float_on_class = "on";
+            var bs_float_show_class = "show";
+
+            $('.float-input').on('bs-check-value', function () {
+                var _bs_label = $(this).closest('.bs-float-label').find('.float-label');
+                if (this.value !== '') {
+                    _bs_label.addClass(bs_float_show_class);
+                } else {
+                    _bs_label.removeClass(bs_float_show_class);
+                }
+            }).on("keyup", function () {
+                $(this).trigger("bs-check-value");
+                var formGroup = $(this).parents('.form-group');
+                var glyphicon = formGroup.find('.form-control-feedback');
+                if (!!this.value) {
+                    validationService.resetValidationError(formGroup, glyphicon);
+                } else {
+                    validationService.showValidationError(formGroup, glyphicon);
+                }
+            }).on("focus", function () {
+                $(this).closest(".bs-float-label").find('.float-label').addClass(bs_float_on_class);
+                $(this).closest(".bs-float-label").find('.input-group-addon').addClass("select-label");
+            }).on("blur", function () {
+                $(this).closest(".bs-float-label").find('.float-label').removeClass(bs_float_on_class);
+                $(this).closest(".bs-float-label").find('.input-group-addon').removeClass("select-label");
+            }).trigger("bs-check-value");
+        };
+
+        /*
+         * ===============REGISTRATION==============*/
+
+        $scope.toRegister = function (user) {
+            formValid = true;
+            $('#registrationBtn').focus();
+
+            var formGroup = $('.form-group.passwordRepeat-field-form');
+            var glyphicon = formGroup.find('.form-control-feedback');
+            validationService.resetLoginError(formGroup, glyphicon);
+
+            if (typeof user === 'undefined' || !user) {
+                var i = 0;
+                $('input').each(function () {
+                    formGroup = $(this).parents('.form-group');
+                    glyphicon = formGroup.find('.form-control-feedback');
+                    validationService.showValidationError(formGroup, glyphicon, messagesError[i]);
+                    i++;
+                });
+                i = null;
+                return;
+            }
+
+            if (typeof user.login === 'undefined' || !user.login) {
+                formValid = false;
+                var formGroup = $('.form-group.login-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                var errorMessage = messagesError[0];
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
+            } else {
+                var formGroup = $('.form-group.login-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                validationService.resetValidationError(formGroup, glyphicon);
+                formGroup = glyphicon = null;
+            }
+
+            if (typeof user.password === 'undefined' || !user.password) {
+                formValid = false;
+                var formGroup = $('.form-group.password-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                var errorMessage = messagesError[1];
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
+            } else {
+                var formGroup = $('.form-group.password-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                validationService.resetValidationError(formGroup, glyphicon);
+                formGroup = glyphicon = null;
+            }
+
+            if (typeof user.passwordRepeat === 'undefined' || !user.passwordRepeat) {
+                formValid = false;
+                var formGroup = $('.form-group.passwordRepeat-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                var errorMessage = messagesError[2];
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
+            } else {
+                var formGroup = $('.form-group.passwordRepeat-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+
+                validationService.resetValidationError(formGroup, glyphicon);
+                formGroup = glyphicon = null;
+            }
+
+            if (user.passwordRepeat != user.password) {
+                formValid = false;
+                var formGroup = $('.form-group.passwordRepeat-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+                validationService.showValidationError(formGroup, glyphicon);
+
+                formGroup = $('.form-group.passwordRepeat-field-form');
+                glyphicon = formGroup.find('.form-control-feedback');
+
+                var errorMessage = "Пароли не совпадают";
+                validationService.showValidationError(formGroup, glyphicon, errorMessage);
+                formGroup = glyphicon = errorMessage = null;
+            }
+            if (formValid) {
+                //TODO sent to ser
+                registrationService.toRegister(user);
+            }
+        };
+
+        //===============================================
+    });
+};
+
+/***/ },
+/* 15 */
+/***/ function(module, exports) {
+
+
+module.exports = function (ngModule) {
+    ngModule.controller('singOutCtrl', function ($rootScope, $scope, singOutService) {
+        $scope.singOut = function () {
+            if ($rootScope.login) {
+                singOutService.singOut();
+            }
+        };
+    });
+};
+
+/***/ },
+/* 16 */
+/***/ function(module, exports) {
+
+
+module.exports = function (ngModule) {
+
+    ngModule.factory('expensesService', function ($http, $rootScope) {
+
+        var service = {};
+        var expenses = [{
+            id: 1,
+            name: "expenses1"
+        }, {
+            id: 2,
+            name: "expenses2"
+        }, {
+            id: 3,
+            name: "expenses3"
+        }];
+
+        service.getExpenses = function () {
+            return expenses;
+        };
+
+        return service;
+    });
+};
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+/**
+ * Created by Nikcher on 04.04.2017.
+ */
+module.exports = function (ngModule) {
+    var Binary = __webpack_require__(0);
+    var binary = new Binary();
+    var md5 = __webpack_require__(4);
+    ngModule.factory('loginService', function ($http, $rootScope, $location, validationService) {
+        var loginError = true;
+        return {
+            toLogin: function (answer, password) {
+                var saltPassword = md5(password);
+                for (var i = 0; i < answer.iter; i++) {
+                    saltPassword = md5(answer.salt + saltPassword + answer.salt);
+                }
+                var formGroup = $('.form-group.password-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+                validationService.resetLoginError(formGroup, glyphicon);
+
+                $http({
+                    method: "post",
+                    url: "/login",
+                    data: {
+                        saltPassword: saltPassword
+                    }
+
+                }).success(function (data, status) {
+                    if (status === 200) {
+                        if (data.code != 101) {
+                            if (data.login) {
+                                $rootScope.login = decodeURI(data.login);
+                                $location.path('/');
+                            }
+                        } else {
+                            var errorMessage = "Неверный логин или пароль";
+
+                            validationService.showValidationError(formGroup, glyphicon, errorMessage, loginError);
+
+                            formGroup = glyphicon = errorMessage = null;
+                        }
+                    }
+                });
+            }
+        };
+    });
+};
+
+/***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+/**
+ * Created by Nikcher on 28.03.2017.
+ */
+
+module.exports = function (ngModule) {
+    var Binary = __webpack_require__(0);
+    var binary = new Binary();
+    var md5 = __webpack_require__(4);
+    ngModule.factory('registrationService', function ($http, $rootScope, $location, $route, validationService) {
+
+        return {
+            toRegister: function (user) {
+                var cipherPassword = encryptString(user.password);
+
+                var loginError = true;
+                var formGroup = $('.form-group.passwordRepeat-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+                validationService.resetLoginError(formGroup, glyphicon);
+
+                $http({
+                    method: "post",
+                    url: "/cipher",
+                    data: {
+                        password: cipherPassword
+                    }
+
+                }).success(function (pswdServer) {
+                    var cipherPasswordServer = decryptString(pswdServer);
+                    $http({
+                        method: "post",
+                        url: "/registration",
+                        data: {
+                            login: encodeURI(user.login),
+                            password: cipherPasswordServer
+                        }
+                    }).success(function (data, status) {
+                        if (status === 200) {
+                            if (data.code === 100) {
+                                $rootScope.login = decodeURI(data.login);
+                                $location.path('/');
+                            } else if (data.code === 101) {
+                                var errorMessage = "Логин занят";
+
+                                validationService.showValidationError(formGroup, glyphicon, errorMessage, loginError);
+
+                                formGroup = glyphicon = errorMessage = null;
+                            }
+                        }
+                    }).error(function (data, status, headers, configs) {
+                        console.error(status);
+                    });
+                }).error(function (error, status) {
+                    console.error(error);
+                });
+            }
+        };
+        function encryptString(str) {
+            var hashCodeArr = binary.str2char(md5(str));
+            var charArr_new = hashCodeArr.map(function (code) {
+                return code ^ 123;
+            });
+            return binary.char2str(charArr_new);
+        };
+        function decryptString(str) {
+
+            var hashCodeArrServer = binary.str2char(str);
+            var charArr_newServer = hashCodeArrServer.map(function (code) {
+                return code ^ 123;
+            });
+            return binary.char2str(charArr_newServer);
+        }
+    });
+};
+
+/***/ },
+/* 19 */
+/***/ function(module, exports) {
+
+/**
+ * Created by Nikcher on 28.03.2017.
+ */
+module.exports = function (ngModule) {
+    ngModule.factory('saltService', function ($http, $rootScope, loginService, validationService) {
+
+        return {
+            toSalt: function (login, password) {
+
+                var formGroup = $('.form-group.password-field-form');
+                var glyphicon = formGroup.find('.form-control-feedback');
+                validationService.resetLoginError(formGroup, glyphicon);
+
+                $http({
+                    method: "post",
+                    url: "/salt",
+                    data: {
+                        login: encodeURI(login)
+                    }
+
+                }).success(function (answer, status) {
+                    if (status === 200) {
+                        if (answer.code != 101) {
+                            loginService.toLogin(answer.answer, password);
+                        } else {
+
+                            var errorMessage = "Неверный логин или пароль";
+                            validationService.showValidationError(formGroup, glyphicon, errorMessage, true);
+
+                            formGroup = $('.form-group.login-field-form');
+                            glyphicon = formGroup.find('.form-control-feedback');
+                            validationService.showValidationError(formGroup, glyphicon, "");
+                            formGroup = glyphicon = errorMessage = null;
+                        }
+                    } else if (status === 102) {
+                        //TODO error login
+                    }
+                });
+            }
+        };
+    });
+};
+
+/***/ },
+/* 20 */
+/***/ function(module, exports) {
+
+
+module.exports = function (ngModule) {
+    ngModule.factory('singOutService', function ($http, $rootScope, loginService) {
+        return {
+            singOut: function (login, password) {
+
+                $http({
+                    method: "post",
+                    url: "/singout"
+                }).success(function (answer, status) {
+                    if (status === 200) {
+                        delete $rootScope.login;
+                    } else if (status === 403) {
+                        //TODO error login
+                    }
+                });
+            }
+        };
+    });
+};
+
+/***/ },
+/* 21 */
+/***/ function(module, exports) {
+
+/**
+ * Created by Nikcher on 21.03.2017.
+ */
+module.exports = function (ngModule) {
+    ngModule.factory('validationService', function ($http, $rootScope, $location) {
+
+        return {
+            showValidationError: function (formGroup, glyphicon, messageError, loginRegistrationError = false) {
+                formGroup.addClass('has-error').removeClass('has-success');
+                glyphicon.addClass('glyphicon-remove').removeClass('glyphicon-ok');
+                formGroup.find('.error-validation').remove();
+
+                if (messageError && !loginRegistrationError) {
+                    var msgElem = document.createElement('div');
+                    msgElem.innerHTML = messageError;
+                    $(msgElem).addClass('error-validation');
+                    formGroup.append(msgElem);
+                } else if (messageError && loginRegistrationError) {
+                    var msgElem = document.createElement('div');
+                    msgElem.innerHTML = messageError;
+                    $(msgElem).addClass('error-login');
+                    formGroup.append(msgElem);
+                }
+            },
+            resetValidationError: function (formGroup, glyphicon, messageError) {
+                formGroup.addClass('has-success').removeClass('has-error');
+                glyphicon.addClass('glyphicon-ok').removeClass('glyphicon-remove');
+
+                formGroup.find('.error-validation').remove();
+            },
+            resetLoginError: function (formGroup, glyphicon, messageError) {
+                formGroup.addClass('has-success').removeClass('has-error');
+                glyphicon.addClass('glyphicon-ok').removeClass('glyphicon-remove');
+
+                formGroup.find('.error-login').remove();
+            }
+        };
+    });
+};
+
+/***/ },
+/* 22 */
+/***/ function(module, exports) {
+
+"use strict";
+'use strict'
+
+exports.byteLength = byteLength
+exports.toByteArray = toByteArray
+exports.fromByteArray = fromByteArray
+
+var lookup = []
+var revLookup = []
+var Arr = typeof Uint8Array !== 'undefined' ? Uint8Array : Array
+
+var code = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+for (var i = 0, len = code.length; i < len; ++i) {
+  lookup[i] = code[i]
+  revLookup[code.charCodeAt(i)] = i
+}
+
+revLookup['-'.charCodeAt(0)] = 62
+revLookup['_'.charCodeAt(0)] = 63
+
+function placeHoldersCount (b64) {
+  var len = b64.length
+  if (len % 4 > 0) {
+    throw new Error('Invalid string. Length must be a multiple of 4')
+  }
+
+  // the number of equal signs (place holders)
+  // if there are two placeholders, than the two characters before it
+  // represent one byte
+  // if there is only one, then the three characters before it represent 2 bytes
+  // this is just a cheap hack to not do indexOf twice
+  return b64[len - 2] === '=' ? 2 : b64[len - 1] === '=' ? 1 : 0
+}
+
+function byteLength (b64) {
+  // base64 is 4/3 + up to two characters of the original data
+  return b64.length * 3 / 4 - placeHoldersCount(b64)
+}
+
+function toByteArray (b64) {
+  var i, j, l, tmp, placeHolders, arr
+  var len = b64.length
+  placeHolders = placeHoldersCount(b64)
+
+  arr = new Arr(len * 3 / 4 - placeHolders)
+
+  // if there are placeholders, only get up to the last complete 4 chars
+  l = placeHolders > 0 ? len - 4 : len
+
+  var L = 0
+
+  for (i = 0, j = 0; i < l; i += 4, j += 3) {
+    tmp = (revLookup[b64.charCodeAt(i)] << 18) | (revLookup[b64.charCodeAt(i + 1)] << 12) | (revLookup[b64.charCodeAt(i + 2)] << 6) | revLookup[b64.charCodeAt(i + 3)]
+    arr[L++] = (tmp >> 16) & 0xFF
+    arr[L++] = (tmp >> 8) & 0xFF
+    arr[L++] = tmp & 0xFF
+  }
+
+  if (placeHolders === 2) {
+    tmp = (revLookup[b64.charCodeAt(i)] << 2) | (revLookup[b64.charCodeAt(i + 1)] >> 4)
+    arr[L++] = tmp & 0xFF
+  } else if (placeHolders === 1) {
+    tmp = (revLookup[b64.charCodeAt(i)] << 10) | (revLookup[b64.charCodeAt(i + 1)] << 4) | (revLookup[b64.charCodeAt(i + 2)] >> 2)
+    arr[L++] = (tmp >> 8) & 0xFF
+    arr[L++] = tmp & 0xFF
+  }
+
+  return arr
+}
+
+function tripletToBase64 (num) {
+  return lookup[num >> 18 & 0x3F] + lookup[num >> 12 & 0x3F] + lookup[num >> 6 & 0x3F] + lookup[num & 0x3F]
+}
+
+function encodeChunk (uint8, start, end) {
+  var tmp
+  var output = []
+  for (var i = start; i < end; i += 3) {
+    tmp = (uint8[i] << 16) + (uint8[i + 1] << 8) + (uint8[i + 2])
+    output.push(tripletToBase64(tmp))
+  }
+  return output.join('')
+}
+
+function fromByteArray (uint8) {
+  var tmp
+  var len = uint8.length
+  var extraBytes = len % 3 // if we have 1 byte left, pad 2 bytes
+  var output = ''
+  var parts = []
+  var maxChunkLength = 16383 // must be multiple of 3
+
+  // go through the array every three bytes, we'll deal with trailing stuff later
+  for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
+    parts.push(encodeChunk(uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)))
+  }
+
+  // pad the end with zeros, but make sure to not forget the extra bytes
+  if (extraBytes === 1) {
+    tmp = uint8[len - 1]
+    output += lookup[tmp >> 2]
+    output += lookup[(tmp << 4) & 0x3F]
+    output += '=='
+  } else if (extraBytes === 2) {
+    tmp = (uint8[len - 2] << 8) + (uint8[len - 1])
+    output += lookup[tmp >> 10]
+    output += lookup[(tmp >> 4) & 0x3F]
+    output += lookup[(tmp << 2) & 0x3F]
+    output += '='
+  }
+
+  parts.push(output)
+
+  return parts.join('')
+}
+
+
+/***/ },
+/* 23 */
+/***/ function(module, exports) {
+
+(function() {
+  var base64map
+      = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/',
+
+  crypt = {
+    // Bit-wise rotation left
+    rotl: function(n, b) {
+      return (n << b) | (n >>> (32 - b));
+    },
+
+    // Bit-wise rotation right
+    rotr: function(n, b) {
+      return (n << (32 - b)) | (n >>> b);
+    },
+
+    // Swap big-endian to little-endian and vice versa
+    endian: function(n) {
+      // If number given, swap endian
+      if (n.constructor == Number) {
+        return crypt.rotl(n, 8) & 0x00FF00FF | crypt.rotl(n, 24) & 0xFF00FF00;
+      }
+
+      // Else, assume array and swap all items
+      for (var i = 0; i < n.length; i++)
+        n[i] = crypt.endian(n[i]);
+      return n;
+    },
+
+    // Generate an array of any length of random bytes
+    randomBytes: function(n) {
+      for (var bytes = []; n > 0; n--)
+        bytes.push(Math.floor(Math.random() * 256));
+      return bytes;
+    },
+
+    // Convert a byte array to big-endian 32-bit words
+    bytesToWords: function(bytes) {
+      for (var words = [], i = 0, b = 0; i < bytes.length; i++, b += 8)
+        words[b >>> 5] |= bytes[i] << (24 - b % 32);
+      return words;
+    },
+
+    // Convert big-endian 32-bit words to a byte array
+    wordsToBytes: function(words) {
+      for (var bytes = [], b = 0; b < words.length * 32; b += 8)
+        bytes.push((words[b >>> 5] >>> (24 - b % 32)) & 0xFF);
+      return bytes;
+    },
+
+    // Convert a byte array to a hex string
+    bytesToHex: function(bytes) {
+      for (var hex = [], i = 0; i < bytes.length; i++) {
+        hex.push((bytes[i] >>> 4).toString(16));
+        hex.push((bytes[i] & 0xF).toString(16));
+      }
+      return hex.join('');
+    },
+
+    // Convert a hex string to a byte array
+    hexToBytes: function(hex) {
+      for (var bytes = [], c = 0; c < hex.length; c += 2)
+        bytes.push(parseInt(hex.substr(c, 2), 16));
+      return bytes;
+    },
+
+    // Convert a byte array to a base-64 string
+    bytesToBase64: function(bytes) {
+      for (var base64 = [], i = 0; i < bytes.length; i += 3) {
+        var triplet = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2];
+        for (var j = 0; j < 4; j++)
+          if (i * 8 + j * 6 <= bytes.length * 8)
+            base64.push(base64map.charAt((triplet >>> 6 * (3 - j)) & 0x3F));
+          else
+            base64.push('=');
+      }
+      return base64.join('');
+    },
+
+    // Convert a base-64 string to a byte array
+    base64ToBytes: function(base64) {
+      // Remove non-base-64 characters
+      base64 = base64.replace(/[^A-Z0-9+\/]/ig, '');
+
+      for (var bytes = [], i = 0, imod4 = 0; i < base64.length;
+          imod4 = ++i % 4) {
+        if (imod4 == 0) continue;
+        bytes.push(((base64map.indexOf(base64.charAt(i - 1))
+            & (Math.pow(2, -2 * imod4 + 8) - 1)) << (imod4 * 2))
+            | (base64map.indexOf(base64.charAt(i)) >>> (6 - imod4 * 2)));
+      }
+      return bytes;
+    }
+  };
+
+  module.exports = crypt;
+})();
+
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(3)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "body {\n  padding-top: 70px;\n}\n.main-page {\n  background-image: url(" + __webpack_require__(30) + ");\n}\n.c-modal {\n  text-align: center;\n}\n.navbar-nav a {\n  color: #FFFFFF;\n}\n.editable-input {\n  border: none;\n  background-color: rgba(0, 0, 0, 0.1);\n}\n.table-hover {\n  background-color: rgba(255, 255, 255, 0.1);\n}\n.edit,\n.edit:focus {\n  background-image: url(" + __webpack_require__(33) + ");\n  background-repeat: no-repeat;\n  background-position: 3px;\n  background-size: 24px;\n  width: 30px;\n  height: 30px;\n  background-color: #23A64E;\n  border: none;\n  border-radius: 5px;\n}\n.edit:hover {\n  background-color: #2ed07e;\n  background-repeat: no-repeat;\n  background-position: 3px;\n  background-size: 24px;\n}\n.edit:active {\n  background-color: #1a7e3b;\n  background-repeat: no-repeat;\n  background-position: 3px;\n  background-size: 24px;\n  border: none;\n}\n.delete {\n  background-image: url(" + __webpack_require__(32) + ");\n  background-repeat: no-repeat;\n  background-position: 3px;\n  background-size: 24px;\n  width: 30px;\n  height: 30px;\n  background-color: #FF5300;\n  border: none;\n  border-radius: 5px;\n}\n.delete:hover {\n  background-color: #FFA000;\n  background-repeat: no-repeat;\n  background-position: 3px;\n  background-size: 24px;\n}\n.delete:active {\n  background-repeat: no-repeat;\n  background-position: 3px;\n  background-size: 24px;\n  background-color: #e94c00;\n}\n.save,\n.save:focus {\n  background-image: url(" + __webpack_require__(34) + ");\n  background-repeat: no-repeat;\n  background-position: 3px;\n  background-size: 24px;\n  width: 30px;\n  height: 30px;\n  background-color: #61C3FF;\n  border: none;\n  border-radius: 5px;\n}\n.save:hover {\n  background-color: #61B3FF;\n  background-repeat: no-repeat;\n  background-position: 3px;\n  background-size: 24px;\n}\n.save:active {\n  background-color: #61A3FF;\n  background-repeat: no-repeat;\n  background-position: 3px;\n  background-size: 24px;\n  border: none;\n}\n.cancel,\n.cancel:focus {\n  background-image: url(" + __webpack_require__(31) + ");\n  background-repeat: no-repeat;\n  background-position: 3px;\n  background-size: 24px;\n  width: 30px;\n  height: 30px;\n  background-color: #FF5300;\n  border: none;\n  border-radius: 5px;\n}\n.cancel:hover {\n  background-color: #FFA000;\n  background-repeat: no-repeat;\n  background-position: 3px;\n  background-size: 24px;\n}\n.cancel:active {\n  background-color: #e94c00;\n  background-repeat: no-repeat;\n  background-position: 3px;\n  background-size: 24px;\n  border: none;\n}\n.navbar-form .btn,\n.login-form-element .btn {\n  color: #FFFFFF;\n  font-weight: bold;\n  font-size: small;\n}\n.navbar-form .btn.btn-singout,\n.login-form-element .btn.btn-singout {\n  margin-bottom: 5px;\n  margin-left: 10px;\n}\n.navbar-form .btn.button-background:active,\n.login-form-element .btn.button-background:active {\n  background-color: #0087ff;\n}\n.navbar-form .btn.singup,\n.login-form-element .btn.singup {\n  color: #FFFFFF;\n  font-weight: bold;\n  font-size: small;\n  position: relative;\n}\n.navbar-form .btn.singup:link,\n.login-form-element .btn.singup:link {\n  box-shadow: none;\n}\n.navbar-form .btn.singup:hover,\n.login-form-element .btn.singup:hover {\n  text-decoration: underline;\n}\n.btn.button-background:hover,\n.btn.button-background:focus,\n.btn.singup:hover,\n.btn.singup:focus {\n  color: #FFFFFF;\n}\n.btn.button-background {\n  background-color: #0096ff;\n  border-radius: 4px;\n}\n.btn.button-background:hover {\n  background-color: #00a5ff;\n}\n@media screen and (min-width: 768px) {\n  .c-modal:before {\n    display: inline-block;\n    vertical-align: middle;\n    content: \" \";\n    height: 100%;\n  }\n}\n.c-modal.in .c-modal-dialog {\n  opacity: 1;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.c-modal-dialog {\n  display: inline-block;\n  text-align: left;\n  vertical-align: middle;\n  opacity: 0;\n  -webkit-transition: opacity 0.7s ease-out;\n  -moz-transition: opacity 0.7s ease-out;\n  -o-transition: opacity 0.7s ease-out;\n  transition: opacity 0.7s ease-out;\n}\n.login-form {\n  top: 95px;\n}\n.login-form .title {\n  color: #FFFFFF;\n  font-size: 27px;\n  text-align: center;\n  margin-top: 10px;\n}\n.expense_new {\n  display: inline-block;\n  margin-bottom: 15px;\n  position: relative;\n  min-height: 150px;\n  color: #FFFFFF;\n  font: 14px/16px \"Roboto\", sans-serif;\n}\n.expense_new .table_container {\n  margin: 15px;\n  position: relative;\n}\n.expense_new .title {\n  width: 100px;\n  margin-left: auto;\n  margin-right: auto;\n  margin-top: 5px;\n  text-align: center;\n  font-weight: bold;\n}\n.expense_new .total {\n  margin-left: 15px;\n  margin-bottom: 15px;\n  font-weight: bold;\n}\n.expense {\n  margin-bottom: 15px;\n  position: relative;\n  min-height: 150px;\n}\n.expense .title {\n  margin-left: 15px;\n  position: relative;\n}\n.expenseSize {\n  position: relative;\n}\n.list-expenses {\n  margin-left: auto;\n  margin-right: auto;\n  margin-top: 150px;\n  width: 65%;\n  left: 10%;\n}\n.login-button {\n  width: 100%;\n  margin-top: 20px;\n}\n.login-form-element {\n  left: 15px;\n}\n.login-form-element.login-field {\n  margin-top: 25px;\n}\n.login-form-element.password-field {\n  margin-top: 10px;\n}\n.background-form {\n  width: 100%;\n  height: 100%;\n  border-radius: 10px;\n  background-color: #FFFFFF;\n  position: absolute;\n  opacity: 0.4;\n  box-shadow: 5px 5px 4px 0px rgba(0, 0, 0, 0.5);\n}\n.float-input {\n  margin: 0;\n}\n.float-label {\n  position: absolute;\n  top: 0px;\n  left: 17px;\n  -webkit-transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  transition: top 0.3s ease-in-out, opacity 0.5s ease-in-out;\n  opacity: 0;\n  color: #FFFFFF;\n}\n.float-label.show {\n  top: -20px;\n  left: 17px;\n  opacity: 1;\n}\n.main-img {\n  background-image: url(" + __webpack_require__(35) + ");\n  background-size: 100% auto;\n  background-repeat: no-repeat;\n  position: absolute;\n  width: 100%;\n  height: 550px;\n  min-height: 350px;\n  opacity: 0.3;\n}\n.select-label {\n  color: #61C3FF;\n}\n@media screen and (max-width: 650px) {\n  .login-form {\n    top: 55px;\n  }\n}\n@media screen and (max-width: 750px) {\n  .main-img {\n    background-image: none;\n  }\n  .background-login-form {\n    background-color: #000000;\n  }\n}\n.error-validation,\n.error-login {\n  margin-left: 31px;\n  margin-bottom: -5px;\n  color: red;\n  font-size: medium;\n}\n.login-main {\n  display: inline-block;\n  margin-top: 0px;\n  margin-bottom: 0px;\n  font-family: \"MuseoSans-700\", Helvetica, Arial, Verdana, sans-serif;\n  font-size: 22px;\n  font-weight: normal;\n  line-height: 22px;\n  text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.45);\n  color: #FFFFFF;\n}\n[ng\\:cloak],\n[ng-cloak],\n.ng-cloak {\n  display: none;\n}\n", ""]);
+
+// exports
+
+
+/***/ },
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(3)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "@media (max-width: 760px) {\n  .navbar-header {\n    float: none;\n    box-shadow: none;\n  }\n  .navbar-left,\n  .navbar-right {\n    float: none !important;\n  }\n  .navbar-toggle {\n    display: block;\n  }\n  .navbar-collapse {\n    box-shadow: none!important;\n  }\n  .navbar-fixed-top {\n    top: 0;\n    background: rgba(255, 255, 255, 0.1);\n  }\n  .navbar-collapse.collapse {\n    display: none!important;\n  }\n  .navbar-form {\n    box-shadow: none!important;\n  }\n  .navbar-nav {\n    float: none!important;\n    margin-top: 7.5px;\n  }\n  .navbar-nav > li {\n    float: none;\n  }\n  .navbar-form {\n    box-shadow: none;\n  }\n  .navbar-nav > li > a {\n    padding-top: 10px;\n    padding-bottom: 10px;\n  }\n  .collapse.in {\n    display: block !important;\n  }\n  .container-fluid > .navbar-collapse,\n  .container-fluid > .navbar-header,\n  .container > .navbar-collapse,\n  .container > .navbar-header {\n    margin-right: -15px;\n    margin-left: -15px;\n  }\n}\n.navbar-fixed-top .navbar-toggle .icon-bar {\n  background-color: #fff;\n}\n.navbar-toggle .icon-bar:nth-of-type(2) {\n  top: 1px;\n}\n.navbar-toggle .icon-bar:nth-of-type(3) {\n  top: 2px;\n}\n.navbar-toggle .icon-bar {\n  position: relative;\n  transition: all 200ms ease-in-out;\n}\n.navbar-toggle.active .icon-bar:nth-of-type(1) {\n  top: 6px;\n  transform: rotate(45deg);\n}\n.navbar-toggle.active .icon-bar:nth-of-type(2) {\n  background-color: transparent;\n}\n.navbar-toggle.active .icon-bar:nth-of-type(3) {\n  top: -6px;\n  transform: rotate(-45deg);\n}\n", ""]);
+
+// exports
+
+
+/***/ },
+/* 26 */
+/***/ function(module, exports) {
+
+exports.read = function (buffer, offset, isLE, mLen, nBytes) {
+  var e, m
+  var eLen = nBytes * 8 - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var nBits = -7
+  var i = isLE ? (nBytes - 1) : 0
+  var d = isLE ? -1 : 1
+  var s = buffer[offset + i]
+
+  i += d
+
+  e = s & ((1 << (-nBits)) - 1)
+  s >>= (-nBits)
+  nBits += eLen
+  for (; nBits > 0; e = e * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+
+  m = e & ((1 << (-nBits)) - 1)
+  e >>= (-nBits)
+  nBits += mLen
+  for (; nBits > 0; m = m * 256 + buffer[offset + i], i += d, nBits -= 8) {}
+
+  if (e === 0) {
+    e = 1 - eBias
+  } else if (e === eMax) {
+    return m ? NaN : ((s ? -1 : 1) * Infinity)
+  } else {
+    m = m + Math.pow(2, mLen)
+    e = e - eBias
+  }
+  return (s ? -1 : 1) * m * Math.pow(2, e - mLen)
+}
+
+exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
+  var e, m, c
+  var eLen = nBytes * 8 - mLen - 1
+  var eMax = (1 << eLen) - 1
+  var eBias = eMax >> 1
+  var rt = (mLen === 23 ? Math.pow(2, -24) - Math.pow(2, -77) : 0)
+  var i = isLE ? 0 : (nBytes - 1)
+  var d = isLE ? 1 : -1
+  var s = value < 0 || (value === 0 && 1 / value < 0) ? 1 : 0
+
+  value = Math.abs(value)
+
+  if (isNaN(value) || value === Infinity) {
+    m = isNaN(value) ? 1 : 0
+    e = eMax
+  } else {
+    e = Math.floor(Math.log(value) / Math.LN2)
+    if (value * (c = Math.pow(2, -e)) < 1) {
+      e--
+      c *= 2
+    }
+    if (e + eBias >= 1) {
+      value += rt / c
+    } else {
+      value += rt * Math.pow(2, 1 - eBias)
+    }
+    if (value * c >= 2) {
+      e++
+      c /= 2
+    }
+
+    if (e + eBias >= eMax) {
+      m = 0
+      e = eMax
+    } else if (e + eBias >= 1) {
+      m = (value * c - 1) * Math.pow(2, mLen)
+      e = e + eBias
+    } else {
+      m = value * Math.pow(2, eBias - 1) * Math.pow(2, mLen)
+      e = 0
+    }
+  }
+
+  for (; mLen >= 8; buffer[offset + i] = m & 0xff, i += d, m /= 256, mLen -= 8) {}
+
+  e = (e << mLen) | m
+  eLen += mLen
+  for (; eLen > 0; buffer[offset + i] = e & 0xff, i += d, e /= 256, eLen -= 8) {}
+
+  buffer[offset + i - d] |= s * 128
+}
+
+
+/***/ },
 /* 27 */
+/***/ function(module, exports) {
+
+/*!
+ * Determine if an object is a Buffer
+ *
+ * @author   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * @license  MIT
+ */
+
+// The _isBuffer check is for Safari 5-7 support, because it's missing
+// Object.prototype.constructor. Remove this eventually
+module.exports = function (obj) {
+  return obj != null && (isBuffer(obj) || isSlowBuffer(obj) || !!obj._isBuffer)
+}
+
+function isBuffer (obj) {
+  return !!obj.constructor && typeof obj.constructor.isBuffer === 'function' && obj.constructor.isBuffer(obj)
+}
+
+// For Node v0.10 support. Remove this eventually.
+function isSlowBuffer (obj) {
+  return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
+}
+
+
+/***/ },
+/* 28 */
+/***/ function(module, exports) {
+
+var toString = {}.toString;
+
+module.exports = Array.isArray || function (arr) {
+  return toString.call(arr) == '[object Array]';
+};
+
+
+/***/ },
+/* 29 */
 /***/ function(module, exports) {
 
 
@@ -4111,31 +4151,43 @@ module.exports = function (css) {
 
 
 /***/ },
-/* 28 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "./img/03983da3f1e00a0a366d41900e9ba5dc.png";
 
 /***/ },
-/* 29 */
+/* 31 */
+/***/ function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAD+UlEQVRoQ8WajVEUQRCFuyNQIxAiECIQIxAiECIQIxAiECIQIgAiECIQIhAiUCNo61tnr3rnZmZ39nb3puqKqrtjtl/36/9TmeCY2WsReS8ieyJyICI74eVvfxYRXvci8igiD6r6Z9PH69gLgtAfReQ0CD7mKoBciMjdWDDVAMwM7X4KgqP5KQ6WAMi1qmKlwacKgJl9nVjwWFCAnKnq5VAEgwAErd/0UOVFRG4DxxHk2WvTzPAPrNf6CT6TO1DraIg1egGY2aGIfBeRFF3+BtNfDXmYlzYohbvxobcJJCjhRFVRSvYUAZjZcRA+vgDBz0QEwTeOJOE5+MCrhKSAuMohyAIoCP8gIodTCB5ZBAsDggARnyyIJIBAGzgfH8IdZp/tFBSHT6zRaQ1A4ObPDOcRvGjSKZAFBUIbTymouh/7WgoAwhMpSmcJEGT0H5EQj6q679/rADAzHJNY78+diJBxB/NyCitwR4ZOX1QVX2nOCkCGOtQrBwVeLmEJqOQdu0MlDyDWPqFyr+XctkCEmovywvvDuaoi738LhC/9ihy3Y6qCSWd37ITysMIuobwFECcstL+TivVbtARW8Bm7oW8LII48KxOlHHIbIMyMkuObk6eJSBro8zsSFPMUy9qlQYQgA839eQMAMqvPui+qStXYe7YAgir1nRPsCABx9LlUVcw16CwJIiHrOQDoUX1tnqw5SmiWApFgywMA4JWnzAdVBVTVWQJEaIoIOO15BoDVOnAO2UIgOvKuAVDV3i5tm3SKFT45gLkz9iIA5gKRygVYIE7RNA3E243P1D5hZnGP8DJJGF3KJ3JhNE5kxTpojFmmsoSZ0ch8djI0iSwuJZomZoygc1sikbOaUoJxRnUxNwbgJpbIFnMhYsRF0lozM0bg1P+MBZGog55UdS/X0DDX3J1K6PieWhCZjrHT0ECjuO+ctWGvAZFoZlYdY6mpX/Wd27REZlrSbeqDH1CR4gu++2d4ezIXgCEZ28wYbvmo2OnXhwy2ZqVSDwhmofEsNj3YarVsZnFE4qNRPUKN5Qo+4a9pIo9/IzfcjamEP9CpVTc6E4LoDNrae2vH60vQiQFDaoQ/bLzuqJTbzjCrhIcbb2a8dUK0YZWVKmPqFhwDQCD8qape11Akk5nJQQxvKSpTe7hxKyYHAnPGy4b2Y5Jfu6iu2u8O2DfD+eONlnwOBDmCkOaHSrFCcXy+w1+GY6umKAjLXBMNQxGUUhqePYU9XK9Sqhr4kNIxdWqbuCmb+P9m++kXGH2XVgFwGRsHZ3o3FZB233xRGxyqAThaQYd2UV2iVkmJUAUfuq0VvJgH+syWKI9bbvuf28Tbd36K4H9ucz9WaP/8fzq0ViDG04v7AAAAAElFTkSuQmCC"
+
+/***/ },
+/* 32 */
 /***/ function(module, exports) {
 
 module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAABmElEQVRoQ+2Y8U0GIQzFXzdwEx1BN9ANdDLdQDf4vhF0EzfAkEByuSBt6SPnRfjzgPb9Wg6aCk4+5OT6sQCOzuDKwMpAMAL/5willG4A3IvIRzBo3e0ppUcAVxH5tvgxZaCIvwC4A/AiIm8W4941KaVnAK8APgE8WCBUgJ34qokOsRFffZggLAA5pe+NaNIgGuKruyftyKoA2VLHQRgiatsEMAsiKj7rMgOwIRji3QAsCJb4IYAoBFP8MMAoBFt8CMALMUN8GMAKMUs8BUCDKC9SLg/2I/yG0AAUiFZJRBFPBXBA0MTTAQwQVPELYH+4O7fNdik1C65aqPU31m9G8XU5DYIC0Lvn//w1anmkLGt62e3NhTLgEeZZ64EZBhgRNLJHgxkCiAiJ7G3BuAEYAhg2KowLgOmYZcsMwHK4PQYMmyYAhqPffsaobRWg9CrP29gqrcUrgNtNFGmlQKcU+SrN5G6TV81AKZFzZ7pC0MU3IEziXeX0qdvr2mt45LzpCB0pUPO9ALQIzZ5fGZgdYc3+yoAWodnzP0cMHEDMPIFNAAAAAElFTkSuQmCC"
 
 /***/ },
-/* 30 */
+/* 33 */
 /***/ function(module, exports) {
 
 module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAADEUlEQVR4Xu2agXHTQBBF/68AOoBUAFRA0gFUQFIBoQKgg1ABoQJIBSQVECqADiAVLPM9kkecT3crS7LvbN2MZzKxYus97e5t7o448sEj58ciYImAIzewpMCRB8BSBKtLATN7A+BV82oD+DeAbwA+kdTP7lGNADN7CuAzgNMM3RXJd14DVQgws+cAvgN47AS7JnnhubZ4ARn4nwAUGY8isEqHy5yEogUk4G8AnJP8K0AzU1pcA3gSAJ/kakKxAhLwX0ieh0/WzJQe94GEbBQUKSABf0eytwg2kaBasZ4dSJ6k0qA4AY6Cd0FS4R4dZqZpcJ0KJJOMRQlwwLfQvRLM7AcAzRqrUY2AVNgDeBl53BsSmjrwp3PtA8nk1FlEBOQKnpmp6KkJCsd/Eszsa9Ah3pBU19g79i4gB9/eeU6CmUlQODsk68UqRXKNwpzve+EdEm4jLXJyxljXiDkBU589FN4hoft1DyqEuSZobxGwLbxTguBPSaopyo6dp8BY+I4ENTxhUzQIfucRMCF8rOANht+pgBLhdyagVPidCCgZfnYBpcPPKqAG+NkE1AI/i4Ca4CcXUBv8pAJqhJ9MQK3wkwioGX60gNrhRwk4BPitBRwK/FYCDgl+sIBDgx8kYNvtqnBNqmf1dqvFjOx6l+MC95KYmWnlNbZBoa/Re1qCTp7OKA1+aARoxyW1y6Kt6rO+xcgS4d0CmuMpvxwRFZVQKvwQAdpe0rZTO+4AfGheYVpIwos2HUqGHyJAsO87Aj6S1O90OuMKwNsgOm5JnpUOP0RAWABfk9SxtNXokzDFur0j7UZd4poFzCwsgBtnbzKzhG5yb1NdylBWQKQARvfcI8dTut9bJLwrBcxsowC253QaOc+aExnapoqd3ykW3isgLICqBxo6hpI7uFg0vFdAqgNMpVfx8F4BuQ4wlCBwbU1fereoR5XxkX+cLIKODrCFVZQI+j73/8DI+538z3MCugWwetiYvZwAVfXVEdTanqw3VLJ9gPeDar1uEVDrk5vqvpcImMpkrZ+zRECtT26q+/4Hj679UJ3GnNwAAAAASUVORK5CYII="
 
 /***/ },
-/* 31 */
+/* 34 */
+/***/ function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAABfUlEQVRoQ+2Z/U0EIRDF36tArUBLuE60A7UDrURL0A60Ei3Bq0CtYMwYSLwTGDaw7G4y/LUJX/ObNywDEBsv3Lj9cIClFXQFVq2AiFwAeACwA6DfI8oTydvaibIhFIx/A3BaO1jHdtUQJYAXAJeWUSSb1pGISGaOKogSwGeN92cEUC4TogSQ88yBw2oBjj0d+xUUiPMUIbYAUFRiKwDIKe0AA9bA71pwBXL7Qa0Cuf4Vf6F1KLBaAGun7lU/2xroZaA1jgNYHpq73hWY28PW+D0VeAZwR/LLmnRKvYjowekRwHWqX0+As97GR4MDhJ5D/pVuAK07r6VKbmd2gOg5V8CIIQ+hP3+E5KHeQ8hD6NADkw/1HkJLhxCAbacSel8J4L53PhTyIL3Kv+mVC2m2eWLlLoPq9yST7xPN1+uDAF5JXiWVKVx3KPH7ClT41hcikh+TALRxeKXRQ4Y+MZ0P8nacZh8cqIenpPHasOl1ZTBQcjoHWFoFV8AVaPTAD1mTG0DXJG8ZAAAAAElFTkSuQmCC"
+
+/***/ },
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "./img/41d61da7a43b26fabd5542cb40ba37b6.jpg";
 
 /***/ },
-/* 32 */
+/* 36 */
 /***/ function(module, exports) {
 
 var g;
@@ -4160,12 +4212,14 @@ module.exports = g;
 
 
 /***/ },
-/* 33 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__css_common_less__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__css_common_less__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__css_common_less___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__css_common_less__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__css_menu_css__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__css_menu_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__css_menu_css__);
 
 
 
@@ -4185,6 +4239,13 @@ var SM = angular.module('SM', ["ngRoute", "xeditable"]).config(function ($routeP
     }).otherwise({
         redirectTo: '/'
     });
+
+    //close menu button
+    $(document).ready(function () {
+        $(".navbar-toggle").on("click", function () {
+            $(this).toggleClass("active");
+        });
+    });
 });
 
 var checkRouting = function ($q, $rootScope, $location) {
@@ -4194,8 +4255,8 @@ var checkRouting = function ($q, $rootScope, $location) {
         return false;
     }
 };
-__webpack_require__(4)(SM);
-__webpack_require__(5)(SM);
+__webpack_require__(6)(SM);
+__webpack_require__(7)(SM);
 
 /***/ }
 /******/ ]);

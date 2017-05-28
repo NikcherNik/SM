@@ -12,38 +12,35 @@
                 <div class="container">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                            <span class="sr-only">Toggle navigation</span>
+
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                         </button>
-                        <a class="navbar-brand" href="#/main">Название сайта</a>
+                        <a class="navbar-brand" href="#/main">
+                            <img src="navbar-brand.svg" height="36" alt="Название бренда или сайта">
+                        </a>
                     </div>
 
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav">
-                            <li class="active"><a href="#">Пункт 1</a></li>
-                            <li><a href="#">Пункт 2</a></li>
-                        </ul>
-                        <div class="navbar-form navbar-right hidden-sm" ng-if = "!login" ng-cloak >
+                    <div class="collapse navbar-collapse top-menu" id="bs-example-navbar-collapse-1">
+                        <div class="navbar-form navbar-right top-menu" ng-if = "!login" ng-cloak >
                             <a href="#/login" class="btn singup " >Войти</a>
                             <a href="#/registration" class="btn btn-sm button-background" >Регистрация</a>
-
                         </div>
-                        <div class="navbar-form navbar-right hidden-sm" ng-if = "login" ng-cloak>
+                        <div class="navbar-form navbar-right top-menu" ng-if = "login" ng-cloak>
                                 <h1 class="login-main">{{login}}</h1>
                                 <button type="submit"
                                         ng-controller="singOutCtrl"
                                         ng-click="singOut()"
-                                        class="btn btn-sm button-background btn-singout"
-                                >Выйти</button>
+                                        class="btn btn-sm button-background btn-singout">Выйти
+                                </button>
                         </div>
                     </div>
                 </div>
             </nav>
             </div>
     </header>
-    <div class="main-img"></div>
+   <!--<div class="main-img"></div>-->
 
     <ng-view></ng-view>
 

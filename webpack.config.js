@@ -18,7 +18,7 @@ module.exports = {
                 exclude: /node_modules/,
 
             },
-            { test: /\.less$/, loader: "style-loader!css-loader!less-loader" },
+            { test: /\.(less|css)$/, loader: "style-loader!css-loader!less-loader" },
             { test: /.(jpg|png|svg)$/, use: 'url-loader?limit=8192&name=./img/[hash].[ext]'},
             { test: /\.(otf|eot|ttf)$/, loader: "file?prefix=font/" },
             { test: /\.svg$/, loader: "file" }
