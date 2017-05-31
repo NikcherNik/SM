@@ -48,6 +48,7 @@
     "express-sql-session": "^1.0.0",
     "file-loader": "^0.10.1",
     "less": "^2.7.2",
+    "less-font-face": "^1.0.1",
     "less-loader": "^3.0.0",
     "md5": "^2.2.1",
     "mysql": "^2.13.0",
