@@ -2,9 +2,24 @@
 @select-label-color: #61C3FF;
 @import url('https://fonts.googleapis.com/css?family=Droid+Serif');
 .title_site{
-  color: #ffffff;
+  color: #209e91;
   font-size: 25px;
   font-family: 'Droid Serif', serif;
+  .title_animate{
+    color: #ffffff;
+  }
+}
+.title_site:hover{
+  .title_animate{
+    color: #209e91;
+  }
+}
+.blur {
+  -webkit-filter: blur(5px);
+  -moz-filter: blur(5px);
+  -o-filter: blur(5px);
+  -ms-filter: blur(5px);
+  filter: blur(5px);
 }
 body {
   padding-top: 70px;
