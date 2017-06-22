@@ -1,88 +1,67 @@
-
+<div class="noise"></div>
+<div class="noise"></div>
+<div class="noise"></div>
+<div class="noise"></div>
+<div class="noise"></div>
+<div class="noise"></div>
+<svg version="1.1" xmlns='http://www.w3.org/2000/svg'>
+    <filter id="blur-filter">
+        <feGaussianBlur stdDeviation='10' />
+    </filter>
+</svg>
 <section id="list-expenses" class="list-expenses"
          ng-controller="mainCtrl as mainCtrl">
 
-    <section ng-repeat="list in mainCtrl.lists">
+    <!-- <section ng-repeat="list in mainCtrl.lists">
 
-        <div class="col-md-3">
-            <div class="expense">
-                <div class="background-form"></div>
-                <div class="title">
-                    <div>{{list.name}}</div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section class="new-list">
-                <div class="expense_new">
-                    <div class="background-form"></div>
-                    <div class="title">19.04.2017</div>
-                    <div ng-controller="EditableFormCtrl" class="table_container">
-                        <table class="table table-bordered ">
-                            <tr style="font-weight: bold">
-                                <td style="width:30%">Раздел</td>
-                                <td style="width:40%">Сумма</td>
-                                <td style="width:30%"></td>
-                            </tr>
-                            <tr ng-repeat="expense in expenses">
-                                <td>
-                                    <!-- editable status (select-local) -->
-                                    <span editable-select="expense.section" e-name="section" e-form="rowform" e-ng-options="s.value as s.text for s in sections">
-                                      {{ showSection(expense) }}
-                                    </span>
-                                </td>
-                                <td>
-                                    <!-- editable username (text with validation) -->
-                                    <span editable-text="expense.amount" e-name="amount" e-form="rowform" onbeforesave="checkName($data, expense.id)">
-                                      {{ expense.amount || '0' }}
-                                    </span>
-                                </td>
+         <div class="col-md-3">
+             <div class="expense">
+                 <div class="background-form"></div>
+                 <div class="title">
+                     <div>{{list.name}}</div>
+                 </div>
+             </div>
+         </div>
+     </section> -->
+    <!-- <section class="new-list">
+                 <div class="expense_new">
+                     <div class="background-form"></div>
+                     <div class="title">19.04.2017</div>
+                     <div ng-controller="EditableFormCtrl" class="table_container">
+                         <table class="table table-bordered ">
+                             <tr style="font-weight: bold">
+                                 <td style="width:30%">Раздел</td>
+                                 <td style="width:40%">Сумма</td>
+                                 <td style="width:30%"></td>
+                             </tr>
+                             <tr ng-repeat="expense in expenses">
+                                 <td>
+                                     <span editable-select="expense.section" e-name="section" e-form="rowform" e-ng-options="s.value as s.text for s in sections">
+                                       {{ showSection(expense) }}
+                                     </span>
+                                 </td>
+                                 <td>
+                                     <span editable-text="expense.amount" e-name="amount" e-form="rowform" onbeforesave="checkName($data, expense.id)">
+                                       {{ expense.amount || '0' }}
+                                     </span>
+                                 </td>
 
-                                <td style="white-space: nowrap">
-                                    <!-- form -->
-                                    <form editable-form name="rowform" onbeforesave="saveUser($data, amount.id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == user">
-                                        <button type="submit" ng-disabled="rowform.$waiting" class="save"></button>
-                                        <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="cancel"></button>
-                                    </form>
-                                    <div class="buttons" ng-show="!rowform.$visible">
-                                        <button type="button" class="edit" ng-click="rowform.$show()"></button>
-                                        <button type="button" class="delete" ng-click="removeUser($index)"></button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
+                                 <td style="white-space: nowrap">
+                                     <form editable-form name="rowform" onbeforesave="saveUser($data, amount.id)" ng-show="rowform.$visible" class="form-buttons form-inline" shown="inserted == user">
+                                         <button type="submit" ng-disabled="rowform.$waiting" class="save"></button>
+                                         <button type="button" ng-disabled="rowform.$waiting" ng-click="rowform.$cancel()" class="cancel"></button>
+                                     </form>
+                                     <div class="buttons" ng-show="!rowform.$visible">
+                                         <button type="button" class="edit" ng-click="rowform.$show()"></button>
+                                         <button type="button" class="delete" ng-click="removeUser($index)"></button>
+                                     </div>
+                                 </td>
+                             </tr>
+                         </table>
 
-                        <button type="button" class="btn btn-default" ng-click="addUser()">Add row</button>
-                    </div>
-                    <!--<div class="table_container">
-                        <table class="table table-bordered">
-                            <thead>
-                            <tr>
-                                <th>№</th>
-                                <th>Раздел</th>
-                                <th>Сумма</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>продукты</td>
-                                <td>250</td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>транспорт</td>
-                                <td>40</td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>прочее</td>
-                                <td>150</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>-->
-                    <div class="total">Всего: <span>440</span></div>
-                </div>
-    </section>
+                         <button type="button" class="btn btn-default" ng-click="addUser()">Add row</button>
+                     </div>
+                     <div class="total">Всего: <span>440</span></div>
+                 </div>
+     </section> -->
 </section>

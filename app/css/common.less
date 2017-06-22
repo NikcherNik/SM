@@ -1,30 +1,57 @@
-@page-color: blue;
+
 @select-label-color: #61C3FF;
 @import url('https://fonts.googleapis.com/css?family=Droid+Serif');
 .title_site{
-  color: #209e91;
-  font-size: 25px;
+  color: #3c4f6d;
+  font-size: 30px;
   font-family: 'Droid Serif', serif;
   .title_animate{
     color: #ffffff;
+    left: -7px;
+    position: relative;
+
+    -webkit-transition: color linear 0.2s;
+    -moz-transition: color linear 0.2s;
+    -o-transition: color linear 0.2s;
+    transition: color linear 0.2s;
   }
 }
 .title_site:hover{
   .title_animate{
-    color: #209e91;
+    color: #3c4f6d;
   }
 }
-.blur {
-  -webkit-filter: blur(5px);
-  -moz-filter: blur(5px);
-  -o-filter: blur(5px);
-  -ms-filter: blur(5px);
-  filter: blur(5px);
+HTML {
+  height: 100%;
 }
 body {
   padding-top: 70px;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background:linear-gradient(to top left, #0a1944, #3c4f6d, #a5b5c4);
 }
 
+.background {
+  width: 100%;
+  height: ~'calc(100% + 70px)';
+  background-image: url('../img/diagonal-noise.png');
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  position: relative;
+  top: -70px;
+
+}
+
+.noise {
+  width: 170px;
+  height: 170px;
+  position: relative;
+  background-image: inherit;
+  overflow: hidden;
+  filter: blur(20px);
+}
 .main-page{
   background-image: url('../img/blue_body_background.png');
 }
@@ -208,8 +235,10 @@ body {
   transition: opacity 0.7s ease-out;
 }
 
-.login-form{
+.login-form, .registration-form{
   top: 95px;
+  height: 300px;
+  margin: 0;
   .title{
     color: #FFFFFF;
     font-size: 27px;
@@ -217,6 +246,9 @@ body {
     margin-top: 10px;
   }
 
+}
+.registration-form{
+  height: 370px;
 }
 .expense_new{
   display: inline-block;

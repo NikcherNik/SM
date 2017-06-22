@@ -1,7 +1,15 @@
 module.exports = function (ngModule) {
     ngModule.controller('mainCtrl',function ($rootScope,$scope,$filter, expensesService) {
 
-        console.log(this)
+        $(function(){
+            $('.noise').each(function(index){
+                var posX = -$(this).position().left,
+                    posY = $(this).position().top;
+                $(this).css({
+                    'background-position': posX+'px '+posY+'px'
+                });
+            });
+        });
         this.lists = expensesService.getExpenses();
 
             $scope.user = {
