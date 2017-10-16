@@ -12,7 +12,7 @@ var async = require('async');
 var binary = new Binary();
 var database = new DataBase();
 
-
+//TEST
 var app = express();
 var options = {
     host: 'localhost',
