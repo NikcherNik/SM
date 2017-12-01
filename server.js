@@ -9,6 +9,7 @@ var Binary = require('./app/binary.js');
 
 var async = require('async');
 
+
 var binary = new Binary();
 var database = new DataBase();
 //123456789
