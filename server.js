@@ -7,12 +7,14 @@ var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser');
 var Binary = require('./app/binary.js');
 
+//test
+
 var async = require('async');
 
 var binary = new Binary();
 var database = new DataBase();
 
-//TEST
+//123456789
 var app = express();
 var options = {
     host: 'localhost',
@@ -21,6 +23,7 @@ var options = {
     database: 'save_money',
     table: 'sessions'
 }
+//sadfasdfasdf
 
 var router = express.Router();
 
